@@ -30,5 +30,5 @@
     "install": "sudo rm -f /usr/local/bin/lehramt-informatik.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/lehramt-informatik.js; sudo rm -f /usr/local/bin/i; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/i"
   },
   "author": "Hermine Bschlangaul",
-  "license": "ISC"
+  "license": "GPL-3.0-or-later"
 }
