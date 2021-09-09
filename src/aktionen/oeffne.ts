@@ -1,22 +1,21 @@
 import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import glob from 'glob'
 
 import { gibExamenSammlung } from '../examen'
-import { öffneProgramm } from '../helfer'
+import { öffneProgramm, öffneVSCode } from '../helfer'
 
 import {
   gibStichwortVerzeichnis,
   gibStichwortBaum
 } from '../stichwort-verzeichnis'
 
-import { homedir } from 'os'
-import path from 'path'
-
-import glob from 'glob'
-
 import { gibBibtexSammlung } from '../bibtex'
+import { Aufgabe } from '../aufgabe'
 
 const basisPfadExterneDateien = path.join(
-  homedir(),
+  os.homedir(),
   'git-repositories/content/informatik-studium'
 )
 
@@ -78,5 +77,34 @@ export function öffne (referenz: string | string[]): void {
     öffneExamen(referenz)
   } else {
     öffneDurchBibtex(referenz)
+  }
+}
+
+export function öffneDurchGlobInVSCode (
+  globMuster: string,
+  cmdObj: { [schlüssel: string]: any }
+): void {
+  function öffneMitAusgabe (pfad: string): void {
+    console.log(pfad)
+    öffneVSCode(pfad)
+  }
+
+  if (typeof globMuster !== 'string') {
+    globMuster = '**/*.tex'
+  }
+  const dateien = glob.sync(globMuster)
+  for (let dateiPfad of dateien) {
+    dateiPfad = path.resolve(dateiPfad)
+    if (cmdObj.keinIndex != null || cmdObj.keinTitel != null) {
+      const aufgabe = new Aufgabe(dateiPfad)
+      if (
+        (cmdObj.keinIndex != null && aufgabe.stichwörter.length === 0) ||
+        (cmdObj.keinTitel != null && aufgabe.titel == null)
+      ) {
+        öffneMitAusgabe(dateiPfad)
+      }
+    } else {
+      öffneMitAusgabe(dateiPfad)
+    }
   }
 }

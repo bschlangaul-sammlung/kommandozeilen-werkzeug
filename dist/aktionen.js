@@ -18,6 +18,7 @@ const oeffne_1 = require("./aktionen/oeffne");
 const aufgaben_vorlage_1 = require("./aktionen/aufgaben-vorlage");
 const aufgaben_sammlung_1 = require("./aktionen/aufgaben-sammlung");
 const externe_befehle_1 = require("./aktionen/externe-befehle");
+const tex_formatierung_1 = require("./aktionen/tex-formatierung");
 exports.default = {
     erkenneTextInPdf: externe_befehle_1.erkenneTextInPdf,
     erzeugeAufgabenMetadaten: aufgaben_metadaten_1.default,
@@ -25,13 +26,15 @@ exports.default = {
     erzeugeExamensAufgabeVorlage: aufgaben_vorlage_1.erzeugeExamensAufgabeVorlage,
     erzeugeExamenScansSammlung: aufgaben_sammlung_1.erzeugeExamenScansSammlung,
     erzeugeExamensLösungen: aufgaben_sammlung_1.erzeugeExamensLösungen,
-    löscheGeradeSeitenInPdf: externe_befehle_1.löscheGeradeSeitenInPdf,
+    erzeugeListenElemente: tex_formatierung_1.erzeugeListenElemente,
     erzeugeReadme: readme_1.default,
     erzeugeTexDokumentation: tex_dokumentation_1.default,
     exportiereTxtAusPdf: externe_befehle_1.exportiereTxtAusPdf,
+    öffneDurchGlobInVSCode: oeffne_1.öffneDurchGlobInVSCode,
     führeSqlAus: sql_1.default,
     kompiliereTex: tex_kompilation_1.default,
     konvertiereFlaciZuTikz: flaci_1.default,
+    löscheGeradeSeitenInPdf: externe_befehle_1.löscheGeradeSeitenInPdf,
     öffne: oeffne_1.öffne,
     öffneDurchStichwort: oeffne_1.öffneDurchStichwort,
     rotierePdf: externe_befehle_1.rotierePdf,

@@ -4,6 +4,7 @@
 
 import path from 'path'
 import { ExamensAufgabe } from '../aufgabe'
+import { logger } from '../log'
 
 import { gibExamenSammlung, Examen } from '../examen'
 import {
@@ -146,6 +147,7 @@ export function erzeugeExamenScansSammlung (): void {
  * ```
  */
 function erzeugeExamensLösung (examen: Examen): void {
+  logger.silly(examen.pfad)
   const textKörper = examen.besucheAufgabenBaum({
     thema (nummer: number): string {
       return `\n\n\\liSetzeExamenThemaNr{${nummer}}`

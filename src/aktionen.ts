@@ -10,7 +10,11 @@ import konvertiereFlaciZuTikz from './aktionen/flaci'
 import validiere from './aktionen/validiere'
 import führeSqlAus from './aktionen/sql'
 import erzeugeAufgabenMetadaten from './aktionen/aufgaben-metadaten'
-import { öffne, öffneDurchStichwort } from './aktionen/oeffne'
+import {
+  öffne,
+  öffneDurchStichwort,
+  öffneDurchGlobInVSCode
+} from './aktionen/oeffne'
 import {
   erzeugeAufgabenVorlage,
   erzeugeExamensAufgabeVorlage
@@ -25,6 +29,7 @@ import {
   löscheGeradeSeitenInPdf,
   exportiereTxtAusPdf
 } from './aktionen/externe-befehle'
+import { erzeugeListenElemente } from './aktionen/tex-formatierung'
 
 export default {
   erkenneTextInPdf,
@@ -33,13 +38,15 @@ export default {
   erzeugeExamensAufgabeVorlage,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen,
-  löscheGeradeSeitenInPdf,
+  erzeugeListenElemente,
   erzeugeReadme,
   erzeugeTexDokumentation,
   exportiereTxtAusPdf,
+  öffneDurchGlobInVSCode,
   führeSqlAus,
   kompiliereTex,
   konvertiereFlaciZuTikz,
+  löscheGeradeSeitenInPdf,
   öffne,
   öffneDurchStichwort,
   rotierePdf,

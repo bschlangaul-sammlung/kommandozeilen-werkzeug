@@ -8,6 +8,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
 const path_1 = __importDefault(require("path"));
+const log_1 = require("../log");
 const examen_1 = require("../examen");
 const helfer_1 = require("../helfer");
 const tex_1 = require("../tex");
@@ -123,6 +124,7 @@ exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
  * ```
  */
 function erzeugeExamensLösung(examen) {
+    log_1.logger.silly(examen.pfad);
     const textKörper = examen.besucheAufgabenBaum({
         thema(nummer) {
             return `\n\n\\liSetzeExamenThemaNr{${nummer}}`;

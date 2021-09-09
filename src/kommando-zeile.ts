@@ -4,13 +4,9 @@
  * Mit Hilfe des Pakets `commander` ein Kommandozeilen-Interface bereitstellen.
  */
 
-import glob from 'glob'
-import path from 'path'
-
 import { Command } from 'commander'
 
-import { Aufgabe } from './aufgabe'
-import { repositoryPfad, öffneVSCode, leseDatei, schreibeDatei } from './helfer'
+import { repositoryPfad } from './helfer'
 import aktionen from './aktionen'
 
 const programm = new Command()
@@ -91,35 +87,7 @@ programm
     '-t, --kein-titel',
     'Öffne nur die Dateien, die keinen Titel haben. \\liAufgabenTitel{}.'
   )
-
-  .action(function (
-    globMuster: string,
-    cmdObj: { [schlüssel: string]: any }
-  ): void {
-    function öffneMitAusgabe (pfad: string): void {
-      console.log(pfad)
-      öffneVSCode(pfad)
-    }
-
-    if (typeof globMuster !== 'string') {
-      globMuster = '**/*.tex'
-    }
-    const dateien = glob.sync(globMuster)
-    for (let dateiPfad of dateien) {
-      dateiPfad = path.resolve(dateiPfad)
-      if (cmdObj.keinIndex != null || cmdObj.keinTitel != null) {
-        const aufgabe = new Aufgabe(dateiPfad)
-        if (
-          (cmdObj.keinIndex != null && aufgabe.stichwörter.length === 0) ||
-          (cmdObj.keinTitel != null && aufgabe.titel == null)
-        ) {
-          öffneMitAusgabe(dateiPfad)
-        }
-      } else {
-        öffneMitAusgabe(dateiPfad)
-      }
-    }
-  })
+  .action(aktionen.öffneDurchGlobInVSCode)
 
 programm
   .command('seiten-loeschen <pdf-datei>')
@@ -146,33 +114,30 @@ programm
   .description('PDF-Datei rotieren.')
   .action(aktionen.rotierePdf)
 
+const sammlung = new Command('sammlungen').description(
+  'Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)'
+).alias('sa')
+
+sammlung
+  .command('examen-scans')
+  .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
+  .action(aktionen.erzeugeExamenScansSammlung)
+
+sammlung
+  .command('aufgaben-pro-examen')
+  .description(
+    'Erzeuge pro Examen eine TeX-Datei. ' +
+      'Das Examen muss mindestens eine gelöste Aufgabe haben'
+  )
+  .action(aktionen.erzeugeExamensLösungen)
+
+programm.addCommand(sammlung)
+
 programm
   .command('enumerate-item <tex-datei>')
   .alias('ei')
   .description('a) b) ... i) iii) durch \\item ersetzen.')
-  .action(function (dateiPfad: string): void {
-    let inhalt = leseDatei(dateiPfad)
-    inhalt = inhalt.replace(
-      /\n(\(?[abcdefghijv]+\)\s*)/g,
-      '\n%%\n% $1\n%%\n\n\\item '
-    )
-    schreibeDatei(dateiPfad, inhalt)
-  })
-
-programm
-  .command('examen-sammlung')
-  .alias('es')
-  .description('PDFs in denen mehrere PDFs zusammengefügt sind.')
-  .action(aktionen.erzeugeExamenScansSammlung)
-
-programm
-  .command('tex-examen')
-  .alias('te')
-  .description(
-    'Erzeuge pro Examen eine TeX-Datei.' +
-    'Das Examen muss mindestens eine gelöste Aufgabe haben'
-  )
-  .action(aktionen.erzeugeExamensLösungen)
+  .action(aktionen.erzeugeListenElemente)
 
 programm
   .command('flaci-to-tikz <jsonDatei>')

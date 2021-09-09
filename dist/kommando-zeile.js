@@ -7,10 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const glob_1 = __importDefault(require("glob"));
-const path_1 = __importDefault(require("path"));
 const commander_1 = require("commander");
-const aufgabe_1 = require("./aufgabe");
 const helfer_1 = require("./helfer");
 const aktionen_1 = __importDefault(require("./aktionen"));
 const programm = new commander_1.Command();
@@ -64,29 +61,7 @@ programm
     .description('Öffne die mit glob spezifizierten Dateien in Visual Studio Code')
     .option('-n, --kein-index', 'Öffne nur die Dateien, die keinen Index haben.')
     .option('-t, --kein-titel', 'Öffne nur die Dateien, die keinen Titel haben. \\liAufgabenTitel{}.')
-    .action(function (globMuster, cmdObj) {
-    function öffneMitAusgabe(pfad) {
-        console.log(pfad);
-        helfer_1.öffneVSCode(pfad);
-    }
-    if (typeof globMuster !== 'string') {
-        globMuster = '**/*.tex';
-    }
-    const dateien = glob_1.default.sync(globMuster);
-    for (let dateiPfad of dateien) {
-        dateiPfad = path_1.default.resolve(dateiPfad);
-        if (cmdObj.keinIndex != null || cmdObj.keinTitel != null) {
-            const aufgabe = new aufgabe_1.Aufgabe(dateiPfad);
-            if ((cmdObj.keinIndex != null && aufgabe.stichwörter.length === 0) ||
-                (cmdObj.keinTitel != null && aufgabe.titel == null)) {
-                öffneMitAusgabe(dateiPfad);
-            }
-        }
-        else {
-            öffneMitAusgabe(dateiPfad);
-        }
-    }
-});
+    .action(aktionen_1.default.öffneDurchGlobInVSCode);
 programm
     .command('seiten-loeschen <pdf-datei>')
     .alias('l')
@@ -106,26 +81,22 @@ programm
     .alias('r')
     .description('PDF-Datei rotieren.')
     .action(aktionen_1.default.rotierePdf);
+const sammlung = new commander_1.Command('sammlungen').description('Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)').alias('sa');
+sammlung
+    .command('examen-scans')
+    .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
+    .action(aktionen_1.default.erzeugeExamenScansSammlung);
+sammlung
+    .command('aufgaben-pro-examen')
+    .description('Erzeuge pro Examen eine TeX-Datei. ' +
+    'Das Examen muss mindestens eine gelöste Aufgabe haben')
+    .action(aktionen_1.default.erzeugeExamensLösungen);
+programm.addCommand(sammlung);
 programm
     .command('enumerate-item <tex-datei>')
     .alias('ei')
     .description('a) b) ... i) iii) durch \\item ersetzen.')
-    .action(function (dateiPfad) {
-    let inhalt = helfer_1.leseDatei(dateiPfad);
-    inhalt = inhalt.replace(/\n(\(?[abcdefghijv]+\)\s*)/g, '\n%%\n% $1\n%%\n\n\\item ');
-    helfer_1.schreibeDatei(dateiPfad, inhalt);
-});
-programm
-    .command('examen-sammlung')
-    .alias('es')
-    .description('PDFs in denen mehrere PDFs zusammengefügt sind.')
-    .action(aktionen_1.default.erzeugeExamenScansSammlung);
-programm
-    .command('tex-examen')
-    .alias('te')
-    .description('Erzeuge pro Examen eine TeX-Datei.' +
-    'Das Examen muss mindestens eine gelöste Aufgabe haben')
-    .action(aktionen_1.default.erzeugeExamensLösungen);
+    .action(aktionen_1.default.erzeugeListenElemente);
 programm
     .command('flaci-to-tikz <jsonDatei>')
     .alias('flaci')

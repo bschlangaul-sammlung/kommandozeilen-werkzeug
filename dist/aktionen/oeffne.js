@@ -3,16 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.öffne = exports.öffneDurchStichwort = exports.öffneDurchBibtex = void 0;
+exports.öffneDurchGlobInVSCode = exports.öffne = exports.öffneDurchStichwort = exports.öffneDurchBibtex = void 0;
 const fs_1 = __importDefault(require("fs"));
+const os_1 = __importDefault(require("os"));
+const path_1 = __importDefault(require("path"));
+const glob_1 = __importDefault(require("glob"));
 const examen_1 = require("../examen");
 const helfer_1 = require("../helfer");
 const stichwort_verzeichnis_1 = require("../stichwort-verzeichnis");
-const os_1 = require("os");
-const path_1 = __importDefault(require("path"));
-const glob_1 = __importDefault(require("glob"));
 const bibtex_1 = require("../bibtex");
-const basisPfadExterneDateien = path_1.default.join(os_1.homedir(), 'git-repositories/content/informatik-studium');
+const aufgabe_1 = require("../aufgabe");
+const basisPfadExterneDateien = path_1.default.join(os_1.default.homedir(), 'git-repositories/content/informatik-studium');
 function öffneDurchBibtex(referenz) {
     const externeDateien = glob_1.default.sync('**/*.pdf', { cwd: basisPfadExterneDateien });
     const sammlung = bibtex_1.gibBibtexSammlung();
@@ -66,3 +67,27 @@ function öffne(referenz) {
     }
 }
 exports.öffne = öffne;
+function öffneDurchGlobInVSCode(globMuster, cmdObj) {
+    function öffneMitAusgabe(pfad) {
+        console.log(pfad);
+        helfer_1.öffneVSCode(pfad);
+    }
+    if (typeof globMuster !== 'string') {
+        globMuster = '**/*.tex';
+    }
+    const dateien = glob_1.default.sync(globMuster);
+    for (let dateiPfad of dateien) {
+        dateiPfad = path_1.default.resolve(dateiPfad);
+        if (cmdObj.keinIndex != null || cmdObj.keinTitel != null) {
+            const aufgabe = new aufgabe_1.Aufgabe(dateiPfad);
+            if ((cmdObj.keinIndex != null && aufgabe.stichwörter.length === 0) ||
+                (cmdObj.keinTitel != null && aufgabe.titel == null)) {
+                öffneMitAusgabe(dateiPfad);
+            }
+        }
+        else {
+            öffneMitAusgabe(dateiPfad);
+        }
+    }
+}
+exports.öffneDurchGlobInVSCode = öffneDurchGlobInVSCode;
