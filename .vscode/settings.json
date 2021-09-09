@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/node_modules/": true,
+    "**/*.aux": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.fls": true,
+    "**/*.log": true,
+    "**/*.out": true,
+    "**/*.pdf": true,
+    "**/*.synctex.gz": true
+  }
+}
