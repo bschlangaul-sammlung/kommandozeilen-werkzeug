@@ -1,0 +1,34 @@
+{
+  "name": "lehramt-informatik-verwaltung",
+  "version": "0.1.0",
+  "description": "Ein Skript geschrieben in NodeJS, um verschiedene Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen zu erledigen.",
+  "main": "dist/main.js",
+  "repository": {
+    "url": "https://github.com/lehramt-informatik/verwaltung"
+  },
+  "dependencies": {
+    "biblatex-csl-converter": "2.0.2",
+    "chalk": "4.1.2",
+    "commander": "8.1.0",
+    "glob": "7.1.7",
+    "js-yaml": "4.1.0",
+    "string-similarity": "4.0.4"
+  },
+  "devDependencies": {
+    "@types/glob": "7.1.4",
+    "@types/js-yaml": "4.0.3",
+    "@types/node": "16.7.8",
+    "@types/string-similarity": "4.0.0",
+    "mocha": "9.1.1"
+  },
+  "scripts": {
+    "lint:depcheck": "depcheck",
+    "lint:ts-standard": "ts-standard --fix 'src/**/*.ts'",
+    "lint": "npm run lint:ts-standard && npm run lint:depcheck",
+    "test": "npm run lint; npm run build; mocha 'test/**/*.js'",
+    "build": "tsc",
+    "install": "sudo rm -f /usr/local/bin/lehramt-informatik.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/lehramt-informatik.js; sudo rm -f /usr/local/bin/i; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/i"
+  },
+  "author": "Hermine Bschlangaul",
+  "license": "ISC"
+}

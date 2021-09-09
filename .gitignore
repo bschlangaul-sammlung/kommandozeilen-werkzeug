@@ -1,0 +1,12 @@
+node_modules/
+
+# Im Test-Ordner befinden sich ein paar TeX-Dateien. Beim Kompilieren
+# dieser Dateinen können mehrer Hilfsdateien entstehen, die nicht
+# in diesem Verzeichnis sein sollten.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+*.synctex.gz
