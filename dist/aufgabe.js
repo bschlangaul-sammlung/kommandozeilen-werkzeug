@@ -52,7 +52,16 @@ class Aufgabe {
         this.validiere(this.bearbeitungsStand, bearbeitungsStand);
         this.validiere(this.korrektheit, korrektheit);
     }
+    /**
+     * Normalisiere den Dateipfad der Aufgabe. Er sollte immer als absoluter Pfad vorliegen.
+     *
+     * @param pfad - Ein möglicherweise relativer Dateipfad
+     * @returns Ein absoluter Pfad.
+     */
     static normalisierePfad(pfad) {
+        if (pfad.charAt(0) === path_1.default.sep) {
+            return pfad;
+        }
         if (pfad.includes(helfer_1.repositoryPfad)) {
             return pfad;
         }

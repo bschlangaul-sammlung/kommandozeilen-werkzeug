@@ -1,5 +1,6 @@
 /**
- * Sammle alle Aktionen im Unterverzeichnis ./aktionen in ein Objekt und exportiere dieses.
+ * Sammle alle Aktionen im Unterverzeichnis ./aktionen in ein Objekt und
+ * exportiere dieses.
  */
 
 import erzeugeReadme from './aktionen/readme'
@@ -14,20 +15,33 @@ import {
   erzeugeAufgabenVorlage,
   erzeugeExamensAufgabeVorlage
 } from './aktionen/aufgaben-vorlage'
-import { erzeugeExamenScansSammlung, erzeugeExamensLösungen } from './aktionen/aufgaben-sammlung'
+import {
+  erzeugeExamenScansSammlung,
+  erzeugeExamensLösungen
+} from './aktionen/aufgaben-sammlung'
+import {
+  rotierePdf,
+  erkenneTextInPdf,
+  löscheGeradeSeitenInPdf,
+  exportiereTxtAusPdf
+} from './aktionen/externe-befehle'
 
 export default {
+  erkenneTextInPdf,
   erzeugeAufgabenMetadaten,
   erzeugeAufgabenVorlage,
   erzeugeExamensAufgabeVorlage,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen,
+  löscheGeradeSeitenInPdf,
   erzeugeReadme,
   erzeugeTexDokumentation,
+  exportiereTxtAusPdf,
   führeSqlAus,
   kompiliereTex,
   konvertiereFlaciZuTikz,
   öffne,
   öffneDurchStichwort,
+  rotierePdf,
   validiere
 }

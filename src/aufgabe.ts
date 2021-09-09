@@ -182,7 +182,16 @@ export class Aufgabe {
     this.validiere(this.korrektheit, korrektheit)
   }
 
+  /**
+   * Normalisiere den Dateipfad der Aufgabe. Er sollte immer als absoluter Pfad vorliegen.
+   *
+   * @param pfad - Ein möglicherweise relativer Dateipfad
+   * @returns Ein absoluter Pfad.
+   */
   static normalisierePfad (pfad: string): string {
+    if (pfad.charAt(0) === path.sep) {
+      return pfad
+    }
     if (pfad.includes(repositoryPfad)) {
       return pfad
     }
@@ -502,10 +511,7 @@ export class ExamensAufgabe extends Aufgabe {
       gibNummer(arg3)
     )
     const examen = Examen.erzeugeExamenVonReferenz(referenz)
-    return new ExamensAufgabe(
-      path.join(examen.verzeichnis, pfad),
-      examen
-    )
+    return new ExamensAufgabe(path.join(examen.verzeichnis, pfad), examen)
   }
 
   static istExamensAufgabe (pfad: string): boolean {

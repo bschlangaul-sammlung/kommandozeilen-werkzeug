@@ -57,17 +57,24 @@ function macheRelativenPfad(pfad) {
 }
 exports.macheRelativenPfad = macheRelativenPfad;
 /**
- * Lese eine Text-Datei relativ zum Lehramt-Informatik-Repository.
+ * Lese eine Text-Datei. Die Pfad kann in Segmenten angegeben werden. Handelt es
+ * sich um keinen absoluten Pfad, wird angenommen, das er relativ zum
+ * Lehramt-Informatik-Repository liegt.
  *
  * @param args - Pfad-Segmente
  *
  * @returns Der Inhalt der Text-Datei als String.
  */
 function leseRepoDatei(...args) {
+    let elternPfad = exports.repositoryPfad;
+    // Überprüfe, ob es sich bereits um einen absoluten Pfad handelt
+    if (args[0].charAt(0) === path_1.default.sep) {
+        elternPfad = '';
+    }
     if (args[0].includes(exports.repositoryPfad)) {
         return leseDatei(path_1.default.join(...args));
     }
-    return leseDatei(path_1.default.join(exports.repositoryPfad, ...args));
+    return leseDatei(path_1.default.join(elternPfad, ...args));
 }
 exports.leseRepoDatei = leseRepoDatei;
 function macheRepoPfad(...args) {

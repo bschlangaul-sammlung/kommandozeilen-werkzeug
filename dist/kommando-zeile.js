@@ -1,11 +1,12 @@
 #! /usr/bin/env node
 "use strict";
+/**
+ * Mit Hilfe des Pakets `commander` ein Kommandozeilen-Interface bereitstellen.
+ */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = __importDefault(require("child_process"));
-const fs_1 = __importDefault(require("fs"));
 const glob_1 = __importDefault(require("glob"));
 const path_1 = __importDefault(require("path"));
 const commander_1 = require("commander");
@@ -90,63 +91,21 @@ programm
     .command('seiten-loeschen <pdf-datei>')
     .alias('l')
     .description('Gerade Seiten in einer PDF-Datei löschen. Die erste, dritte Seite etc. bleibt bestehen.')
-    .action(function (datei) {
-    child_process_1.default.spawnSync('pdftk', [
-        `A=${datei}`,
-        'cat',
-        'Aodd',
-        'output',
-        `${datei}_ungerade.pdf`
-    ]);
-});
+    .action(aktionen_1.default.löscheGeradeSeitenInPdf);
 programm
     .command('txt-exportieren <pdf-datei>')
     .alias('t')
     .description('TXT aus einer PDF-Datei exportieren.')
-    .action(function (datei) {
-    if (datei.includes('.pdf')) {
-        console.log(datei);
-        const txt = datei.replace('.pdf', '.txt');
-        if (!fs_1.default.existsSync(txt)) {
-            child_process_1.default.spawnSync('pdftotext', [datei]);
-        }
-    }
-});
+    .action(aktionen_1.default.exportiereTxtAusPdf);
 programm
     .command('ocr <pdf-datei>')
     .description('Texterkennung in einer PDF-Datei durchführen.')
-    .action(function (datei) {
-    const process = child_process_1.default.spawnSync('ocrmypdf', [
-        '--deskew',
-        '--rotate-pages',
-        '-l',
-        'deu+eng',
-        '--sidecar',
-        `${datei}.txt`,
-        datei,
-        datei
-    ], { encoding: 'utf-8' });
-    if (process.status !== 0) {
-        console.log(process.stderr);
-    }
-});
+    .action(aktionen_1.default.erkenneTextInPdf);
 programm
     .command('rotiere-pdf <pdf-datei>')
     .alias('r')
     .description('PDF-Datei rotieren.')
-    .action(function (datei) {
-    const process = child_process_1.default.spawnSync('pdftk', [
-        datei,
-        'cat',
-        '1-endeast',
-        'output',
-        '--sidecar',
-        `${datei}_rotated.pdf`
-    ]);
-    if (process.status !== 0) {
-        console.log(process.stderr);
-    }
-});
+    .action(aktionen_1.default.rotierePdf);
 programm
     .command('enumerate-item <tex-datei>')
     .alias('ei')
