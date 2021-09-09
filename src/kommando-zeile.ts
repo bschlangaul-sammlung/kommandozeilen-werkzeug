@@ -9,10 +9,30 @@ import { Command } from 'commander'
 import { repositoryPfad } from './helfer'
 import aktionen from './aktionen'
 
+import { setzeLogEbene } from './log'
+
+function increaseVerbosity (dummyValue: any, verbosity: number): number {
+  verbosity = verbosity + 1
+  if (verbosity === 1) {
+    setzeLogEbene('info')
+  } else if (verbosity === 2) {
+    setzeLogEbene('verbose')
+  } else {
+    setzeLogEbene('debug')
+  }
+  return verbosity
+}
+
 const programm = new Command()
-programm.description(`Repository-Pfad: ${repositoryPfad}`)
-programm.name('lehramt-informatik.js')
-programm.version('0.1.0')
+  .description(`Repository-Pfad: ${repositoryPfad}`)
+  .name('lehramt-informatik.js')
+  .version('0.1.0')
+  .option(
+    '-v, --verbose',
+    'verbosity that can be increased',
+    increaseVerbosity,
+    0
+  )
 
 programm.on('command:*', function () {
   console.error(
@@ -114,9 +134,11 @@ programm
   .description('PDF-Datei rotieren.')
   .action(aktionen.rotierePdf)
 
-const sammlung = new Command('sammlungen').description(
-  'Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)'
-).alias('sa')
+const sammlung = new Command('sammlungen')
+  .description(
+    'Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)'
+  )
+  .alias('sa')
 
 sammlung
   .command('examen-scans')
@@ -127,7 +149,7 @@ sammlung
   .command('aufgaben-pro-examen')
   .description(
     'Erzeuge pro Examen eine TeX-Datei. ' +
-      'Das Examen muss mindestens eine gelöste Aufgabe haben'
+       'Das Examen muss mindestens eine gelöste Aufgabe haben'
   )
   .action(aktionen.erzeugeExamensLösungen)
 
@@ -161,8 +183,8 @@ programm
   .alias('v')
   .description(
     'Überprüfe / validiere ob es die Stichwörter in \\index{} gibt. ' +
-      'Ob es die Werte für die Metadaten-Schlüssel BearbeitungsStand und ' +
-      'Korrektheit in den Metadaten gibt'
+       'Ob es die Werte für die Metadaten-Schlüssel BearbeitungsStand und ' +
+       'Korrektheit in den Metadaten gibt'
   )
   .action(aktionen.validiere)
 

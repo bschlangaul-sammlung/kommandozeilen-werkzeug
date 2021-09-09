@@ -8,21 +8,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
 const path_1 = __importDefault(require("path"));
+const aufgabe_1 = require("../aufgabe");
 const log_1 = require("../log");
 const examen_1 = require("../examen");
 const helfer_1 = require("../helfer");
 const tex_1 = require("../tex");
 /**
- * ```md
- * - 2015 Frühjahr: [Scan.pdf](...46116/2015/03/Scan.pdf) [OCR.txt](…46116/2015/03/OCR.txt)
- *     - Thema 1
- *         - Teilaufgabe 1
- *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-1/Aufgabe-3.pdf)
- *         - Teilaufgabe 2
- *             - [Aufgabe 1](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-1.pdf)
- *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-3.pdf)
- *```
- */
+  * ```md
+  * - 2015 Frühjahr: [Scan.pdf](...46116/2015/03/Scan.pdf) [OCR.txt](…46116/2015/03/OCR.txt)
+  *     - Thema 1
+  *         - Teilaufgabe 1
+  *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-1/Aufgabe-3.pdf)
+  *         - Teilaufgabe 2
+  *             - [Aufgabe 1](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-1.pdf)
+  *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-3.pdf)
+  *```
+  */
 function erzeugeAufgabenBaumMarkdown(examen) {
     function rückeEin() {
         return ' '.repeat(4 * ebene) + '- ';
@@ -60,8 +61,8 @@ function erzeugeDateiLink(examen, dateiName) {
     return examen.macheMarkdownLink(dateiName, dateiName);
 }
 /**
- * Erzeugen den Markdown-Code für die README-Datei.
- */
+  * Erzeugen den Markdown-Code für die README-Datei.
+  */
 function generiereExamensÜbersicht() {
     const examenSammlung = examen_1.gibExamenSammlung();
     const examenBaum = examenSammlung.examenBaum;
@@ -81,9 +82,9 @@ function generiereExamensÜbersicht() {
 }
 exports.generiereExamensÜbersicht = generiereExamensÜbersicht;
 /**
- * Erzeugt eine TeX-Datei, die alle Examens-Scanns eines bestimmten Fachs (z. B.
- * 65116) als eine PDF-Datei zusammenfasst.
- */
+  * Erzeugt eine TeX-Datei, die alle Examens-Scanns eines bestimmten Fachs (z. B.
+  * 65116) als eine PDF-Datei zusammenfasst.
+  */
 function erzeugeExamenScansSammlung() {
     const examenSammlung = examen_1.gibExamenSammlung();
     const examenBaum = examenSammlung.examenBaum;
@@ -108,23 +109,24 @@ function erzeugeExamenScansSammlung() {
 }
 exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
 /**
- * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
- * Aufgaben samt Lösungen einbindet.
- *
- * ```latex
- * \liSetzeExamen{66116}{2021}{03}
- *
- * \liSetzeExamenThemaNr{1}
- *
- * \liSetzeExamenTeilaufgabeNr{1}
- *
- * \liBindeAufgabeEin{1}
- * \liBindeAufgabeEin{2}
- * \liBindeAufgabeEin{3}
- * ```
- */
+  * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
+  * Aufgaben samt Lösungen einbindet.
+  *
+  * ```latex
+  * \liSetzeExamen{66116}{2021}{03}
+  *
+  * \liSetzeExamenThemaNr{1}
+  *
+  * \liSetzeExamenTeilaufgabeNr{1}
+  *
+  * \liBindeAufgabeEin{1}
+  * \liBindeAufgabeEin{2}
+  * \liBindeAufgabeEin{3}
+  * ```
+  */
 function erzeugeExamensLösung(examen) {
-    log_1.logger.silly(examen.pfad);
+    log_1.logger.log('debug', 'Besuche Examen %s', examen.referenz);
+    log_1.logger.verbose(examen.pfad);
     const textKörper = examen.besucheAufgabenBaum({
         thema(nummer) {
             return `\n\n\\liSetzeExamenThemaNr{${nummer}}`;
@@ -145,17 +147,21 @@ function erzeugeExamensLösung(examen) {
     });
     const pfad = examen.machePfad('Examen.tex');
     if (textKörper != null) {
+        log_1.logger.log('info', 'Schreibe %s', pfad);
         tex_1.schreibeTexDatei(pfad, 'examen', kopf, textKörper);
     }
     else {
+        log_1.logger.log('verbose', 'Lösche %s', pfad);
         helfer_1.löscheDatei(pfad);
     }
 }
 /**
- * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
- * Aufgaben samt Lösungen einbindet.
- */
+  * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
+  * Aufgaben samt Lösungen einbindet.
+  */
 function erzeugeExamensLösungen() {
+    // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
+    aufgabe_1.gibAufgabenSammlung();
     const examenSammlung = examen_1.gibExamenSammlung();
     const examenBaum = examenSammlung.examenBaum;
     for (const nummer in examenBaum) {

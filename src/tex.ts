@@ -3,6 +3,7 @@
  */
 
 import { leseRepoDatei, schreibeDatei } from './helfer'
+import { logger } from './log'
 
 function assembleMacroRegExp (macroName: string): RegExp {
   return new RegExp('\\' + macroName + '{([^}]*)}', 'g')
@@ -22,11 +23,11 @@ export function gibInhaltEinesTexMakros (
 }
 
 /**
- * Sammle alle Stichwörter eines TeX-Inhaltes (string). Doppelte Stichwörter
- * werden nur als eins aufgelistet.
- *
- * @param inhalt - Der Textinhalt einer TeX-Datei.
- */
+  * Sammle alle Stichwörter eines TeX-Inhaltes (string). Doppelte Stichwörter
+  * werden nur als eins aufgelistet.
+  *
+  * @param inhalt - Der Textinhalt einer TeX-Datei.
+  */
 export function sammleStichwörter (inhalt: string): string[] {
   const re = assembleMacroRegExp('index')
   let übereinstimmung
@@ -42,18 +43,18 @@ export function sammleStichwörter (inhalt: string): string[] {
 }
 
 /**
- * Sammle alle Stichwörter einer TeX-Datei.
- */
+  * Sammle alle Stichwörter einer TeX-Datei.
+  */
 export function sammleStichwörterEinerDatei (pfad: string): string[] {
   return sammleStichwörter(leseRepoDatei(pfad))
 }
 
 /**
- * @param dateiPfad - Ein Dateipfad.
- * @param klassenName - Ein Klassenname (ohne Präfix `lehramt-informatik-`)
- * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
- * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
- */
+  * @param dateiPfad - Ein Dateipfad.
+  * @param klassenName - Ein Klassenname (ohne Präfix `lehramt-informatik-`)
+  * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
+  * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
+  */
 export function schreibeTexDatei (
   dateiPfad: string,
   klassenName: string,
@@ -61,11 +62,11 @@ export function schreibeTexDatei (
   textkörper: string
 ): void {
   textkörper = textkörper.trim()
-  schreibeDatei(
-    dateiPfad,
-    `\\documentclass{lehramt-informatik-${klassenName}}\n${kopf}\n` +
-      `\\begin{document}\n${textkörper}\n\\end{document}\n`
-  )
+  const inhalt =
+     `\\documentclass{lehramt-informatik-${klassenName}}\n${kopf}\n` +
+     `\\begin{document}\n${textkörper}\n\\end{document}\n`
+  logger.debug(inhalt)
+  schreibeDatei(dateiPfad, inhalt)
 }
 
 function umgebeMitKlammern (text: string): string {
@@ -77,23 +78,23 @@ function umgebeMitKlammern (text: string): string {
 }
 
 /**
- * @returns
- *
- * ```latex
- * \makroName{
- *   Titel = Aufgabe 2,
- *   Thematik = Petri-Netz,
- *   RelativerPfad = Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,
- *   ZitatSchluessel = sosy:pu:4,
- *   ExamenNummer = 46116,
- *   ExamenJahr = 2016,
- *   ExamenMonat = 03,
- *   ExamenThemaNr = 2,
- *   ExamenTeilaufgabeNr = 1,
- *   ExamenAufgabeNr = 2,
- * }
- * ```
- */
+  * @returns
+  *
+  * ```latex
+  * \makroName{
+  *   Titel = Aufgabe 2,
+  *   Thematik = Petri-Netz,
+  *   RelativerPfad = Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,
+  *   ZitatSchluessel = sosy:pu:4,
+  *   ExamenNummer = 46116,
+  *   ExamenJahr = 2016,
+  *   ExamenMonat = 03,
+  *   ExamenThemaNr = 2,
+  *   ExamenTeilaufgabeNr = 1,
+  *   ExamenAufgabeNr = 2,
+  * }
+  * ```
+  */
 export function machePlist (
   makroName: string,
   daten: { [schlüssel: string]: any },

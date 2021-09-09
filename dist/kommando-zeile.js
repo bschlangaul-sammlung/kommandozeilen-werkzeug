@@ -10,10 +10,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const helfer_1 = require("./helfer");
 const aktionen_1 = __importDefault(require("./aktionen"));
-const programm = new commander_1.Command();
-programm.description(`Repository-Pfad: ${helfer_1.repositoryPfad}`);
-programm.name('lehramt-informatik.js');
-programm.version('0.1.0');
+const log_1 = require("./log");
+function increaseVerbosity(dummyValue, verbosity) {
+    verbosity = verbosity + 1;
+    if (verbosity === 1) {
+        log_1.setzeLogEbene('info');
+    }
+    else if (verbosity === 2) {
+        log_1.setzeLogEbene('verbose');
+    }
+    else {
+        log_1.setzeLogEbene('debug');
+    }
+    return verbosity;
+}
+const programm = new commander_1.Command()
+    .description(`Repository-Pfad: ${helfer_1.repositoryPfad}`)
+    .name('lehramt-informatik.js')
+    .version('0.1.0')
+    .option('-v, --verbose', 'verbosity that can be increased', increaseVerbosity, 0);
 programm.on('command:*', function () {
     console.error('Ungültiger Befehl: %s\nBenutze das Argument --help, um eine Liste der verfügbaren Befehle anzuzeigen.', programm.args.join(' '));
     process.exit(1);
@@ -81,7 +96,9 @@ programm
     .alias('r')
     .description('PDF-Datei rotieren.')
     .action(aktionen_1.default.rotierePdf);
-const sammlung = new commander_1.Command('sammlungen').description('Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)').alias('sa');
+const sammlung = new commander_1.Command('sammlungen')
+    .description('Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)')
+    .alias('sa');
 sammlung
     .command('examen-scans')
     .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
