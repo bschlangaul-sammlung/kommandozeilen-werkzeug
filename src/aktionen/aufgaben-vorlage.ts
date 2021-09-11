@@ -40,7 +40,7 @@ function schreibeVorlage (
   const textkörper =
     plist + '\n' + '\\index{}\n' + '\\footcite{' + meta.ZitatSchluessel + '}\n'
 
-  schreibeTexDatei(pfad, 'aufgabe', '\', textkörper)
+  schreibeTexDatei(pfad, 'aufgabe', '', textkörper)
 }
 
 export function erzeugeAufgabenVorlage (titel: string): void {
