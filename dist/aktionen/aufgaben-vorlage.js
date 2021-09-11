@@ -18,7 +18,7 @@ function schreibeVorlage(pfad, werte = {}) {
         werte.zitatSchlüssel != null ? werte.zitatSchlüssel : '';
     const plist = aufgaben_metadaten_1.macheAufgabenMetadatenPlist(meta);
     const textkörper = plist + '\n' + '\\index{}\n' + '\\footcite{' + meta.ZitatSchluessel + '}\n';
-    tex_1.schreibeTexDatei(pfad, 'aufgabe', '\\liLadePakete{}', textkörper);
+    tex_1.schreibeTexDatei(pfad, 'aufgabe', '\', textkörper);
 }
 function erzeugeAufgabenVorlage(titel) {
     let dateiName = 'Aufgabe_';
