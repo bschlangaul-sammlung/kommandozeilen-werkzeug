@@ -7,7 +7,7 @@ const sammlung = gibExamenSammlung()
 describe('examen.js', function () {
   describe('Klasse ExamenSammlung()', function () {
     it('Getter methode examenBaum', function () {
-      const examen = sammlung.examenBaum['66116']['2021']['03']
+      const examen = sammlung.baum['66116']['2021']['03']
       assert.strictEqual(examen.jahr, 2021)
     })
   })

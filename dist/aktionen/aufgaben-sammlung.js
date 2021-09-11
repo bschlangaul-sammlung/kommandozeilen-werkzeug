@@ -14,16 +14,16 @@ const examen_1 = require("../examen");
 const helfer_1 = require("../helfer");
 const tex_1 = require("../tex");
 /**
-  * ```md
-  * - 2015 Frühjahr: [Scan.pdf](...46116/2015/03/Scan.pdf) [OCR.txt](…46116/2015/03/OCR.txt)
-  *     - Thema 1
-  *         - Teilaufgabe 1
-  *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-1/Aufgabe-3.pdf)
-  *         - Teilaufgabe 2
-  *             - [Aufgabe 1](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-1.pdf)
-  *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-3.pdf)
-  *```
-  */
+ * ```md
+ * - 2015 Frühjahr: [Scan.pdf](...46116/2015/03/Scan.pdf) [OCR.txt](…46116/2015/03/OCR.txt)
+ *     - Thema 1
+ *         - Teilaufgabe 1
+ *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-1/Aufgabe-3.pdf)
+ *         - Teilaufgabe 2
+ *             - [Aufgabe 1](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-1.pdf)
+ *             - [Aufgabe 3](…46116/2015/03/Thema-1/Teilaufgabe-2/Aufgabe-3.pdf)
+ *```
+ */
 function erzeugeAufgabenBaumMarkdown(examen) {
     const baum = examen.aufgabenBaum;
     if (baum == null) {
@@ -35,19 +35,19 @@ function erzeugeAufgabenBaumMarkdown(examen) {
     }
     let ebene = 1;
     const ausgabe = baum.registriereBesucher({
-        thema(nummer) {
+        besucheThema(nummer) {
             ebene = 1;
             const ausgabe = rückeEin() + `Thema ${nummer}`;
             ebene++;
             return ausgabe;
         },
-        teilaufgabe(nummer) {
+        besucheTeilaufgabe(nummer) {
             ebene = 2;
             const ausgabe = rückeEin() + `Teilaufgabe ${nummer}`;
             ebene++;
             return ausgabe;
         },
-        aufgabe(nummer, examen, aufgabe) {
+        besucheAufgabe(nummer, examen, aufgabe) {
             let titel;
             if (aufgabe != null) {
                 titel = aufgabe.gibTitelNurAufgabe(true);
@@ -66,11 +66,11 @@ function erzeugeDateiLink(examen, dateiName) {
     return examen.macheMarkdownLink(dateiName, dateiName);
 }
 /**
-  * Erzeugen den Markdown-Code für die README-Datei.
-  */
+ * Erzeugen den Markdown-Code für die README-Datei.
+ */
 function generiereExamensÜbersicht() {
     const examenSammlung = examen_1.gibExamenSammlung();
-    const examenBaum = examenSammlung.examenBaum;
+    const examenBaum = examenSammlung.baum;
     const ausgabe = new helfer_1.AusgabeSammler();
     for (const nummer in examenBaum) {
         ausgabe.sammle(`\n### ${nummer}: ${examen_1.Examen.fachDurchNummer(nummer)}\n`);
@@ -87,12 +87,12 @@ function generiereExamensÜbersicht() {
 }
 exports.generiereExamensÜbersicht = generiereExamensÜbersicht;
 /**
-  * Erzeugt eine TeX-Datei, die alle Examens-Scanns eines bestimmten Fachs (z. B.
-  * 65116) als eine PDF-Datei zusammenfasst.
-  */
+ * Erzeugt eine TeX-Datei, die alle Examens-Scanns eines bestimmten Fachs (z. B.
+ * 65116) als eine PDF-Datei zusammenfasst.
+ */
 function erzeugeExamenScansSammlung() {
     const examenSammlung = examen_1.gibExamenSammlung();
-    const examenBaum = examenSammlung.examenBaum;
+    const examenBaum = examenSammlung.baum;
     for (const nummer in examenBaum) {
         const ausgabe = new helfer_1.AusgabeSammler();
         const nummernPfad = path_1.default.join(helfer_1.repositoryPfad, 'Staatsexamen', nummer);
@@ -114,21 +114,21 @@ function erzeugeExamenScansSammlung() {
 }
 exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
 /**
-  * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
-  * Aufgaben samt Lösungen einbindet.
-  *
-  * ```latex
-  * \liSetzeExamen{66116}{2021}{03}
-  *
-  * \liSetzeExamenThemaNr{1}
-  *
-  * \liSetzeExamenTeilaufgabeNr{1}
-  *
-  * \liBindeAufgabeEin{1}
-  * \liBindeAufgabeEin{2}
-  * \liBindeAufgabeEin{3}
-  * ```
-  */
+ * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
+ * Aufgaben samt Lösungen einbindet.
+ *
+ * ```latex
+ * \liSetzeExamen{66116}{2021}{03}
+ *
+ * \liSetzeExamenThemaNr{1}
+ *
+ * \liSetzeExamenTeilaufgabeNr{1}
+ *
+ * \liBindeAufgabeEin{1}
+ * \liBindeAufgabeEin{2}
+ * \liBindeAufgabeEin{3}
+ * ```
+ */
 function erzeugeExamensLösung(examen) {
     log_1.logger.log('debug', 'Besuche Examen %s', examen.referenz);
     const baum = examen.aufgabenBaum;
@@ -138,13 +138,13 @@ function erzeugeExamensLösung(examen) {
     }
     log_1.logger.verbose(examen.pfad);
     const textKörper = baum.registriereBesucher({
-        thema(nummer) {
+        besucheThema(nummer) {
             return `\n\n\\liSetzeExamenThemaNr{${nummer}}`;
         },
-        teilaufgabe(nummer) {
+        besucheTeilaufgabe(nummer) {
             return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`;
         },
-        aufgabe(nummer) {
+        besucheAufgabe(nummer) {
             return `\\liBindeAufgabeEin{${nummer}}`;
         }
     });
@@ -166,14 +166,14 @@ function erzeugeExamensLösung(examen) {
     }
 }
 /**
-  * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
-  * Aufgaben samt Lösungen einbindet.
-  */
+ * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
+ * Aufgaben samt Lösungen einbindet.
+ */
 function erzeugeExamensLösungen() {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
     aufgabe_1.gibAufgabenSammlung();
     const examenSammlung = examen_1.gibExamenSammlung();
-    const examenBaum = examenSammlung.examenBaum;
+    const examenBaum = examenSammlung.baum;
     for (const nummer in examenBaum) {
         for (const jahr in examenBaum[nummer]) {
             for (const monat in examenBaum[nummer][jahr]) {

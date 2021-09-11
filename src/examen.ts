@@ -256,24 +256,32 @@ export class Examen {
   }
 }
 
-type BesucherFunktion = (
-  nummer: number,
-  examen?: Examen,
-  aufgabe?: ExamensAufgabe
-) => string | undefined
+interface ExamensAufgabenBesucher {
+  besucheThema?: (
+    nummer: number,
+    examen?: Examen,
+    aufgabe?: ExamensAufgabe
+  ) => string | undefined
 
-interface BesucherFunktionsSammlung {
-  thema?: BesucherFunktion
-  teilaufgabe?: BesucherFunktion
-  aufgabe?: BesucherFunktion
+  besucheTeilaufgabe?: (
+    nummer: number,
+    examen?: Examen,
+    aufgabe?: ExamensAufgabe
+  ) => string | undefined
+
+  besucheAufgabe?: (
+    nummer: number,
+    examen?: Examen,
+    aufgabe?: ExamensAufgabe
+  ) => string | undefined
 }
 
-interface ExamensBaum {
-  [referenz: string]: ExamensBaum | Examen
-}
-
-interface AufgabenBaum {
-  [aufgabe: string]: AufgabenBaum | Aufgabe
+/**
+ * Interface für das Objekt, dass den rekursiven Baum mit den
+ * ExamsAufgaben-Objekten enthält.
+ */
+interface ExamenAufgabenBaumBehälter {
+  [aufgabe: string]: ExamenAufgabenBaumBehälter | Aufgabe
 }
 
 /**
@@ -301,7 +309,7 @@ interface AufgabenBaum {
  * ```
  */
 class ExamenAufgabenBaum {
-  baum?: AufgabenBaum
+  baum?: ExamenAufgabenBaumBehälter
 
   examen: Examen
 
@@ -310,31 +318,13 @@ class ExamenAufgabenBaum {
     this.baum = this.baue(examen.aufgaben)
   }
 
-  /**
-   * ```js
-   * {
-   *   'Thema 1': {
-   *     'Teilaufgabe 1': {
-   *       'Aufgabe 3': aufgabe,
-   *       'Aufgabe 4': aufgabe
-   *     },
-   *     'Teilaufgabe 2': {
-   *       'Aufgabe 2': aufgabe,
-   *       'Aufgabe 4': aufgabe
-   *     }
-   *   },
-   *   'Thema 2': {
-   *     'Teilaufgabe 2': {
-   *       'Aufgabe 2': aufgabe,
-   *       'Aufgabe 5': aufgabe
-   *     }
-   *   }
-   * }
-   * ```
-   */
+  public gib (): ExamenAufgabenBaumBehälter | undefined {
+    return this.baum
+  }
+
   private baue (aufgaben: {
     [pfad: string]: Aufgabe
-  }): AufgabenBaum | undefined {
+  }): ExamenAufgabenBaumBehälter | undefined {
     const aufgabenPfade = Object.keys(aufgaben)
 
     if (aufgabenPfade.length === 0) {
@@ -357,7 +347,7 @@ class ExamenAufgabenBaum {
 
     aufgabenPfade.sort(collator.compare)
 
-    const baum: AufgabenBaum = {}
+    const baum: ExamenAufgabenBaumBehälter = {}
     for (const pfad of aufgabenPfade) {
       const aufgabenPfad = pfad.replace(
         this.examen.verzeichnisRelativ + path.sep,
@@ -370,7 +360,7 @@ class ExamenAufgabenBaum {
       ) {
         const aufgabe = aufgaben[pfad]
         const segmente = aufgabenPfad.split(path.sep)
-        let unterBaum: AufgabenBaum = baum
+        let unterBaum: ExamenAufgabenBaumBehälter = baum
         for (const segment of segmente) {
           const segmentLesbar = macheSegmenteLesbar(segment)
           if (unterBaum[segmentLesbar] == null && !segment.includes('.tex')) {
@@ -379,7 +369,7 @@ class ExamenAufgabenBaum {
             unterBaum[segmentLesbar] = aufgabe
           }
           if (!segment.includes('.tex')) {
-            unterBaum = unterBaum[segmentLesbar] as AufgabenBaum
+            unterBaum = unterBaum[segmentLesbar] as ExamenAufgabenBaumBehälter
           }
         }
       }
@@ -396,7 +386,7 @@ class ExamenAufgabenBaum {
    * @returns Die gesammelten String-Ergebnisse, der einzelnen
    * Besucher-Funktionen-Aufrufe
    */
-  registriereBesucher (besucher: BesucherFunktionsSammlung): string | undefined {
+  registriereBesucher (besucher: ExamensAufgabenBesucher): string | undefined {
     const baum = this.baum as any
 
     if (baum == null) {
@@ -419,16 +409,16 @@ class ExamenAufgabenBaum {
     ): void => {
       const nr = extrahiereNummer(titel)
       if (titel.indexOf('Thema ') === 0) {
-        if (besucher.thema != null) {
-          ausgabe.sammle(besucher.thema(nr, this.examen, aufgabe))
+        if (besucher.besucheThema != null) {
+          ausgabe.sammle(besucher.besucheThema(nr, this.examen, aufgabe))
         }
       } else if (titel.indexOf('Teilaufgabe ') === 0) {
-        if (besucher.teilaufgabe != null) {
-          ausgabe.sammle(besucher.teilaufgabe(nr, this.examen, aufgabe))
+        if (besucher.besucheTeilaufgabe != null) {
+          ausgabe.sammle(besucher.besucheTeilaufgabe(nr, this.examen, aufgabe))
         }
       } else if (titel.indexOf('Aufgabe ') === 0) {
-        if (besucher.aufgabe != null) {
-          ausgabe.sammle(besucher.aufgabe(nr, this.examen, aufgabe))
+        if (besucher.besucheAufgabe != null) {
+          ausgabe.sammle(besucher.besucheAufgabe(nr, this.examen, aufgabe))
         }
       }
     }
@@ -455,8 +445,31 @@ class ExamenAufgabenBaum {
   }
 }
 
+/**
+ * Interface für das Objekt, dass den rekursiven Baum mit den Examen-Objekten
+ * enthält.
+ */
+interface ExamenBaumBehälter {
+  [referenz: string]: ExamenBaumBehälter | Examen
+}
+
+interface ExamenBesucher {
+  besucheNr?: (nummer: number) => string | undefined
+
+  besucheJahr?: (jahr: number, nummer: number) => string | undefined
+
+  besucheExamen?: (
+    examen: Examen,
+    monat: number,
+    jahr: number,
+    nummer: number
+  ) => string | undefined
+}
+
 export class ExamenSammlung {
-  private readonly speicher: { [referenz: string]: Examen }
+  public readonly speicher: { [referenz: string]: Examen }
+
+  private examenBaum?: ExamenBaum
 
   constructor () {
     const dateien = glob.sync('**/Scan.pdf', { cwd: repositoryPfad })
@@ -489,15 +502,41 @@ export class ExamenSammlung {
    * }
    * ```
    */
-  get examenBaum (): ExamensBaum {
-    const referenzen = Object.keys(this.speicher)
+  get baum (): ExamenBaumBehälter {
+    if (this.examenBaum == null) {
+      this.examenBaum = new ExamenBaum(this)
+    }
+    return this.examenBaum.baum
+  }
+}
+
+class ExamenBaum {
+  sammlung: ExamenSammlung
+
+  baum: ExamenBaumBehälter
+  constructor (sammlung: ExamenSammlung) {
+    this.sammlung = sammlung
+    this.baum = this.baue()
+  }
+
+  /**
+   * @returns
+   *
+   * ```js
+   * {
+   *    '66116' : { '2021': { '03': Examen } }
+   * }
+   * ```
+   */
+  private baue (): ExamenBaumBehälter {
+    const referenzen = Object.keys(this.sammlung.speicher)
     referenzen.sort(undefined)
 
-    const baum: ExamensBaum = {}
+    const baum: ExamenBaumBehälter = {}
     for (const referenz of referenzen) {
-      const examen = this.speicher[referenz]
+      const examen = this.sammlung.speicher[referenz]
       const segmente = referenz.split(':')
-      let unterBaum: ExamensBaum = baum
+      let unterBaum: ExamenBaumBehälter = baum
       for (const segment of segmente) {
         if (unterBaum[segment] == null) {
           unterBaum[segment] = {}
@@ -506,11 +545,40 @@ export class ExamenSammlung {
         if (segment === '03' || segment === '09') {
           unterBaum[segment] = examen
         } else {
-          unterBaum = unterBaum[segment] as ExamensBaum
+          unterBaum = unterBaum[segment] as ExamenBaumBehälter
         }
       }
     }
     return baum
+  }
+
+  registriereBesucher (besucher: ExamenBesucher): string {
+    const examenBaum = examenSammlung.baum as any
+    const ausgabe = new AusgabeSammler()
+    for (const nummer in examenBaum) {
+      if (besucher.besucheNr != null) {
+        ausgabe.sammle(besucher.besucheNr(parseInt(nummer)))
+      }
+      for (const jahr in examenBaum[nummer]) {
+        if (besucher.besucheJahr != null) {
+          ausgabe.sammle(besucher.besucheJahr(parseInt(jahr), parseInt(nummer)))
+        }
+        for (const monat in examenBaum[nummer][jahr]) {
+          if (besucher.besucheExamen != null) {
+            const examen = examenBaum[nummer][jahr][monat]
+            ausgabe.sammle(
+              besucher.besucheExamen(
+                examen,
+                parseInt(monat),
+                parseInt(jahr),
+                parseInt(nummer)
+              )
+            )
+          }
+        }
+      }
+    }
+    return ausgabe.gibText()
   }
 }
 

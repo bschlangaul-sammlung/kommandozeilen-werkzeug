@@ -211,28 +211,9 @@ class ExamenAufgabenBaum {
         this.examen = examen;
         this.baum = this.baue(examen.aufgaben);
     }
-    /**
-     * ```js
-     * {
-     *   'Thema 1': {
-     *     'Teilaufgabe 1': {
-     *       'Aufgabe 3': aufgabe,
-     *       'Aufgabe 4': aufgabe
-     *     },
-     *     'Teilaufgabe 2': {
-     *       'Aufgabe 2': aufgabe,
-     *       'Aufgabe 4': aufgabe
-     *     }
-     *   },
-     *   'Thema 2': {
-     *     'Teilaufgabe 2': {
-     *       'Aufgabe 2': aufgabe,
-     *       'Aufgabe 5': aufgabe
-     *     }
-     *   }
-     * }
-     * ```
-     */
+    gib() {
+        return this.baum;
+    }
     baue(aufgaben) {
         const aufgabenPfade = Object.keys(aufgaben);
         if (aufgabenPfade.length === 0) {
@@ -299,18 +280,18 @@ class ExamenAufgabenBaum {
         const rufeBesucherFunktionAuf = (titel, aufgabe) => {
             const nr = extrahiereNummer(titel);
             if (titel.indexOf('Thema ') === 0) {
-                if (besucher.thema != null) {
-                    ausgabe.sammle(besucher.thema(nr, this.examen, aufgabe));
+                if (besucher.besucheThema != null) {
+                    ausgabe.sammle(besucher.besucheThema(nr, this.examen, aufgabe));
                 }
             }
             else if (titel.indexOf('Teilaufgabe ') === 0) {
-                if (besucher.teilaufgabe != null) {
-                    ausgabe.sammle(besucher.teilaufgabe(nr, this.examen, aufgabe));
+                if (besucher.besucheTeilaufgabe != null) {
+                    ausgabe.sammle(besucher.besucheTeilaufgabe(nr, this.examen, aufgabe));
                 }
             }
             else if (titel.indexOf('Aufgabe ') === 0) {
-                if (besucher.aufgabe != null) {
-                    ausgabe.sammle(besucher.aufgabe(nr, this.examen, aufgabe));
+                if (besucher.besucheAufgabe != null) {
+                    ausgabe.sammle(besucher.besucheAufgabe(nr, this.examen, aufgabe));
                 }
             }
         };
@@ -357,12 +338,34 @@ class ExamenSammlung {
      * }
      * ```
      */
-    get examenBaum() {
-        const referenzen = Object.keys(this.speicher);
+    get baum() {
+        if (this.examenBaum == null) {
+            this.examenBaum = new ExamenBaum(this);
+        }
+        return this.examenBaum.baum;
+    }
+}
+exports.ExamenSammlung = ExamenSammlung;
+class ExamenBaum {
+    constructor(sammlung) {
+        this.sammlung = sammlung;
+        this.baum = this.baue();
+    }
+    /**
+     * @returns
+     *
+     * ```js
+     * {
+     *    '66116' : { '2021': { '03': Examen } }
+     * }
+     * ```
+     */
+    baue() {
+        const referenzen = Object.keys(this.sammlung.speicher);
         referenzen.sort(undefined);
         const baum = {};
         for (const referenz of referenzen) {
-            const examen = this.speicher[referenz];
+            const examen = this.sammlung.speicher[referenz];
             const segmente = referenz.split(':');
             let unterBaum = baum;
             for (const segment of segmente) {
@@ -379,8 +382,28 @@ class ExamenSammlung {
         }
         return baum;
     }
+    registriereBesucher(besucher) {
+        const examenBaum = examenSammlung.baum;
+        const ausgabe = new helfer_1.AusgabeSammler();
+        for (const nummer in examenBaum) {
+            if (besucher.besucheNr != null) {
+                ausgabe.sammle(besucher.besucheNr(parseInt(nummer)));
+            }
+            for (const jahr in examenBaum[nummer]) {
+                if (besucher.besucheJahr != null) {
+                    ausgabe.sammle(besucher.besucheJahr(parseInt(jahr), parseInt(nummer)));
+                }
+                for (const monat in examenBaum[nummer][jahr]) {
+                    if (besucher.besucheExamen != null) {
+                        const examen = examenBaum[nummer][jahr][monat];
+                        ausgabe.sammle(besucher.besucheExamen(examen, parseInt(monat), parseInt(jahr), parseInt(nummer)));
+                    }
+                }
+            }
+        }
+        return ausgabe.gibText();
+    }
 }
-exports.ExamenSammlung = ExamenSammlung;
 // auch in .tex/pakete/basis.sty
 exports.examensTitel = {
     46110: 'Grundlagen der Informatik (nicht vertieft)',
