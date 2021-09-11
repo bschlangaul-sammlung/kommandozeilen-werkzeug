@@ -31,6 +31,12 @@ class Examen {
         this.monat = monat;
     }
     /**
+     * Zeigt an, ob das Examen Aufgaben hat.
+     */
+    get hatAufgaben() {
+        return Object.keys(this.aufgaben).length > 1;
+    }
+    /**
      * Der Pfad zum Scan
      *
      * z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09/Scan.pdf`
@@ -168,114 +174,10 @@ class Examen {
             monat: tmp[2]
         };
     }
-    /**
-     * ```js
-     * {
-     *   'Thema 1': {
-     *     'Teilaufgabe 1': {
-     *       'Aufgabe 3': aufgabe,
-     *       'Aufgabe 4': aufgabe
-     *     },
-     *     'Teilaufgabe 2': {
-     *       'Aufgabe 2': aufgabe,
-     *       'Aufgabe 4': aufgabe
-     *     }
-     *   },
-     *   'Thema 2': {
-     *     'Teilaufgabe 2': {
-     *       'Aufgabe 2': aufgabe,
-     *       'Aufgabe 5': aufgabe
-     *     }
-     *   }
-     * }
-     * ```
-     */
     get aufgabenBaum() {
-        const aufgabenPfade = Object.keys(this.aufgaben);
-        if (aufgabenPfade.length === 0) {
-            return;
+        if (this.hatAufgaben) {
+            return new ExamenAufgabenBaum(this);
         }
-        /**
-         * Thema-1: Thema 1
-         * Teilaufgabe-2: Teilaufgabe 2
-         * Aufgabe-3.tex: Aufgabe 3
-         */
-        function macheSegmenteLesbar(segment) {
-            return segment.replace('-', ' ').replace('.tex', '');
-        }
-        var collator = new Intl.Collator(undefined, {
-            numeric: true,
-            sensitivity: 'base'
-        });
-        aufgabenPfade.sort(collator.compare);
-        const baum = {};
-        for (const pfad of aufgabenPfade) {
-            const aufgabenPfad = pfad.replace(this.verzeichnisRelativ + path_1.default.sep, '');
-            if (aufgabenPfad.match(/(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/) != null) {
-                const aufgabe = this.aufgaben[pfad];
-                const segmente = aufgabenPfad.split(path_1.default.sep);
-                let unterBaum = baum;
-                for (const segment of segmente) {
-                    const segmentLesbar = macheSegmenteLesbar(segment);
-                    if (unterBaum[segmentLesbar] == null && !segment.includes('.tex')) {
-                        unterBaum[segmentLesbar] = {};
-                    }
-                    else if (segment.includes('.tex')) {
-                        unterBaum[segmentLesbar] = aufgabe;
-                    }
-                    if (!segment.includes('.tex')) {
-                        unterBaum = unterBaum[segmentLesbar];
-                    }
-                }
-            }
-        }
-        return baum;
-    }
-    besucheAufgabenBaum(besucher) {
-        const baum = this.aufgabenBaum;
-        if (baum == null) {
-            return;
-        }
-        const ausgabe = new helfer_1.AusgabeSammler();
-        function extrahiereNummer(titel) {
-            const match = titel.match(/\d+/);
-            if (match != null) {
-                return parseInt(match[0]);
-            }
-            throw new Error('Konte keine Zahl finden');
-        }
-        const rufeBesucherFunktionAuf = (titel, aufgabe) => {
-            const nr = extrahiereNummer(titel);
-            if (titel.indexOf('Thema ') === 0) {
-                if (besucher.thema != null) {
-                    ausgabe.sammle(besucher.thema(nr, this, aufgabe));
-                }
-            }
-            else if (titel.indexOf('Teilaufgabe ') === 0) {
-                if (besucher.teilaufgabe != null) {
-                    ausgabe.sammle(besucher.teilaufgabe(nr, this, aufgabe));
-                }
-            }
-            else if (titel.indexOf('Aufgabe ') === 0) {
-                if (besucher.aufgabe != null) {
-                    ausgabe.sammle(besucher.aufgabe(nr, this, aufgabe));
-                }
-            }
-        };
-        for (const thema in baum) {
-            rufeBesucherFunktionAuf(thema, baum[thema]);
-            if (!(baum[thema] instanceof aufgabe_1.ExamensAufgabe)) {
-                for (const teilaufgabe in baum[thema]) {
-                    rufeBesucherFunktionAuf(teilaufgabe, baum[thema][teilaufgabe]);
-                    if (!(baum[thema][teilaufgabe] instanceof aufgabe_1.ExamensAufgabe)) {
-                        for (const aufgabe in baum[thema][teilaufgabe]) {
-                            rufeBesucherFunktionAuf(aufgabe, baum[thema][teilaufgabe][aufgabe]);
-                        }
-                    }
-                }
-            }
-        }
-        return ausgabe.gibText();
     }
 }
 exports.Examen = Examen;
@@ -283,11 +185,31 @@ Examen.regExp = /^.*(?<nummer>\d{5})\/(?<jahr>\d{4})\/(?<monat>\d{2})\/.*$/;
 /**
  * Die Aufgaben eines Examens in einer rekursiven Baumdarstellung
  * präsentiert.
+ * ```js
+ * {
+ *   'Thema 1': {
+ *     'Teilaufgabe 1': {
+ *       'Aufgabe 3': aufgabe,
+ *       'Aufgabe 4': aufgabe
+ *     },
+ *     'Teilaufgabe 2': {
+ *       'Aufgabe 2': aufgabe,
+ *       'Aufgabe 4': aufgabe
+ *     }
+ *   },
+ *   'Thema 2': {
+ *     'Teilaufgabe 2': {
+ *       'Aufgabe 2': aufgabe,
+ *       'Aufgabe 5': aufgabe
+ *     }
+ *   }
+ * }
+ * ```
  */
 class ExamenAufgabenBaum {
     constructor(examen) {
         this.examen = examen;
-        this.aufgabenBaum = this.baueAufgabenBaum(examen.aufgaben);
+        this.baum = this.baue(examen.aufgaben);
     }
     /**
      * ```js
@@ -311,7 +233,7 @@ class ExamenAufgabenBaum {
      * }
      * ```
      */
-    baueAufgabenBaum(aufgaben) {
+    baue(aufgaben) {
         const aufgabenPfade = Object.keys(aufgaben);
         if (aufgabenPfade.length === 0) {
             return;
@@ -352,8 +274,17 @@ class ExamenAufgabenBaum {
         }
         return baum;
     }
-    besucheAufgabenBaum(besucher) {
-        const baum = this.aufgabenBaum;
+    /**
+     * Registiere die verschiedenen Besucher-Funktionen, die dann aufgerufen
+     * werden sobald eine Aufgabe besucht wird.
+     *
+     * @param besucher - Die Besucher-Funktionen als Objekt.
+     *
+     * @returns Die gesammelten String-Ergebnisse, der einzelnen
+     * Besucher-Funktionen-Aufrufe
+     */
+    registriereBesucher(besucher) {
+        const baum = this.baum;
         if (baum == null) {
             return;
         }
@@ -363,7 +294,7 @@ class ExamenAufgabenBaum {
             if (match != null) {
                 return parseInt(match[0]);
             }
-            throw new Error('Konte keine Zahl finden');
+            throw new Error('Konnte keine Zahl finden');
         }
         const rufeBesucherFunktionAuf = (titel, aufgabe) => {
             const nr = extrahiereNummer(titel);

@@ -33,8 +33,8 @@ describe('examen.js', function () {
 
     it('Attribut „aufgabenBaum“', function () {
       const examen = sammlung.gibDurchReferenz('66116:2021:03')
-      const aufgabe =
-        examen.aufgabenBaum['Thema 1']['Teilaufgabe 1']['Aufgabe 1']
+      const baum = examen.aufgabenBaum.baum
+      const aufgabe = baum['Thema 1']['Teilaufgabe 1']['Aufgabe 1']
       assert.strictEqual(aufgabe.thema, 1)
       assert.strictEqual(aufgabe.teilaufgabe, 1)
       assert.strictEqual(aufgabe.aufgabe, 1)

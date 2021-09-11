@@ -28,12 +28,18 @@ import { schreibeTexDatei, machePlist } from '../tex'
   *```
   */
 function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
+  const baum = examen.aufgabenBaum
+  if (baum == null) {
+    logger.log('debug', 'Examen hat keine Aufgaben')
+    return ''
+  }
+
   function rückeEin (): string {
     return ' '.repeat(4 * ebene) + '- '
   }
 
   let ebene = 1
-  const ausgabe = examen.besucheAufgabenBaum({
+  const ausgabe = baum.registriereBesucher({
     thema (nummer: number): string {
       ebene = 1
       const ausgabe = rückeEin() + `Thema ${nummer}`
@@ -149,8 +155,14 @@ export function erzeugeExamenScansSammlung (): void {
 function erzeugeExamensLösung (examen: Examen): void {
   logger.log('debug', 'Besuche Examen %s', examen.referenz)
 
+  const baum = examen.aufgabenBaum
+  if (baum == null) {
+    logger.log('debug', 'Examen hat keine Aufgaben')
+    return
+  }
+
   logger.verbose(examen.pfad)
-  const textKörper = examen.besucheAufgabenBaum({
+  const textKörper = baum.registriereBesucher({
     thema (nummer: number): string {
       return `\n\n\\liSetzeExamenThemaNr{${nummer}}`
     },

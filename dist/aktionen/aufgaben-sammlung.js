@@ -25,11 +25,16 @@ const tex_1 = require("../tex");
   *```
   */
 function erzeugeAufgabenBaumMarkdown(examen) {
+    const baum = examen.aufgabenBaum;
+    if (baum == null) {
+        log_1.logger.log('debug', 'Examen hat keine Aufgaben');
+        return '';
+    }
     function rückeEin() {
         return ' '.repeat(4 * ebene) + '- ';
     }
     let ebene = 1;
-    const ausgabe = examen.besucheAufgabenBaum({
+    const ausgabe = baum.registriereBesucher({
         thema(nummer) {
             ebene = 1;
             const ausgabe = rückeEin() + `Thema ${nummer}`;
@@ -126,8 +131,13 @@ exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
   */
 function erzeugeExamensLösung(examen) {
     log_1.logger.log('debug', 'Besuche Examen %s', examen.referenz);
+    const baum = examen.aufgabenBaum;
+    if (baum == null) {
+        log_1.logger.log('debug', 'Examen hat keine Aufgaben');
+        return;
+    }
     log_1.logger.verbose(examen.pfad);
-    const textKörper = examen.besucheAufgabenBaum({
+    const textKörper = baum.registriereBesucher({
         thema(nummer) {
             return `\n\n\\liSetzeExamenThemaNr{${nummer}}`;
         },
