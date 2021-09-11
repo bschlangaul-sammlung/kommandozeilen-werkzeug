@@ -319,6 +319,7 @@ class ExamenSammlung {
             const examen = Examen.erzeugeExamenVonPfad(pfad);
             this.speicher[examen.referenz] = examen;
         }
+        this.examenBaum = new ExamenBaum(this);
     }
     gib(nummer, jahr, monat) {
         return this.gibDurchReferenz(`${nummer}:${jahr}:${monat}`);
@@ -339,13 +340,22 @@ class ExamenSammlung {
      * ```
      */
     get baum() {
-        if (this.examenBaum == null) {
-            this.examenBaum = new ExamenBaum(this);
-        }
         return this.examenBaum.baum;
     }
 }
 exports.ExamenSammlung = ExamenSammlung;
+/**
+ * ```js
+ * {
+ *    '66116' : {
+ *      '2021': {
+ *        '03': Examen,
+ *        '09': Examen
+ *     }
+ *   }
+ * }
+ * ```
+ */
 class ExamenBaum {
     constructor(sammlung) {
         this.sammlung = sammlung;
@@ -382,23 +392,26 @@ class ExamenBaum {
         }
         return baum;
     }
-    registriereBesucher(besucher) {
+    besuche(besucher) {
         const examenBaum = examenSammlung.baum;
         const ausgabe = new helfer_1.AusgabeSammler();
         for (const nummer in examenBaum) {
-            if (besucher.besucheNr != null) {
-                ausgabe.sammle(besucher.besucheNr(parseInt(nummer)));
+            if (besucher.betreteEinzelprüfungsNr != null) {
+                ausgabe.sammle(besucher.betreteEinzelprüfungsNr(parseInt(nummer)));
             }
             for (const jahr in examenBaum[nummer]) {
-                if (besucher.besucheJahr != null) {
-                    ausgabe.sammle(besucher.besucheJahr(parseInt(jahr), parseInt(nummer)));
+                if (besucher.betreteJahr != null) {
+                    ausgabe.sammle(besucher.betreteJahr(parseInt(jahr), parseInt(nummer)));
                 }
                 for (const monat in examenBaum[nummer][jahr]) {
-                    if (besucher.besucheExamen != null) {
+                    if (besucher.betreteExamen != null) {
                         const examen = examenBaum[nummer][jahr][monat];
-                        ausgabe.sammle(besucher.besucheExamen(examen, parseInt(monat), parseInt(jahr), parseInt(nummer)));
+                        ausgabe.sammle(besucher.betreteExamen(examen, parseInt(monat), parseInt(jahr), parseInt(nummer)));
                     }
                 }
+            }
+            if (besucher.verlasseEinzelprüfungsNr != null) {
+                ausgabe.sammle(besucher.verlasseEinzelprüfungsNr(parseInt(nummer)));
             }
         }
         return ausgabe.gibText();

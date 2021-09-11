@@ -148,6 +148,13 @@ class AusgabeSammler {
             this.speicher.push(ausgabe);
         }
     }
+    /**
+     * Leeren den Ausgabenspeicher. Dabei wir keine neues Feld erzeugt, sondern
+     * alle Einträge aus dem Array gelöscht.
+     */
+    leere() {
+        this.speicher.splice(0, this.speicher.length);
+    }
     gibText() {
         return this.speicher.join('\n');
     }

@@ -2,17 +2,14 @@
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
 
-import path from 'path'
 import { ExamensAufgabe, gibAufgabenSammlung } from '../aufgabe'
 import { logger } from '../log'
-
 import { gibExamenSammlung, Examen } from '../examen'
 import {
-  repositoryPfad,
-  macheRelativenPfad,
   macheRepoPfad,
   löscheDatei,
-  AusgabeSammler
+  AusgabeSammler,
+  macheRelativenPfad
 } from '../helfer'
 import { schreibeTexDatei, machePlist } from '../tex'
 
@@ -101,39 +98,45 @@ export function generiereExamensÜbersicht (): string {
 }
 
 /**
- * Erzeugt eine TeX-Datei, die alle Examens-Scanns eines bestimmten Fachs (z. B.
+ * Erzeugt eine TeX-Datei, die alle Examens-Scans eines bestimmten Fachs (z. B.
  * 65116) als eine PDF-Datei zusammenfasst.
  */
 export function erzeugeExamenScansSammlung (): void {
   const examenSammlung = gibExamenSammlung()
-  const examenBaum = examenSammlung.baum as any
-  for (const nummer in examenBaum) {
-    const ausgabe = new AusgabeSammler()
-    const nummernPfad = path.join(repositoryPfad, 'Staatsexamen', nummer)
-    for (const jahr in examenBaum[nummer]) {
-      const jahrPfad = path.join(nummernPfad, jahr)
-      for (const monat in examenBaum[nummer][jahr]) {
-        const examen = gibExamenSammlung().gib(nummer, jahr, monat)
-        ausgabe.sammle(`\n\\liTrennSeite{${examen.jahreszeit} ${examen.jahr}}`)
-        const scanPfad = macheRelativenPfad(
-          path.join(jahrPfad, monat, 'Scan.pdf')
-        )
-        const includePdf = `\\liBindePdfEin{${scanPfad}}`
-        ausgabe.sammle(includePdf)
-      }
-    }
-    const textKörper = ausgabe.gibText()
-    const kopf =
-      `\\liPruefungsNummer{${nummer}}\n` +
-      `\\liPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`
 
-    schreibeTexDatei(
-      macheRepoPfad('Staatsexamen', nummer, 'Examensammlung.tex'),
-      'examen-scans',
-      kopf,
-      textKörper
-    )
+  const baum = examenSammlung.examenBaum
+  if (baum == null) {
+    logger.log('info', 'Konnte keinen Examensbaum aufbauen')
+    return
   }
+
+  const ausgabe = new AusgabeSammler()
+
+  baum.besuche({
+    betreteEinzelprüfungsNr (nummer: number): undefined {
+      ausgabe.leere()
+      return undefined
+    },
+    betreteExamen (examen: Examen, monat: number, nummer: number): undefined {
+      ausgabe.sammle(`\n\\liTrennSeite{${examen.jahreszeit} ${examen.jahr}}`)
+      ausgabe.sammle(`\\liBindePdfEin{${macheRelativenPfad(examen.pfad)}}`)
+      return undefined
+    },
+    verlasseEinzelprüfungsNr (nummer: number): undefined {
+      const textKörper = ausgabe.gibText()
+      const kopf =
+        `\\liPruefungsNummer{${nummer}}\n` +
+        `\\liPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`
+
+      schreibeTexDatei(
+        macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'),
+        'examen-scans',
+        kopf,
+        textKörper
+      )
+      return undefined
+    }
+  })
 }
 
 /**

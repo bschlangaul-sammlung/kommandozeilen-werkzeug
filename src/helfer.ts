@@ -151,14 +151,14 @@ export function öffneVSCode (pfad: string): void {
  * und dann per Join über Zeileumbrüche zusammenzufügen.
  */
 export class AusgabeSammler {
-  speicher: string[]
-  redselig: boolean
+  private readonly speicher: string[]
+  private readonly redselig: boolean
   constructor (redselig = false) {
     this.speicher = []
     this.redselig = redselig
   }
 
-  sammle (ausgabe: string | undefined): void {
+  public sammle (ausgabe: string | undefined): void {
     if (this.redselig) {
       console.log(ausgabe)
     }
@@ -167,7 +167,15 @@ export class AusgabeSammler {
     }
   }
 
-  gibText (): string {
+  /**
+   * Leeren den Ausgabenspeicher. Dabei wir keine neues Feld erzeugt, sondern
+   * alle Einträge aus dem Array gelöscht.
+   */
+  public leere (): void {
+    this.speicher.splice(0, this.speicher.length)
+  }
+
+  public gibText (): string {
     return this.speicher.join('\n')
   }
 }

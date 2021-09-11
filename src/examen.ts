@@ -453,23 +453,10 @@ interface ExamenBaumBehälter {
   [referenz: string]: ExamenBaumBehälter | Examen
 }
 
-interface ExamenBesucher {
-  besucheNr?: (nummer: number) => string | undefined
-
-  besucheJahr?: (jahr: number, nummer: number) => string | undefined
-
-  besucheExamen?: (
-    examen: Examen,
-    monat: number,
-    jahr: number,
-    nummer: number
-  ) => string | undefined
-}
-
 export class ExamenSammlung {
   public readonly speicher: { [referenz: string]: Examen }
 
-  private examenBaum?: ExamenBaum
+  public examenBaum: ExamenBaum
 
   constructor () {
     const dateien = glob.sync('**/Scan.pdf', { cwd: repositoryPfad })
@@ -479,6 +466,8 @@ export class ExamenSammlung {
       const examen = Examen.erzeugeExamenVonPfad(pfad)
       this.speicher[examen.referenz] = examen
     }
+
+    this.examenBaum = new ExamenBaum(this)
   }
 
   gib (nummer: string, jahr: string, monat: string): Examen {
@@ -503,13 +492,44 @@ export class ExamenSammlung {
    * ```
    */
   get baum (): ExamenBaumBehälter {
-    if (this.examenBaum == null) {
-      this.examenBaum = new ExamenBaum(this)
-    }
     return this.examenBaum.baum
   }
 }
 
+interface ExamenBesucher {
+  /**
+   * Besuche / betrete die einzelnen Einzelprüfungsnummer.
+   */
+  betreteEinzelprüfungsNr?: (nummer: number) => string | undefined
+
+  betreteJahr?: (jahr: number, nummer: number) => string | undefined
+
+  betreteExamen?: (
+    examen: Examen,
+    monat: number,
+    jahr: number,
+    nummer: number
+  ) => string | undefined
+
+  /**
+   * Verlasse die einzelnen Einzelprüfungsnummer. Zuvor wurden alle Jahre und
+   * Monate / Examen besucht.
+   */
+  verlasseEinzelprüfungsNr?: (nummer: number) => string | undefined
+}
+
+/**
+ * ```js
+ * {
+ *    '66116' : {
+ *      '2021': {
+ *        '03': Examen,
+ *        '09': Examen
+ *     }
+ *   }
+ * }
+ * ```
+ */
 class ExamenBaum {
   sammlung: ExamenSammlung
 
@@ -552,22 +572,22 @@ class ExamenBaum {
     return baum
   }
 
-  registriereBesucher (besucher: ExamenBesucher): string {
+  besuche (besucher: ExamenBesucher): string {
     const examenBaum = examenSammlung.baum as any
     const ausgabe = new AusgabeSammler()
     for (const nummer in examenBaum) {
-      if (besucher.besucheNr != null) {
-        ausgabe.sammle(besucher.besucheNr(parseInt(nummer)))
+      if (besucher.betreteEinzelprüfungsNr != null) {
+        ausgabe.sammle(besucher.betreteEinzelprüfungsNr(parseInt(nummer)))
       }
       for (const jahr in examenBaum[nummer]) {
-        if (besucher.besucheJahr != null) {
-          ausgabe.sammle(besucher.besucheJahr(parseInt(jahr), parseInt(nummer)))
+        if (besucher.betreteJahr != null) {
+          ausgabe.sammle(besucher.betreteJahr(parseInt(jahr), parseInt(nummer)))
         }
         for (const monat in examenBaum[nummer][jahr]) {
-          if (besucher.besucheExamen != null) {
+          if (besucher.betreteExamen != null) {
             const examen = examenBaum[nummer][jahr][monat]
             ausgabe.sammle(
-              besucher.besucheExamen(
+              besucher.betreteExamen(
                 examen,
                 parseInt(monat),
                 parseInt(jahr),
@@ -576,6 +596,10 @@ class ExamenBaum {
             )
           }
         }
+      }
+
+      if (besucher.verlasseEinzelprüfungsNr != null) {
+        ausgabe.sammle(besucher.verlasseEinzelprüfungsNr(parseInt(nummer)))
       }
     }
     return ausgabe.gibText()

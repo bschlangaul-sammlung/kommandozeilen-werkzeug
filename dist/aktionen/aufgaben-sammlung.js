@@ -2,12 +2,8 @@
 /**
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
-const path_1 = __importDefault(require("path"));
 const aufgabe_1 = require("../aufgabe");
 const log_1 = require("../log");
 const examen_1 = require("../examen");
@@ -87,30 +83,35 @@ function generiereExamensÜbersicht() {
 }
 exports.generiereExamensÜbersicht = generiereExamensÜbersicht;
 /**
- * Erzeugt eine TeX-Datei, die alle Examens-Scanns eines bestimmten Fachs (z. B.
+ * Erzeugt eine TeX-Datei, die alle Examens-Scans eines bestimmten Fachs (z. B.
  * 65116) als eine PDF-Datei zusammenfasst.
  */
 function erzeugeExamenScansSammlung() {
     const examenSammlung = examen_1.gibExamenSammlung();
-    const examenBaum = examenSammlung.baum;
-    for (const nummer in examenBaum) {
-        const ausgabe = new helfer_1.AusgabeSammler();
-        const nummernPfad = path_1.default.join(helfer_1.repositoryPfad, 'Staatsexamen', nummer);
-        for (const jahr in examenBaum[nummer]) {
-            const jahrPfad = path_1.default.join(nummernPfad, jahr);
-            for (const monat in examenBaum[nummer][jahr]) {
-                const examen = examen_1.gibExamenSammlung().gib(nummer, jahr, monat);
-                ausgabe.sammle(`\n\\liTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
-                const scanPfad = helfer_1.macheRelativenPfad(path_1.default.join(jahrPfad, monat, 'Scan.pdf'));
-                const includePdf = `\\liBindePdfEin{${scanPfad}}`;
-                ausgabe.sammle(includePdf);
-            }
-        }
-        const textKörper = ausgabe.gibText();
-        const kopf = `\\liPruefungsNummer{${nummer}}\n` +
-            `\\liPruefungsTitel{${examen_1.Examen.fachDurchNummer(nummer)}}\n`;
-        tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Staatsexamen', nummer, 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
+    const baum = examenSammlung.examenBaum;
+    if (baum == null) {
+        log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
+        return;
     }
+    const ausgabe = new helfer_1.AusgabeSammler();
+    baum.besuche({
+        betreteEinzelprüfungsNr(nummer) {
+            ausgabe.leere();
+            return undefined;
+        },
+        betreteExamen(examen, monat, nummer) {
+            ausgabe.sammle(`\n\\liTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
+            ausgabe.sammle(`\\liBindePdfEin{${helfer_1.macheRelativenPfad(examen.pfad)}}`);
+            return undefined;
+        },
+        verlasseEinzelprüfungsNr(nummer) {
+            const textKörper = ausgabe.gibText();
+            const kopf = `\\liPruefungsNummer{${nummer}}\n` +
+                `\\liPruefungsTitel{${examen_1.Examen.fachDurchNummer(nummer)}}\n`;
+            tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
+            return undefined;
+        }
+    });
 }
 exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
 /**
