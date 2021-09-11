@@ -395,6 +395,162 @@ interface ExamensBaum {
   [referenz: string]: ExamensBaum | Examen
 }
 
+interface AufgabenBaum {
+  [aufgabe: string]: ExamensAufgabeBaum | Aufgabe
+}
+
+/**
+ * Die Aufgaben eines Examens in einer rekursiven Baumdarstellung
+ * präsentiert.
+ */
+class ExamenAufgabenBaum {
+  aufgabenBaum?: AufgabenBaum
+
+  examen: Examen
+
+  constructor (examen: Examen) {
+    this.examen = examen
+    this.aufgabenBaum = this.baueAufgabenBaum(examen.aufgaben)
+  }
+
+  /**
+   * ```js
+   * {
+   *   'Thema 1': {
+   *     'Teilaufgabe 1': {
+   *       'Aufgabe 3': aufgabe,
+   *       'Aufgabe 4': aufgabe
+   *     },
+   *     'Teilaufgabe 2': {
+   *       'Aufgabe 2': aufgabe,
+   *       'Aufgabe 4': aufgabe
+   *     }
+   *   },
+   *   'Thema 2': {
+   *     'Teilaufgabe 2': {
+   *       'Aufgabe 2': aufgabe,
+   *       'Aufgabe 5': aufgabe
+   *     }
+   *   }
+   * }
+   * ```
+   */
+  baueAufgabenBaum (aufgaben: {
+    [pfad: string]: Aufgabe
+  }): AufgabenBaum | undefined {
+    const aufgabenPfade = Object.keys(aufgaben)
+
+    if (aufgabenPfade.length === 0) {
+      return
+    }
+
+    /**
+     * Thema-1: Thema 1
+     * Teilaufgabe-2: Teilaufgabe 2
+     * Aufgabe-3.tex: Aufgabe 3
+     */
+    function macheSegmenteLesbar (segment: string): string {
+      return segment.replace('-', ' ').replace('.tex', '')
+    }
+
+    var collator = new Intl.Collator(undefined, {
+      numeric: true,
+      sensitivity: 'base'
+    })
+
+    aufgabenPfade.sort(collator.compare)
+
+    const baum: ExamensAufgabeBaum = {}
+    for (const pfad of aufgabenPfade) {
+      const aufgabenPfad = pfad.replace(
+        this.examen.verzeichnisRelativ + path.sep,
+        ''
+      )
+      if (
+        aufgabenPfad.match(
+          /(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/
+        ) != null
+      ) {
+        const aufgabe = aufgaben[pfad]
+        const segmente = aufgabenPfad.split(path.sep)
+        let unterBaum: ExamensAufgabeBaum = baum
+        for (const segment of segmente) {
+          const segmentLesbar = macheSegmenteLesbar(segment)
+          if (unterBaum[segmentLesbar] == null && !segment.includes('.tex')) {
+            unterBaum[segmentLesbar] = {}
+          } else if (segment.includes('.tex')) {
+            unterBaum[segmentLesbar] = aufgabe
+          }
+          if (!segment.includes('.tex')) {
+            unterBaum = unterBaum[segmentLesbar] as ExamensAufgabeBaum
+          }
+        }
+      }
+    }
+    return baum
+  }
+
+  besucheAufgabenBaum (
+    besucher: BesucherFunktionsSammlung
+  ): string | undefined {
+    const baum = this.aufgabenBaum as any
+
+    if (baum == null) {
+      return
+    }
+
+    const ausgabe = new AusgabeSammler()
+
+    function extrahiereNummer (titel: string): number {
+      const match = titel.match(/\d+/)
+      if (match != null) {
+        return parseInt(match[0])
+      }
+      throw new Error('Konte keine Zahl finden')
+    }
+
+    const rufeBesucherFunktionAuf = (
+      titel: string,
+      aufgabe?: ExamensAufgabe
+    ): void => {
+      const nr = extrahiereNummer(titel)
+      if (titel.indexOf('Thema ') === 0) {
+        if (besucher.thema != null) {
+          ausgabe.sammle(besucher.thema(nr, this.examen, aufgabe))
+        }
+      } else if (titel.indexOf('Teilaufgabe ') === 0) {
+        if (besucher.teilaufgabe != null) {
+          ausgabe.sammle(besucher.teilaufgabe(nr, this.examen, aufgabe))
+        }
+      } else if (titel.indexOf('Aufgabe ') === 0) {
+        if (besucher.aufgabe != null) {
+          ausgabe.sammle(besucher.aufgabe(nr, this.examen, aufgabe))
+        }
+      }
+    }
+
+    for (const thema in baum) {
+      rufeBesucherFunktionAuf(thema, baum[thema])
+
+      if (!(baum[thema] instanceof ExamensAufgabe)) {
+        for (const teilaufgabe in baum[thema]) {
+          rufeBesucherFunktionAuf(teilaufgabe, baum[thema][teilaufgabe])
+
+          if (!(baum[thema][teilaufgabe] instanceof ExamensAufgabe)) {
+            for (const aufgabe in baum[thema][teilaufgabe]) {
+              rufeBesucherFunktionAuf(
+                aufgabe,
+                baum[thema][teilaufgabe][aufgabe]
+              )
+            }
+          }
+        }
+      }
+    }
+    return ausgabe.gibText()
+  }
+}
+
 export class ExamenSammlung {
   private readonly speicher: { [referenz: string]: Examen }
 

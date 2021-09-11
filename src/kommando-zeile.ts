@@ -25,7 +25,7 @@ function increaseVerbosity (dummyValue: any, verbosity: number): number {
 
 const programm = new Command()
   .description(`Repository-Pfad: ${repositoryPfad}`)
-  .name('lehramt-informatik.js')
+  .name('bschlangaul-werkzeug.js')
   .version('0.1.0')
   .option(
     '-v, --verbose',

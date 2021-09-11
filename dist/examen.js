@@ -280,6 +280,125 @@ class Examen {
 }
 exports.Examen = Examen;
 Examen.regExp = /^.*(?<nummer>\d{5})\/(?<jahr>\d{4})\/(?<monat>\d{2})\/.*$/;
+/**
+ * Die Aufgaben eines Examens in einer rekursiven Baumdarstellung
+ * präsentiert.
+ */
+class ExamenAufgabenBaum {
+    constructor(examen) {
+        this.examen = examen;
+        this.aufgabenBaum = this.baueAufgabenBaum(examen.aufgaben);
+    }
+    /**
+     * ```js
+     * {
+     *   'Thema 1': {
+     *     'Teilaufgabe 1': {
+     *       'Aufgabe 3': aufgabe,
+     *       'Aufgabe 4': aufgabe
+     *     },
+     *     'Teilaufgabe 2': {
+     *       'Aufgabe 2': aufgabe,
+     *       'Aufgabe 4': aufgabe
+     *     }
+     *   },
+     *   'Thema 2': {
+     *     'Teilaufgabe 2': {
+     *       'Aufgabe 2': aufgabe,
+     *       'Aufgabe 5': aufgabe
+     *     }
+     *   }
+     * }
+     * ```
+     */
+    baueAufgabenBaum(aufgaben) {
+        const aufgabenPfade = Object.keys(aufgaben);
+        if (aufgabenPfade.length === 0) {
+            return;
+        }
+        /**
+         * Thema-1: Thema 1
+         * Teilaufgabe-2: Teilaufgabe 2
+         * Aufgabe-3.tex: Aufgabe 3
+         */
+        function macheSegmenteLesbar(segment) {
+            return segment.replace('-', ' ').replace('.tex', '');
+        }
+        var collator = new Intl.Collator(undefined, {
+            numeric: true,
+            sensitivity: 'base'
+        });
+        aufgabenPfade.sort(collator.compare);
+        const baum = {};
+        for (const pfad of aufgabenPfade) {
+            const aufgabenPfad = pfad.replace(this.examen.verzeichnisRelativ + path_1.default.sep, '');
+            if (aufgabenPfad.match(/(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/) != null) {
+                const aufgabe = aufgaben[pfad];
+                const segmente = aufgabenPfad.split(path_1.default.sep);
+                let unterBaum = baum;
+                for (const segment of segmente) {
+                    const segmentLesbar = macheSegmenteLesbar(segment);
+                    if (unterBaum[segmentLesbar] == null && !segment.includes('.tex')) {
+                        unterBaum[segmentLesbar] = {};
+                    }
+                    else if (segment.includes('.tex')) {
+                        unterBaum[segmentLesbar] = aufgabe;
+                    }
+                    if (!segment.includes('.tex')) {
+                        unterBaum = unterBaum[segmentLesbar];
+                    }
+                }
+            }
+        }
+        return baum;
+    }
+    besucheAufgabenBaum(besucher) {
+        const baum = this.aufgabenBaum;
+        if (baum == null) {
+            return;
+        }
+        const ausgabe = new helfer_1.AusgabeSammler();
+        function extrahiereNummer(titel) {
+            const match = titel.match(/\d+/);
+            if (match != null) {
+                return parseInt(match[0]);
+            }
+            throw new Error('Konte keine Zahl finden');
+        }
+        const rufeBesucherFunktionAuf = (titel, aufgabe) => {
+            const nr = extrahiereNummer(titel);
+            if (titel.indexOf('Thema ') === 0) {
+                if (besucher.thema != null) {
+                    ausgabe.sammle(besucher.thema(nr, this.examen, aufgabe));
+                }
+            }
+            else if (titel.indexOf('Teilaufgabe ') === 0) {
+                if (besucher.teilaufgabe != null) {
+                    ausgabe.sammle(besucher.teilaufgabe(nr, this.examen, aufgabe));
+                }
+            }
+            else if (titel.indexOf('Aufgabe ') === 0) {
+                if (besucher.aufgabe != null) {
+                    ausgabe.sammle(besucher.aufgabe(nr, this.examen, aufgabe));
+                }
+            }
+        };
+        for (const thema in baum) {
+            rufeBesucherFunktionAuf(thema, baum[thema]);
+            if (!(baum[thema] instanceof aufgabe_1.ExamensAufgabe)) {
+                for (const teilaufgabe in baum[thema]) {
+                    rufeBesucherFunktionAuf(teilaufgabe, baum[thema][teilaufgabe]);
+                    if (!(baum[thema][teilaufgabe] instanceof aufgabe_1.ExamensAufgabe)) {
+                        for (const aufgabe in baum[thema][teilaufgabe]) {
+                            rufeBesucherFunktionAuf(aufgabe, baum[thema][teilaufgabe][aufgabe]);
+                        }
+                    }
+                }
+            }
+        }
+        return ausgabe.gibText();
+    }
+}
 class ExamenSammlung {
     constructor() {
         const dateien = glob_1.default.sync('**/Scan.pdf', { cwd: helfer_1.repositoryPfad });
