@@ -141,17 +141,19 @@ const sammlung = new Command('sammlungen')
   .alias('sa')
 
 sammlung
-  .command('examen-scans')
-  .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
-  .action(aktionen.erzeugeExamenScansSammlung)
-
-sammlung
-  .command('aufgaben-pro-examen')
+  .command('examen')
+  .alias('e')
   .description(
     'Erzeuge pro Examen eine TeX-Datei. ' +
        'Das Examen muss mindestens eine gelöste Aufgabe haben'
   )
   .action(aktionen.erzeugeExamensLösungen)
+
+sammlung
+  .command('examen-scans')
+  .alias('s')
+  .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
+  .action(aktionen.erzeugeExamenScansSammlung)
 
 programm.addCommand(sammlung)
 

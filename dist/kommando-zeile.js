@@ -100,14 +100,16 @@ const sammlung = new commander_1.Command('sammlungen')
     .description('Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)')
     .alias('sa');
 sammlung
-    .command('examen-scans')
-    .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
-    .action(aktionen_1.default.erzeugeExamenScansSammlung);
-sammlung
-    .command('aufgaben-pro-examen')
+    .command('examen')
+    .alias('e')
     .description('Erzeuge pro Examen eine TeX-Datei. ' +
     'Das Examen muss mindestens eine gelöste Aufgabe haben')
     .action(aktionen_1.default.erzeugeExamensLösungen);
+sammlung
+    .command('examen-scans')
+    .alias('s')
+    .description('Füge mehrer Examen-Scans in einer PDF-Datei zusammen sind.')
+    .action(aktionen_1.default.erzeugeExamenScansSammlung);
 programm.addCommand(sammlung);
 programm
     .command('enumerate-item <tex-datei>')
