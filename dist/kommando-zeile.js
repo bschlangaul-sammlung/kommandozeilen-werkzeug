@@ -100,6 +100,11 @@ const sammlung = new commander_1.Command('sammlungen')
     .description('Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)')
     .alias('sa');
 sammlung
+    .command('haupt')
+    .alias('h')
+    .description('Erzeuge das Haupt-Dokument mit dem Namen Bschlangaul-Sammlung.tex')
+    .action(aktionen_1.default.erzeugeHauptDokument);
+sammlung
     .command('examen')
     .alias('e')
     .description('Erzeuge pro Examen eine TeX-Datei. ' +

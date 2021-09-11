@@ -3,7 +3,7 @@
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
+exports.erzeugeHauptDokument = exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
 const aufgabe_1 = require("../aufgabe");
 const log_1 = require("../log");
 const examen_1 = require("../examen");
@@ -186,3 +186,27 @@ function erzeugeExamensLösungen() {
     }
 }
 exports.erzeugeExamensLösungen = erzeugeExamensLösungen;
+/**
+ * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
+ */
+function erzeugeHauptDokument() {
+    const examenSammlung = examen_1.gibExamenSammlung();
+    const baum = examenSammlung.examenBaum;
+    if (baum == null) {
+        log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
+        return;
+    }
+    const textkörper = baum.besuche({
+        betreteEinzelprüfungsNr(nummer) {
+            return `\n% ${nummer.toString()}`;
+        },
+        betreteExamen(examen, monat, nummer) {
+            return undefined;
+        }
+        // betreteAufgabe(nummer: number, examen: Examen, aufgabe: Aufgabe): string {
+        //   return ''
+        // }
+    });
+    tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Bschlangaul-Sammlung.tex'), 'examen', '', textkörper);
+}
+exports.erzeugeHauptDokument = erzeugeHauptDokument;

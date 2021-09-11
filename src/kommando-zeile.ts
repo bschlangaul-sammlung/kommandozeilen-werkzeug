@@ -141,6 +141,14 @@ const sammlung = new Command('sammlungen')
   .alias('sa')
 
 sammlung
+  .command('haupt')
+  .alias('h')
+  .description(
+    'Erzeuge das Haupt-Dokument mit dem Namen Bschlangaul-Sammlung.tex'
+  )
+  .action(aktionen.erzeugeHauptDokument)
+
+sammlung
   .command('examen')
   .alias('e')
   .description(

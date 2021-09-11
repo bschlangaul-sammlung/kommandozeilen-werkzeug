@@ -21,7 +21,8 @@ import {
 } from './aktionen/aufgaben-vorlage'
 import {
   erzeugeExamenScansSammlung,
-  erzeugeExamensLösungen
+  erzeugeExamensLösungen,
+  erzeugeHauptDokument
 } from './aktionen/aufgaben-sammlung'
 import {
   rotierePdf,
@@ -38,16 +39,17 @@ export default {
   erzeugeExamensAufgabeVorlage,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen,
+  erzeugeHauptDokument,
   erzeugeListenElemente,
   erzeugeReadme,
   erzeugeTexDokumentation,
   exportiereTxtAusPdf,
-  öffneDurchGlobInVSCode,
   führeSqlAus,
   kompiliereTex,
   konvertiereFlaciZuTikz,
   löscheGeradeSeitenInPdf,
   öffne,
+  öffneDurchGlobInVSCode,
   öffneDurchStichwort,
   rotierePdf,
   validiere

@@ -2,7 +2,7 @@
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
 
-import { ExamensAufgabe, gibAufgabenSammlung } from '../aufgabe'
+import { Aufgabe, ExamensAufgabe, gibAufgabenSammlung } from '../aufgabe'
 import { logger } from '../log'
 import { gibExamenSammlung, Examen } from '../examen'
 import {
@@ -213,4 +213,37 @@ export function erzeugeExamensLösungen (): void {
       }
     }
   }
+}
+
+/**
+ * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
+ */
+export function erzeugeHauptDokument (): void {
+  const examenSammlung = gibExamenSammlung()
+
+  const baum = examenSammlung.examenBaum
+  if (baum == null) {
+    logger.log('info', 'Konnte keinen Examensbaum aufbauen')
+    return
+  }
+
+  const textkörper = baum.besuche({
+    betreteEinzelprüfungsNr (nummer: number): string {
+      return `\n% ${nummer.toString()}`
+    },
+    betreteExamen (examen: Examen, monat: number, nummer: number): undefined {
+      return undefined
+    }
+
+    // betreteAufgabe(nummer: number, examen: Examen, aufgabe: Aufgabe): string {
+    //   return ''
+    // }
+
+  })
+  schreibeTexDatei(
+    macheRepoPfad('Bschlangaul-Sammlung.tex'),
+    'examen',
+    '',
+    textkörper
+  )
 }
