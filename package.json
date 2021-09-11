@@ -1,7 +1,7 @@
 {
-  "name": "lehramt-informatik-verwaltung",
+  "name": "bschlangaul-werkzeug",
   "version": "0.1.0",
-  "description": "Ein Skript geschrieben in NodeJS, um verschiedene Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen zu erledigen.",
+  "description": "Ein Skript geschrieben in NodeJS, um verschiedene administrative Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen etc. zu erledigen.",
   "main": "dist/main.js",
   "repository": {
     "url": "https://github.com/lehramt-informatik/verwaltung"
@@ -28,7 +28,7 @@
     "lint": "npm run lint:ts-standard && npm run lint:depcheck",
     "test": "npm run lint; npm run build; mocha 'test/**/*.js'",
     "build": "tsc",
-    "install": "sudo rm -f /usr/local/bin/lehramt-informatik.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/lehramt-informatik.js; sudo rm -f /usr/local/bin/i; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/i"
+    "install": "sudo rm -f /usr/local/bin/bschlangaul-werkzeug.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/bschlangaul-werkzeug.js;"
   },
   "author": "Hermine Bschlangaul",
   "license": "GPL-3.0-or-later"
