@@ -30,20 +30,20 @@ function erzeugeAufgabenBaumMarkdown(examen) {
         return ' '.repeat(4 * ebene) + '- ';
     }
     let ebene = 1;
-    const ausgabe = baum.registriereBesucher({
-        besucheThema(nummer) {
+    const ausgabe = baum.besuche({
+        betreteThema(nummer) {
             ebene = 1;
             const ausgabe = rückeEin() + `Thema ${nummer}`;
             ebene++;
             return ausgabe;
         },
-        besucheTeilaufgabe(nummer) {
+        betreteTeilaufgabe(nummer) {
             ebene = 2;
             const ausgabe = rückeEin() + `Teilaufgabe ${nummer}`;
             ebene++;
             return ausgabe;
         },
-        besucheAufgabe(nummer, examen, aufgabe) {
+        betreteAufgabe(nummer, examen, aufgabe) {
             let titel;
             if (aufgabe != null) {
                 titel = aufgabe.gibTitelNurAufgabe(true);
@@ -66,20 +66,21 @@ function erzeugeDateiLink(examen, dateiName) {
  */
 function generiereExamensÜbersicht() {
     const examenSammlung = examen_1.gibExamenSammlung();
-    const examenBaum = examenSammlung.baum;
-    const ausgabe = new helfer_1.AusgabeSammler();
-    for (const nummer in examenBaum) {
-        ausgabe.sammle(`\n### ${nummer}: ${examen_1.Examen.fachDurchNummer(nummer)}\n`);
-        for (const jahr in examenBaum[nummer]) {
-            for (const monat in examenBaum[nummer][jahr]) {
-                const examen = examenBaum[nummer][jahr][monat];
-                const scanLink = erzeugeDateiLink(examen, 'Scan.pdf');
-                const ocrLink = erzeugeDateiLink(examen, 'OCR.txt');
-                ausgabe.sammle(`- ${examen.jahrJahreszeit}: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`);
-            }
-        }
+    const baum = examenSammlung.examenBaum;
+    if (baum == null) {
+        log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
+        return '';
     }
-    return ausgabe.gibText();
+    return baum.besuche({
+        betreteEinzelprüfungsNr(nummer) {
+            return `\n### ${nummer}: ${examen_1.Examen.fachDurchNummer(nummer)}\n`;
+        },
+        betreteExamen(examen, monat, nummer) {
+            const scanLink = erzeugeDateiLink(examen, 'Scan.pdf');
+            const ocrLink = erzeugeDateiLink(examen, 'OCR.txt');
+            return `- ${examen.jahrJahreszeit}: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`;
+        }
+    });
 }
 exports.generiereExamensÜbersicht = generiereExamensÜbersicht;
 /**
@@ -138,14 +139,14 @@ function erzeugeExamensLösung(examen) {
         return;
     }
     log_1.logger.verbose(examen.pfad);
-    const textKörper = baum.registriereBesucher({
-        besucheThema(nummer) {
+    const textKörper = baum.besuche({
+        betreteThema(nummer) {
             return `\n\n\\liSetzeExamenThemaNr{${nummer}}`;
         },
-        besucheTeilaufgabe(nummer) {
+        betreteTeilaufgabe(nummer) {
             return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`;
         },
-        besucheAufgabe(nummer) {
+        betreteAufgabe(nummer) {
             return `\\liBindeAufgabeEin{${nummer}}`;
         }
     });

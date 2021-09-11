@@ -36,20 +36,20 @@ function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
   }
 
   let ebene = 1
-  const ausgabe = baum.registriereBesucher({
-    besucheThema (nummer: number): string {
+  const ausgabe = baum.besuche({
+    betreteThema (nummer: number): string {
       ebene = 1
       const ausgabe = rückeEin() + `Thema ${nummer}`
       ebene++
       return ausgabe
     },
-    besucheTeilaufgabe (nummer: number): string {
+    betreteTeilaufgabe (nummer: number): string {
       ebene = 2
       const ausgabe = rückeEin() + `Teilaufgabe ${nummer}`
       ebene++
       return ausgabe
     },
-    besucheAufgabe (
+    betreteAufgabe (
       nummer: number,
       examen?: Examen,
       aufgabe?: ExamensAufgabe
@@ -77,24 +77,25 @@ function erzeugeDateiLink (examen: Examen, dateiName: string): string {
  */
 export function generiereExamensÜbersicht (): string {
   const examenSammlung = gibExamenSammlung()
-  const examenBaum = examenSammlung.baum as any
-  const ausgabe = new AusgabeSammler()
-  for (const nummer in examenBaum) {
-    ausgabe.sammle(`\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`)
-    for (const jahr in examenBaum[nummer]) {
-      for (const monat in examenBaum[nummer][jahr]) {
-        const examen = examenBaum[nummer][jahr][monat] as Examen
-        const scanLink = erzeugeDateiLink(examen, 'Scan.pdf')
-        const ocrLink = erzeugeDateiLink(examen, 'OCR.txt')
-        ausgabe.sammle(
-          `- ${
-            examen.jahrJahreszeit
-          }: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`
-        )
-      }
-    }
+
+  const baum = examenSammlung.examenBaum
+  if (baum == null) {
+    logger.log('info', 'Konnte keinen Examensbaum aufbauen')
+    return ''
   }
-  return ausgabe.gibText()
+
+  return baum.besuche({
+    betreteEinzelprüfungsNr (nummer: number): string {
+      return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`
+    },
+    betreteExamen (examen: Examen, monat: number, nummer: number): string {
+      const scanLink = erzeugeDateiLink(examen, 'Scan.pdf')
+      const ocrLink = erzeugeDateiLink(examen, 'OCR.txt')
+      return `- ${
+        examen.jahrJahreszeit
+      }: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`
+    }
+  })
 }
 
 /**
@@ -165,14 +166,14 @@ function erzeugeExamensLösung (examen: Examen): void {
   }
 
   logger.verbose(examen.pfad)
-  const textKörper = baum.registriereBesucher({
-    besucheThema (nummer: number): string {
+  const textKörper = baum.besuche({
+    betreteThema (nummer: number): string {
       return `\n\n\\liSetzeExamenThemaNr{${nummer}}`
     },
-    besucheTeilaufgabe (nummer: number): string {
+    betreteTeilaufgabe (nummer: number): string {
       return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`
     },
-    besucheAufgabe (nummer: number): string {
+    betreteAufgabe (nummer: number): string {
       return `\\liBindeAufgabeEin{${nummer}}`
     }
   })

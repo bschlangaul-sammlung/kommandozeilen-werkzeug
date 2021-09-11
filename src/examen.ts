@@ -257,23 +257,43 @@ export class Examen {
 }
 
 interface ExamensAufgabenBesucher {
-  besucheThema?: (
+  /**
+   * Besuche / betrete die einzelnen Einzelprüfungsnummer.
+   */
+  betreteEinzelprüfungsNr?: (nummer: number) => string | undefined
+
+  betreteJahr?: (jahr: number, nummer: number) => string | undefined
+
+  betreteExamen?: (
+    examen: Examen,
+    monat: number,
+    jahr: number,
+    nummer: number
+  ) => string | undefined
+
+  betreteThema?: (
     nummer: number,
     examen?: Examen,
     aufgabe?: ExamensAufgabe
   ) => string | undefined
 
-  besucheTeilaufgabe?: (
+  betreteTeilaufgabe?: (
     nummer: number,
     examen?: Examen,
     aufgabe?: ExamensAufgabe
   ) => string | undefined
 
-  besucheAufgabe?: (
+  betreteAufgabe?: (
     nummer: number,
     examen?: Examen,
     aufgabe?: ExamensAufgabe
   ) => string | undefined
+
+  /**
+   * Verlasse die einzelnen Einzelprüfungsnummer. Zuvor wurden alle Jahre und
+   * Monate / Examen besucht.
+   */
+  verlasseEinzelprüfungsNr?: (nummer: number) => string | undefined
 }
 
 /**
@@ -386,7 +406,7 @@ class ExamenAufgabenBaum {
    * @returns Die gesammelten String-Ergebnisse, der einzelnen
    * Besucher-Funktionen-Aufrufe
    */
-  registriereBesucher (besucher: ExamensAufgabenBesucher): string | undefined {
+  besuche (besucher: ExamensAufgabenBesucher): string | undefined {
     const baum = this.baum as any
 
     if (baum == null) {
@@ -409,16 +429,16 @@ class ExamenAufgabenBaum {
     ): void => {
       const nr = extrahiereNummer(titel)
       if (titel.indexOf('Thema ') === 0) {
-        if (besucher.besucheThema != null) {
-          ausgabe.sammle(besucher.besucheThema(nr, this.examen, aufgabe))
+        if (besucher.betreteThema != null) {
+          ausgabe.sammle(besucher.betreteThema(nr, this.examen, aufgabe))
         }
       } else if (titel.indexOf('Teilaufgabe ') === 0) {
-        if (besucher.besucheTeilaufgabe != null) {
-          ausgabe.sammle(besucher.besucheTeilaufgabe(nr, this.examen, aufgabe))
+        if (besucher.betreteTeilaufgabe != null) {
+          ausgabe.sammle(besucher.betreteTeilaufgabe(nr, this.examen, aufgabe))
         }
       } else if (titel.indexOf('Aufgabe ') === 0) {
-        if (besucher.besucheAufgabe != null) {
-          ausgabe.sammle(besucher.besucheAufgabe(nr, this.examen, aufgabe))
+        if (besucher.betreteAufgabe != null) {
+          ausgabe.sammle(besucher.betreteAufgabe(nr, this.examen, aufgabe))
         }
       }
     }
@@ -496,28 +516,6 @@ export class ExamenSammlung {
   }
 }
 
-interface ExamenBesucher {
-  /**
-   * Besuche / betrete die einzelnen Einzelprüfungsnummer.
-   */
-  betreteEinzelprüfungsNr?: (nummer: number) => string | undefined
-
-  betreteJahr?: (jahr: number, nummer: number) => string | undefined
-
-  betreteExamen?: (
-    examen: Examen,
-    monat: number,
-    jahr: number,
-    nummer: number
-  ) => string | undefined
-
-  /**
-   * Verlasse die einzelnen Einzelprüfungsnummer. Zuvor wurden alle Jahre und
-   * Monate / Examen besucht.
-   */
-  verlasseEinzelprüfungsNr?: (nummer: number) => string | undefined
-}
-
 /**
  * ```js
  * {
@@ -572,7 +570,10 @@ class ExamenBaum {
     return baum
   }
 
-  besuche (besucher: ExamenBesucher): string {
+  besuche (
+    besucher: ExamensAufgabenBesucher,
+    besucheAufgaben: boolean = false
+  ): string {
     const examenBaum = examenSammlung.baum as any
     const ausgabe = new AusgabeSammler()
     for (const nummer in examenBaum) {
@@ -584,8 +585,8 @@ class ExamenBaum {
           ausgabe.sammle(besucher.betreteJahr(parseInt(jahr), parseInt(nummer)))
         }
         for (const monat in examenBaum[nummer][jahr]) {
+          const examen = examenBaum[nummer][jahr][monat] as Examen
           if (besucher.betreteExamen != null) {
-            const examen = examenBaum[nummer][jahr][monat]
             ausgabe.sammle(
               besucher.betreteExamen(
                 examen,
@@ -594,6 +595,9 @@ class ExamenBaum {
                 parseInt(nummer)
               )
             )
+          }
+          if (besucheAufgaben) {
+            examen.aufgabenBaum?.besuche(besucher)
           }
         }
       }

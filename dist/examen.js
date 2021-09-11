@@ -264,7 +264,7 @@ class ExamenAufgabenBaum {
      * @returns Die gesammelten String-Ergebnisse, der einzelnen
      * Besucher-Funktionen-Aufrufe
      */
-    registriereBesucher(besucher) {
+    besuche(besucher) {
         const baum = this.baum;
         if (baum == null) {
             return;
@@ -280,18 +280,18 @@ class ExamenAufgabenBaum {
         const rufeBesucherFunktionAuf = (titel, aufgabe) => {
             const nr = extrahiereNummer(titel);
             if (titel.indexOf('Thema ') === 0) {
-                if (besucher.besucheThema != null) {
-                    ausgabe.sammle(besucher.besucheThema(nr, this.examen, aufgabe));
+                if (besucher.betreteThema != null) {
+                    ausgabe.sammle(besucher.betreteThema(nr, this.examen, aufgabe));
                 }
             }
             else if (titel.indexOf('Teilaufgabe ') === 0) {
-                if (besucher.besucheTeilaufgabe != null) {
-                    ausgabe.sammle(besucher.besucheTeilaufgabe(nr, this.examen, aufgabe));
+                if (besucher.betreteTeilaufgabe != null) {
+                    ausgabe.sammle(besucher.betreteTeilaufgabe(nr, this.examen, aufgabe));
                 }
             }
             else if (titel.indexOf('Aufgabe ') === 0) {
-                if (besucher.besucheAufgabe != null) {
-                    ausgabe.sammle(besucher.besucheAufgabe(nr, this.examen, aufgabe));
+                if (besucher.betreteAufgabe != null) {
+                    ausgabe.sammle(besucher.betreteAufgabe(nr, this.examen, aufgabe));
                 }
             }
         };
@@ -392,7 +392,8 @@ class ExamenBaum {
         }
         return baum;
     }
-    besuche(besucher) {
+    besuche(besucher, besucheAufgaben = false) {
+        var _a;
         const examenBaum = examenSammlung.baum;
         const ausgabe = new helfer_1.AusgabeSammler();
         for (const nummer in examenBaum) {
@@ -404,9 +405,12 @@ class ExamenBaum {
                     ausgabe.sammle(besucher.betreteJahr(parseInt(jahr), parseInt(nummer)));
                 }
                 for (const monat in examenBaum[nummer][jahr]) {
+                    const examen = examenBaum[nummer][jahr][monat];
                     if (besucher.betreteExamen != null) {
-                        const examen = examenBaum[nummer][jahr][monat];
                         ausgabe.sammle(besucher.betreteExamen(examen, parseInt(monat), parseInt(jahr), parseInt(nummer)));
+                    }
+                    if (besucheAufgaben) {
+                        (_a = examen.aufgabenBaum) === null || _a === void 0 ? void 0 : _a.besuche(besucher);
                     }
                 }
             }
