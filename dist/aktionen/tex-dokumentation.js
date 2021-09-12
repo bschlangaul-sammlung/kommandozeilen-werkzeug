@@ -8,8 +8,6 @@ const path_1 = __importDefault(require("path"));
 const helfer_1 = require("../helfer");
 const log_1 = require("../log");
 const übergeordneterPfad = path_1.default.join(helfer_1.repositoryPfad, '.tex');
-const paketePfad = path_1.default.join(übergeordneterPfad, 'pakete');
-const klassenPfad = path_1.default.join(übergeordneterPfad, 'klassen');
 const dtxPfad = path_1.default.join(übergeordneterPfad, 'dokumentation.dtx');
 /**
  * @param segmente Relativ zum übergeordneten .tex-Verzeichnis
@@ -17,7 +15,7 @@ const dtxPfad = path_1.default.join(übergeordneterPfad, 'dokumentation.dtx');
 function gibAbsolutenPfad(...segmente) {
     return path_1.default.join(übergeordneterPfad, ...segmente);
 }
-function leseTexDatei(dateiPfad, dtxInhalte) {
+function leseTexDatei(dateiPfad) {
     log_1.log('info', `Lese Datei: ${dateiPfad}`);
     const inhalt = helfer_1.leseDatei(dateiPfad);
     const dateiName = path_1.default.basename(dateiPfad);
@@ -26,7 +24,7 @@ function leseTexDatei(dateiPfad, dtxInhalte) {
         dateiName +
         '}\n' +
         '%    \\begin{macrocode}\n';
-    dtxInhalte.push(prefix + inhalt);
+    return prefix + inhalt;
 }
 function kompiliereDtxDatei() {
     helfer_1.führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad);
@@ -34,21 +32,22 @@ function kompiliereDtxDatei() {
     helfer_1.führeAus('makeindex -s gind.ist -o dokumentation.ind dokumentation.idx', übergeordneterPfad);
     helfer_1.führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad);
 }
+function leseVerzeichnis(verzeichnis, dateiEndung) {
+    const ausgabe = new helfer_1.AusgabeSammler();
+    const dateinamen = glob_1.default.sync('**/*.' + dateiEndung, {
+        cwd: gibAbsolutenPfad(verzeichnis)
+    });
+    for (const dateiname of dateinamen) {
+        ausgabe.sammle(leseTexDatei(gibAbsolutenPfad(verzeichnis, dateiname)));
+    }
+    return ausgabe.gibText();
+}
 function default_1() {
     let textkörper = helfer_1.leseDatei(path_1.default.join(übergeordneterPfad, 'dokumentation_vorlage.dtx'));
-    const dtxInhalte = [];
     // klassen
-    const klassenDateiname = glob_1.default.sync('**/*.cls', { cwd: klassenPfad });
-    for (const klassenPfad of klassenDateiname) {
-        leseTexDatei(gibAbsolutenPfad('klassen', klassenPfad), dtxInhalte);
-    }
-    textkörper = textkörper.replace('{{ klassen }}', dtxInhalte.join('\n'));
+    textkörper = textkörper.replace('{{ klassen }}', leseVerzeichnis('klassen', 'cls'));
     // pakete
-    const paketDateiname = glob_1.default.sync('**/*.sty', { cwd: paketePfad });
-    for (const paketPfad of paketDateiname) {
-        leseTexDatei(gibAbsolutenPfad('pakete', paketPfad), dtxInhalte);
-    }
-    textkörper = textkörper.replace('{{ pakete }}', dtxInhalte.join('\n'));
+    textkörper = textkörper.replace('{{ pakete }}', leseVerzeichnis('pakete', 'sty'));
     helfer_1.schreibeDatei(dtxPfad, textkörper);
     kompiliereDtxDatei();
     helfer_1.öffneProgramm('/usr/bin/xdg-open', path_1.default.join(übergeordneterPfad, 'dokumentation.pdf'));

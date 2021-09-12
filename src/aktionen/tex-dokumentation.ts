@@ -6,14 +6,13 @@ import {
   leseDatei,
   schreibeDatei,
   führeAus,
-  öffneProgramm
+  öffneProgramm,
+  AusgabeSammler
 } from '../helfer'
 
 import { log } from '../log'
 
 const übergeordneterPfad = path.join(repositoryPfad, '.tex')
-const paketePfad = path.join(übergeordneterPfad, 'pakete')
-const klassenPfad = path.join(übergeordneterPfad, 'klassen')
 const dtxPfad = path.join(übergeordneterPfad, 'dokumentation.dtx')
 
 /**
@@ -23,7 +22,7 @@ function gibAbsolutenPfad (...segmente: string[]): string {
   return path.join(übergeordneterPfad, ...segmente)
 }
 
-function leseTexDatei (dateiPfad: string, dtxInhalte: string[]): void {
+function leseTexDatei (dateiPfad: string): string {
   log('info', `Lese Datei: ${dateiPfad}`)
   const inhalt = leseDatei(dateiPfad)
   const dateiName = path.basename(dateiPfad)
@@ -33,7 +32,7 @@ function leseTexDatei (dateiPfad: string, dtxInhalte: string[]): void {
     dateiName +
     '}\n' +
     '%    \\begin{macrocode}\n'
-  dtxInhalte.push(prefix + inhalt)
+  return prefix + inhalt
 }
 
 function kompiliereDtxDatei (): void {
@@ -49,25 +48,33 @@ function kompiliereDtxDatei (): void {
   führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad)
 }
 
+function leseVerzeichnis (verzeichnis: string, dateiEndung: string): string {
+  const ausgabe = new AusgabeSammler()
+  const dateinamen = glob.sync('**/*.' + dateiEndung, {
+    cwd: gibAbsolutenPfad(verzeichnis)
+  })
+  for (const dateiname of dateinamen) {
+    ausgabe.sammle(leseTexDatei(gibAbsolutenPfad(verzeichnis, dateiname)))
+  }
+  return ausgabe.gibText()
+}
+
 export default function (): void {
   let textkörper = leseDatei(
     path.join(übergeordneterPfad, 'dokumentation_vorlage.dtx')
   )
-  const dtxInhalte: string[] = []
 
   // klassen
-  const klassenDateiname = glob.sync('**/*.cls', { cwd: klassenPfad })
-  for (const klassenPfad of klassenDateiname) {
-    leseTexDatei(gibAbsolutenPfad('klassen', klassenPfad), dtxInhalte)
-  }
-  textkörper = textkörper.replace('{{ klassen }}', dtxInhalte.join('\n'))
+  textkörper = textkörper.replace(
+    '{{ klassen }}',
+    leseVerzeichnis('klassen', 'cls')
+  )
 
   // pakete
-  const paketDateiname = glob.sync('**/*.sty', { cwd: paketePfad })
-  for (const paketPfad of paketDateiname) {
-    leseTexDatei(gibAbsolutenPfad('pakete', paketPfad), dtxInhalte)
-  }
-  textkörper = textkörper.replace('{{ pakete }}', dtxInhalte.join('\n'))
+  textkörper = textkörper.replace(
+    '{{ pakete }}',
+    leseVerzeichnis('pakete', 'sty')
+  )
 
   schreibeDatei(dtxPfad, textkörper)
 

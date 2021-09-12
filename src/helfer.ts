@@ -175,6 +175,11 @@ export class AusgabeSammler {
     this.speicher.splice(0, this.speicher.length)
   }
 
+  /**
+   * Gib die gesammelten Textschnipsel zusammengefügt als ein String zurück.
+   *
+   * @returns Die einzelnen Einträge des Felds mit `\n` zusammengefügt.
+   */
   public gibText (): string {
     return this.speicher.join('\n')
   }
