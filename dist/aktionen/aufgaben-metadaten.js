@@ -55,7 +55,7 @@ function default_1(dateiPfad) {
     dateiPfad = path_1.default.resolve(dateiPfad);
     const aufgabenSammlung = aufgabe_1.gibAufgabenSammlung();
     const aufgabe = aufgabenSammlung.gib(dateiPfad);
-    const texPlist = tex_1.machePlist('liAufgabenMetadaten', aufgabe.erzeugeMetadaten(), ['Titel', 'Thematik', 'ZitatBeschreibung', 'Stichwoerter']);
+    const texPlist = tex_1.machePlist('bAufgabenMetadaten', aufgabe.erzeugeMetadaten(), ['Titel', 'Thematik', 'ZitatBeschreibung', 'Stichwoerter']);
     if (aufgabe.inhalt !== null) {
         const inhalt = aufgabe.inhalt;
         schreibe(dateiPfad, inhalt, texPlist);

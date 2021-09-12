@@ -201,10 +201,10 @@ function erzeugeHauptDokument() {
     const textkörper = baum.besuche({
         betreteAufgabe(aufgabe, nummer) {
             if (aufgabe.istKorrekt) {
-                return '% ' + aufgabe.einbindenTexMakro;
+                return aufgabe.einbindenTexMakro;
             }
         }
     });
-    tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Bschlangaul-Sammlung.tex'), 'examen', '', textkörper);
+    tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Bschlangaul-Sammlung.tex'), 'haupt', '', textkörper);
 }
 exports.erzeugeHauptDokument = erzeugeHauptDokument;

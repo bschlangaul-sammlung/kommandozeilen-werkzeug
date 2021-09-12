@@ -64,7 +64,7 @@ export default function (dateiPfad: string): void {
   const aufgabe = aufgabenSammlung.gib(dateiPfad)
 
   const texPlist = machePlist(
-    'liAufgabenMetadaten',
+    'bAufgabenMetadaten',
     aufgabe.erzeugeMetadaten(),
     ['Titel', 'Thematik', 'ZitatBeschreibung', 'Stichwoerter']
   )

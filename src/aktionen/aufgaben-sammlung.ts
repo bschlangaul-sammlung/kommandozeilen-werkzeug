@@ -228,13 +228,13 @@ export function erzeugeHauptDokument (): void {
   const textkörper = baum.besuche({
     betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
       if (aufgabe.istKorrekt) {
-        return '% ' + aufgabe.einbindenTexMakro
+        return aufgabe.einbindenTexMakro
       }
     }
   })
   schreibeTexDatei(
     macheRepoPfad('Bschlangaul-Sammlung.tex'),
-    'examen',
+    'haupt',
     '',
     textkörper
   )
