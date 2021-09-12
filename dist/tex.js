@@ -6,17 +6,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.machePlist = exports.schreibeTexDatei = exports.sammleStichwörterEinerDatei = exports.sammleStichwörter = exports.gibInhaltEinesTexMakros = void 0;
 const helfer_1 = require("./helfer");
 const log_1 = require("./log");
-function assembleMacroRegExp(macroName) {
-    return new RegExp('\\' + macroName + '{([^}]*)}', 'g');
+function baueMakroRegExp(macroName) {
+    // Probleme mit `\bAufgabenTitel`: `\b` ist angeblich ein Sonderzeichen
+    return new RegExp(`\\\\${macroName}{([^}]*)}`, 'g');
 }
 function säubereStichwort(stichwort) {
     return stichwort.replace(/\s+/g, ' ');
 }
 function gibInhaltEinesTexMakros(makroName, markup) {
-    const regExp = assembleMacroRegExp(makroName);
+    const regExp = baueMakroRegExp(makroName);
     const übereinstimmung = regExp.exec(markup);
-    if (übereinstimmung != null)
+    if (übereinstimmung != null) {
         return übereinstimmung[1];
+    }
 }
 exports.gibInhaltEinesTexMakros = gibInhaltEinesTexMakros;
 /**
@@ -26,7 +28,7 @@ exports.gibInhaltEinesTexMakros = gibInhaltEinesTexMakros;
   * @param inhalt - Der Textinhalt einer TeX-Datei.
   */
 function sammleStichwörter(inhalt) {
-    const re = assembleMacroRegExp('index');
+    const re = baueMakroRegExp('index');
     let übereinstimmung;
     const stichwörter = new Set();
     do {

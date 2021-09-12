@@ -27,11 +27,12 @@ function schreibe(dateiPfad, aufgabenInhalt, titelTexMakro) {
 }
 exports.schreibe = schreibe;
 function macheAufgabenMetadatenPlist(meta) {
-    return tex_1.machePlist('liAufgabenMetadaten', meta, [
+    return tex_1.machePlist('bAufgabenMetadaten', meta, [
         'Titel',
         'Thematik',
         'ZitatBeschreibung',
-        'Stichwoerter'
+        'Stichwoerter',
+        'Ueberprueft'
     ]);
 }
 exports.macheAufgabenMetadatenPlist = macheAufgabenMetadatenPlist;

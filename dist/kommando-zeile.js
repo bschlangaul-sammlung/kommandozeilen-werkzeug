@@ -131,9 +131,9 @@ programm
     .description('*.sty zu einem dtx zusammenfügen')
     .action(aktionen_1.default.erzeugeTexDokumentation);
 programm
-    .command('aufgaben-titel <texDatei>')
-    .alias('at')
-    .description('Erzeuge den Titel in einer TeX-Datei')
+    .command('metadaten <texDatei>')
+    .alias('m')
+    .description('Erzeuge die Metadaten in einer TeX-Datei.')
     .action(aktionen_1.default.erzeugeAufgabenMetadaten);
 programm
     .command('validiere')

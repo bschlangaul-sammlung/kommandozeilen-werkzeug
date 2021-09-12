@@ -168,8 +168,8 @@ function formatiereAutomat(def) {
         '\n\n' +
         transitionsRendered.join('\n').replace(/\n$/, '');
     const tikzPicture = formatiereTexEnv('center', formatiereTexEnv('tikzpicture', inhalt, envOption));
-    const liAntwort = tikzPicture + '\n' + formatiereFlaciLink(def);
-    return formatiereTexEnv('liAntwort', liAntwort);
+    const bAntwort = tikzPicture + '\n' + formatiereFlaciLink(def);
+    return formatiereTexEnv('bAntwort', bAntwort);
 }
 function default_1(jsonDateiPfad) {
     if (jsonDateiPfad.match(/^\//) == null) {

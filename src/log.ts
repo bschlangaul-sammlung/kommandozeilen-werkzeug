@@ -57,7 +57,7 @@ export function log (
   level: 'error' | 'warn' | 'info' | 'verbose' | 'debug',
   message: string,
   ...meta: any[]
-) {
+): void {
   logger.log(level, message, ...meta)
 }
 

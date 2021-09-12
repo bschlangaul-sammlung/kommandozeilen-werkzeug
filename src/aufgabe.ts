@@ -93,6 +93,12 @@ export interface AufgabenMetadaten {
   Korrektheit: Korrektheit
 
   /**
+   * Mit welchem Online-Tool wurde die Aufgabe überprüft. Wer hat die Aufgabe
+   * überprüft.
+   */
+  Ueberprueft?: string
+
+  /**
    * Der relative Datei-Pfad der Aufgabe, z. B. `Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex`
    */
   RelativerPfad: string
@@ -279,6 +285,9 @@ export class Aufgabe {
 
     meta.BearbeitungsStand = this.bearbeitungsStand
     meta.Korrektheit = this.korrektheit
+    if (this.überprüft != null) {
+      meta.Ueberprueft = umgebeMitKlammern(this.überprüft)
+    }
 
     if (this.stichwörter.length > 0) {
       meta.Stichwoerter = umgebeMitKlammern(this.stichwörter.join(', '))
@@ -329,7 +338,7 @@ export class Aufgabe {
       return this.metadaten_.Thematik
     }
 
-    const thematik = gibInhaltEinesTexMakros('liAufgabenTitel', this.inhalt)
+    const thematik = gibInhaltEinesTexMakros('bAufgabenTitel', this.inhalt)
     if (thematik != null) {
       return thematik
     }
@@ -384,6 +393,12 @@ export class Aufgabe {
       this.korrektheit === 'korrekt' ||
       this.korrektheit === 'korrekt und überprüft'
     )
+  }
+
+  get überprüft (): string | undefined {
+    if (this.metadaten_?.Ueberprueft != null) {
+      return this.metadaten_.Ueberprueft
+    }
   }
 
   /**

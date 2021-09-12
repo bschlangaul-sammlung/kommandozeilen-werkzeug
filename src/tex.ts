@@ -5,8 +5,9 @@
 import { leseRepoDatei, schreibeDatei } from './helfer'
 import { logger } from './log'
 
-function assembleMacroRegExp (macroName: string): RegExp {
-  return new RegExp('\\' + macroName + '{([^}]*)}', 'g')
+function baueMakroRegExp (macroName: string): RegExp {
+  // Probleme mit `\bAufgabenTitel`: `\b` ist angeblich ein Sonderzeichen
+  return new RegExp(`\\\\${macroName}{([^}]*)}`, 'g')
 }
 
 function säubereStichwort (stichwort: string): string {
@@ -17,9 +18,11 @@ export function gibInhaltEinesTexMakros (
   makroName: string,
   markup: string
 ): string | undefined {
-  const regExp = assembleMacroRegExp(makroName)
+  const regExp = baueMakroRegExp(makroName)
   const übereinstimmung = regExp.exec(markup)
-  if (übereinstimmung != null) return übereinstimmung[1]
+  if (übereinstimmung != null) {
+    return übereinstimmung[1]
+  }
 }
 
 /**
@@ -29,7 +32,7 @@ export function gibInhaltEinesTexMakros (
   * @param inhalt - Der Textinhalt einer TeX-Datei.
   */
 export function sammleStichwörter (inhalt: string): string[] {
-  const re = assembleMacroRegExp('index')
+  const re = baueMakroRegExp('index')
   let übereinstimmung
   const stichwörter = new Set<string>()
   do {

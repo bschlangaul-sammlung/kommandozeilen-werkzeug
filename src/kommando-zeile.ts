@@ -183,9 +183,9 @@ programm
   .action(aktionen.erzeugeTexDokumentation)
 
 programm
-  .command('aufgaben-titel <texDatei>')
-  .alias('at')
-  .description('Erzeuge den Titel in einer TeX-Datei')
+  .command('metadaten <texDatei>')
+  .alias('m')
+  .description('Erzeuge die Metadaten in einer TeX-Datei.')
   .action(aktionen.erzeugeAufgabenMetadaten)
 
 programm

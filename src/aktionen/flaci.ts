@@ -306,8 +306,8 @@ function formatiereAutomat (def: FlaciDefinition): string {
     'center',
     formatiereTexEnv('tikzpicture', inhalt, envOption)
   )
-  const liAntwort = tikzPicture + '\n' + formatiereFlaciLink(def)
-  return formatiereTexEnv('liAntwort', liAntwort)
+  const bAntwort = tikzPicture + '\n' + formatiereFlaciLink(def)
+  return formatiereTexEnv('bAntwort', bAntwort)
 }
 
 export default function (jsonDateiPfad: string): void {

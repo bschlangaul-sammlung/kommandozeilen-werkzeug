@@ -141,6 +141,9 @@ class Aufgabe {
         }
         meta.BearbeitungsStand = this.bearbeitungsStand;
         meta.Korrektheit = this.korrektheit;
+        if (this.überprüft != null) {
+            meta.Ueberprueft = umgebeMitKlammern(this.überprüft);
+        }
         if (this.stichwörter.length > 0) {
             meta.Stichwoerter = umgebeMitKlammern(this.stichwörter.join(', '));
         }
@@ -181,7 +184,7 @@ class Aufgabe {
         if (((_a = this.metadaten_) === null || _a === void 0 ? void 0 : _a.Thematik) != null) {
             return this.metadaten_.Thematik;
         }
-        const thematik = tex_1.gibInhaltEinesTexMakros('liAufgabenTitel', this.inhalt);
+        const thematik = tex_1.gibInhaltEinesTexMakros('bAufgabenTitel', this.inhalt);
         if (thematik != null) {
             return thematik;
         }
@@ -231,6 +234,12 @@ class Aufgabe {
     get istKorrekt() {
         return (this.korrektheit === 'korrekt' ||
             this.korrektheit === 'korrekt und überprüft');
+    }
+    get überprüft() {
+        var _a;
+        if (((_a = this.metadaten_) === null || _a === void 0 ? void 0 : _a.Ueberprueft) != null) {
+            return this.metadaten_.Ueberprueft;
+        }
     }
     /**
      * Siehe Dokumentation des Typs

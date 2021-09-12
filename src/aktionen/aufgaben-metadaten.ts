@@ -34,11 +34,12 @@ export function schreibe (
 export function macheAufgabenMetadatenPlist (meta: {
   [schlüssel: string]: any
 }): string {
-  return machePlist('liAufgabenMetadaten', meta, [
+  return machePlist('bAufgabenMetadaten', meta, [
     'Titel',
     'Thematik',
     'ZitatBeschreibung',
-    'Stichwoerter'
+    'Stichwoerter',
+    'Ueberprueft'
   ])
 }
 
