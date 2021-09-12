@@ -417,7 +417,7 @@ class ExamenBaum {
                     }
                     if (besucher.betreteThema != null ||
                         besucher.betreteTeilaufgabe != null ||
-                        besucher.betreteAufgabe) {
+                        besucher.betreteAufgabe != null) {
                         ausgabe.sammle((_a = examen.aufgabenBaum) === null || _a === void 0 ? void 0 : _a.besuche(besucher));
                     }
                 }

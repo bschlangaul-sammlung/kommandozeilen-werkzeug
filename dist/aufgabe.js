@@ -285,7 +285,7 @@ class Aufgabe {
             this.linkTex +
             ') ');
     }
-    get texEinbindenMakro() {
+    get einbindenTexMakro() {
         let relativerPfad = helfer_1.macheRelativenPfad(this.pfad);
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\liAufgabe{${relativerPfad}}`;
@@ -384,35 +384,6 @@ class ExamensAufgabe extends Aufgabe {
         return this.aufgabenReferenz.replace(/ +/g, '');
     }
     /**
-     * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
-     * eingebunden werden kann.
-     *
-     * @returns
-     * z. B. `\ExamensAufgabeTTA 66116 / 2021 / 03 : Thema 1 Teilaufgabe 1 Aufgabe 1`
-     */
-    get einbindenTexMakro() {
-        let aufgabe = '';
-        let suffix = '';
-        const examen = `${this.examen.nummer} / ${this.examen.jahr} / ${this.examen.monat} :`;
-        if (this.thema != null &&
-            this.teilaufgabe != null &&
-            this.aufgabe != null) {
-            aufgabe = `Thema ${this.thema} Teilaufgabe ${this.teilaufgabe} Aufgabe ${this.aufgabe}`;
-            suffix = 'TTA';
-        }
-        else if (this.thema != null &&
-            this.aufgabe != null &&
-            this.teilaufgabe == null) {
-            aufgabe = `Thema ${this.thema} Aufgabe ${this.aufgabe}`;
-            suffix = 'TA';
-        }
-        else {
-            aufgabe = `Aufgabe ${this.aufgabe}`;
-            suffix = 'A';
-        }
-        return `\n\\ExamensAufgabe${suffix} ${examen} ${aufgabe}`;
-    }
-    /**
      * `„Greedy-Färben von Intervallen“ Examen 66115 Herbst 2017 T1 A8`
      */
     get titelKurz() {
@@ -453,11 +424,49 @@ class ExamensAufgabe extends Aufgabe {
             return `Aufgabe-${arg1}.tex`;
         }
     }
-    get texEinbindenMakro() {
+    /**
+     * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
+     * eingebunden werden kann. Es handelt sich hierbei um die neue Version des
+     * Einbinden-Makros.
+     *
+     * @returns z. B.
+     * `\liExamensAufgabe{66116/2017/03/Thema-1/Teilaufgabe-1/Aufgabe-2}`
+     */
+    get einbindenTexMakro() {
         let relativerPfad = helfer_1.macheRelativenPfad(this.pfad);
         relativerPfad = relativerPfad.replace('Staatsexamen/', '');
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\liExamensAufgabe{${relativerPfad}}`;
+    }
+    /**
+     * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
+     * eingebunden werden kann. Es handelt sich hierbei um die alte Version des
+     * Einbinden-Makros.
+     *
+     * @returns z. B. `\ExamensAufgabeTTA 66116 / 2021 / 03 : Thema 1 Teilaufgabe
+     * 1 Aufgabe 1`
+     */
+    get einbindenTexMakroAlt() {
+        let aufgabe = '';
+        let suffix = '';
+        const examen = `${this.examen.nummer} / ${this.examen.jahr} / ${this.examen.monat} :`;
+        if (this.thema != null &&
+            this.teilaufgabe != null &&
+            this.aufgabe != null) {
+            aufgabe = `Thema ${this.thema} Teilaufgabe ${this.teilaufgabe} Aufgabe ${this.aufgabe}`;
+            suffix = 'TTA';
+        }
+        else if (this.thema != null &&
+            this.aufgabe != null &&
+            this.teilaufgabe == null) {
+            aufgabe = `Thema ${this.thema} Aufgabe ${this.aufgabe}`;
+            suffix = 'TA';
+        }
+        else {
+            aufgabe = `Aufgabe ${this.aufgabe}`;
+            suffix = 'A';
+        }
+        return `\n\\ExamensAufgabe${suffix} ${examen} ${aufgabe}`;
     }
 }
 exports.ExamensAufgabe = ExamensAufgabe;

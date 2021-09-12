@@ -48,13 +48,13 @@ function sammleStichwörterEinerDatei(pfad) {
 exports.sammleStichwörterEinerDatei = sammleStichwörterEinerDatei;
 /**
   * @param dateiPfad - Ein Dateipfad.
-  * @param klassenName - Ein Klassenname (ohne Präfix `lehramt-informatik-`)
+  * @param klassenName - Ein Klassenname (ohne Präfix `bschlangaul-`)
   * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
   * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
   */
 function schreibeTexDatei(dateiPfad, klassenName, kopf, textkörper) {
     textkörper = textkörper.trim();
-    const inhalt = `\\documentclass{lehramt-informatik-${klassenName}}\n${kopf}\n` +
+    const inhalt = `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
         `\\begin{document}\n${textkörper}\n\\end{document}\n`;
     log_1.logger.debug(inhalt);
     helfer_1.schreibeDatei(dateiPfad, inhalt);

@@ -9,13 +9,24 @@ import {
   öffneProgramm
 } from '../helfer'
 
-const texPfad = path.join(repositoryPfad, '.tex')
-const styPfad = path.join(texPfad, 'pakete')
-const dtxPfad = path.join(texPfad, 'dokumentation.dtx')
+import { log } from '../log'
 
-function leseStyDatei (dateiName: string, dtxInhalte: string[]): void {
-  console.log(`lese *.sty datei ${dateiName}`)
-  const inhalt = leseDatei(path.join(styPfad, dateiName))
+const übergeordneterPfad = path.join(repositoryPfad, '.tex')
+const paketePfad = path.join(übergeordneterPfad, 'pakete')
+const klassenPfad = path.join(übergeordneterPfad, 'klassen')
+const dtxPfad = path.join(übergeordneterPfad, 'dokumentation.dtx')
+
+/**
+ * @param segmente Relativ zum übergeordneten .tex-Verzeichnis
+ */
+function gibAbsolutenPfad (...segmente: string[]): string {
+  return path.join(übergeordneterPfad, ...segmente)
+}
+
+function leseTexDatei (dateiPfad: string, dtxInhalte: string[]): void {
+  log('info', `Lese Datei: ${dateiPfad}`)
+  const inhalt = leseDatei(dateiPfad)
+  const dateiName = path.basename(dateiPfad)
   const prefix =
     '%    \\end{macrocode}\n' +
     '% \\subsection{' +
@@ -26,33 +37,43 @@ function leseStyDatei (dateiName: string, dtxInhalte: string[]): void {
 }
 
 function kompiliereDtxDatei (): void {
-  führeAus('lualatex --shell-escape dokumentation.dtx', texPfad)
+  führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad)
   führeAus(
     'makeindex -s gglo.ist -o dokumentation.gls dokumentation.glo',
-    texPfad
+    übergeordneterPfad
   )
   führeAus(
     'makeindex -s gind.ist -o dokumentation.ind dokumentation.idx',
-    texPfad
+    übergeordneterPfad
   )
-  führeAus('lualatex --shell-escape dokumentation.dtx', texPfad)
+  führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad)
 }
 
 export default function (): void {
-  const styS = glob.sync('**/*.sty', { cwd: styPfad })
-
+  let textkörper = leseDatei(
+    path.join(übergeordneterPfad, 'dokumentation_vorlage.dtx')
+  )
   const dtxInhalte: string[] = []
 
-  for (const sty of styS) {
-    leseStyDatei(sty, dtxInhalte)
+  // klassen
+  const klassenDateiname = glob.sync('**/*.cls', { cwd: klassenPfad })
+  for (const klassenPfad of klassenDateiname) {
+    leseTexDatei(gibAbsolutenPfad('klassen', klassenPfad), dtxInhalte)
   }
+  textkörper = textkörper.replace('{{ klassen }}', dtxInhalte.join('\n'))
 
-  const dtxVorlage = leseDatei(path.join(texPfad, 'dokumentation_vorlage.dtx'))
-  schreibeDatei(
-    dtxPfad,
-    dtxVorlage.replace('{{ einbinden }}', dtxInhalte.join('\n'))
-  )
+  // pakete
+  const paketDateiname = glob.sync('**/*.sty', { cwd: paketePfad })
+  for (const paketPfad of paketDateiname) {
+    leseTexDatei(gibAbsolutenPfad('pakete', paketPfad), dtxInhalte)
+  }
+  textkörper = textkörper.replace('{{ pakete }}', dtxInhalte.join('\n'))
+
+  schreibeDatei(dtxPfad, textkörper)
 
   kompiliereDtxDatei()
-  öffneProgramm('/usr/bin/xdg-open', path.join(texPfad, 'dokumentation.pdf'))
+  öffneProgramm(
+    '/usr/bin/xdg-open',
+    path.join(übergeordneterPfad, 'dokumentation.pdf')
+  )
 }

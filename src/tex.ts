@@ -51,7 +51,7 @@ export function sammleStichwörterEinerDatei (pfad: string): string[] {
 
 /**
   * @param dateiPfad - Ein Dateipfad.
-  * @param klassenName - Ein Klassenname (ohne Präfix `lehramt-informatik-`)
+  * @param klassenName - Ein Klassenname (ohne Präfix `bschlangaul-`)
   * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
   * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
   */
@@ -63,7 +63,7 @@ export function schreibeTexDatei (
 ): void {
   textkörper = textkörper.trim()
   const inhalt =
-     `\\documentclass{lehramt-informatik-${klassenName}}\n${kopf}\n` +
+     `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
      `\\begin{document}\n${textkörper}\n\\end{document}\n`
   logger.debug(inhalt)
   schreibeDatei(dateiPfad, inhalt)

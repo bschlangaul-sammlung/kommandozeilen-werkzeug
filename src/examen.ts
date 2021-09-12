@@ -604,7 +604,7 @@ class ExamenBaum {
           if (
             besucher.betreteThema != null ||
             besucher.betreteTeilaufgabe != null ||
-            besucher.betreteAufgabe
+            besucher.betreteAufgabe != null
           ) {
             ausgabe.sammle(examen.aufgabenBaum?.besuche(besucher))
           }

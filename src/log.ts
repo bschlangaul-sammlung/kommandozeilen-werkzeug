@@ -42,6 +42,25 @@ export const logger = winston.createLogger({
   levels: customLevels.levels
 })
 
+/**
+ * ```js
+ * {
+ *   error: 0,
+ *   warn: 1,
+ *   info: 2,
+ *   verbose: 3,
+ *   debug: 4,
+ * }
+ * ```
+ */
+export function log (
+  level: 'error' | 'warn' | 'info' | 'verbose' | 'debug',
+  message: string,
+  ...meta: any[]
+) {
+  logger.log(level, message, ...meta)
+}
+
 export function setzeLogEbene (
   ebene: 'error' | 'warn' | 'info' | 'verbose' | 'debug'
 ): void {

@@ -201,7 +201,7 @@ function erzeugeHauptDokument() {
     const textkörper = baum.besuche({
         betreteAufgabe(aufgabe, nummer) {
             if (aufgabe.istKorrekt) {
-                return '% ' + aufgabe.texEinbindenMakro;
+                return '% ' + aufgabe.einbindenTexMakro;
             }
         }
     });

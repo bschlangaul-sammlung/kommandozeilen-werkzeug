@@ -40,7 +40,7 @@ function öffneDurchStichwort(stichwort) {
     }
     else {
         for (const aufgabe of aufgaben) {
-            console.log(aufgabe.texEinbindenMakro);
+            console.log(aufgabe.einbindenTexMakro);
             helfer_1.öffneProgramm('code', aufgabe.pfad);
         }
     }
