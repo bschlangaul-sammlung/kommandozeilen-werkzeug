@@ -13,9 +13,9 @@ export function schreibe (
 
   titelTexMakro += '\n'
 
-  if (aufgabenInhalt.includes('\\liAufgabenMetadaten{')) {
+  if (aufgabenInhalt.includes('\\bAufgabenMetadaten{')) {
     // /s s (dotall) modifier, +? one or more (non-greedy)
-    const regexp = new RegExp(/\\liAufgabenMetadaten\{.+?,?\n\}\n/, 's')
+    const regexp = new RegExp(/\\bAufgabenMetadaten\{.+?,?\n\}\n/, 's')
     aufgabenTitelErsetzt = aufgabenInhalt.replace(regexp, titelTexMakro)
   } else {
     aufgabenTitelErsetzt = aufgabenInhalt.replace(
@@ -44,7 +44,7 @@ export function macheAufgabenMetadatenPlist (meta: {
 
 /**
  * ```latex
- * \liAufgabenMetadaten{
+ * \bAufgabenMetadaten{
  *   Titel = Aufgabe 2,
  *   Thematik = Petri-Netz,
  *   RelativerPfad = Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,

@@ -101,14 +101,14 @@ function erzeugeExamenScansSammlung() {
             return undefined;
         },
         betreteExamen(examen, monat, nummer) {
-            ausgabe.sammle(`\n\\liTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
-            ausgabe.sammle(`\\liBindePdfEin{${helfer_1.macheRelativenPfad(examen.pfad)}}`);
+            ausgabe.sammle(`\n\\bTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
+            ausgabe.sammle(`\\bBindePdfEin{${helfer_1.macheRelativenPfad(examen.pfad)}}`);
             return undefined;
         },
         verlasseEinzelprüfungsNr(nummer) {
             const textKörper = ausgabe.gibText();
-            const kopf = `\\liPruefungsNummer{${nummer}}\n` +
-                `\\liPruefungsTitel{${examen_1.Examen.fachDurchNummer(nummer)}}\n`;
+            const kopf = `\\bPruefungsNummer{${nummer}}\n` +
+                `\\bPruefungsTitel{${examen_1.Examen.fachDurchNummer(nummer)}}\n`;
             tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
             return undefined;
         }
@@ -120,15 +120,15 @@ exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
  * Aufgaben samt Lösungen einbindet.
  *
  * ```latex
- * \liSetzeExamen{66116}{2021}{03}
+ * \bSetzeExamen{66116}{2021}{03}
  *
- * \liSetzeExamenThemaNr{1}
+ * \bSetzeExamenThemaNr{1}
  *
- * \liSetzeExamenTeilaufgabeNr{1}
+ * \bSetzeExamenTeilaufgabeNr{1}
  *
- * \liBindeAufgabeEin{1}
- * \liBindeAufgabeEin{2}
- * \liBindeAufgabeEin{3}
+ * \bBindeAufgabeEin{1}
+ * \bBindeAufgabeEin{2}
+ * \bBindeAufgabeEin{3}
  * ```
  */
 function erzeugeExamensLösung(examen) {
@@ -141,13 +141,13 @@ function erzeugeExamensLösung(examen) {
     log_1.logger.verbose(examen.pfad);
     const textKörper = baum.besuche({
         betreteThema(nummer) {
-            return `\n\n\\liSetzeExamenThemaNr{${nummer}}`;
+            return `\n\n\\bSetzeExamenThemaNr{${nummer}}`;
         },
         betreteTeilaufgabe(nummer) {
-            return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`;
+            return `\n\\bSetzeExamenTeilaufgabeNr{${nummer}}\n`;
         },
         betreteAufgabe(aufgaben, nummer) {
-            return `\\liBindeAufgabeEin{${nummer}}`;
+            return `\\bBindeAufgabeEin{${nummer}}`;
         }
     });
     const kopf = tex_1.machePlist('liMetaSetze', {

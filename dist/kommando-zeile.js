@@ -75,7 +75,7 @@ programm
     .alias('c')
     .description('Öffne die mit glob spezifizierten Dateien in Visual Studio Code')
     .option('-n, --kein-index', 'Öffne nur die Dateien, die keinen Index haben.')
-    .option('-t, --kein-titel', 'Öffne nur die Dateien, die keinen Titel haben. \\liAufgabenTitel{}.')
+    .option('-t, --kein-titel', 'Öffne nur die Dateien, die keinen Titel haben. \\bAufgabenTitel{}.')
     .action(aktionen_1.default.öffneDurchGlobInVSCode);
 programm
     .command('seiten-loeschen <pdf-datei>')

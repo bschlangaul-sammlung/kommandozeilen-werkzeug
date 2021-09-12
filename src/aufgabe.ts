@@ -215,7 +215,7 @@ export class Aufgabe {
 
   /**
    * ```tex
-   * \liAufgabenMetadaten{
+   * \bAufgabenMetadaten{
    *   Titel = {Aufgabe 5},
    *   Thematik = {Regal mit DVDs, CDs und BDs},
    *   RelativerPfad = Staatsexamen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
@@ -239,7 +239,7 @@ export class Aufgabe {
     }
     const ergebnis: any = {}
     const match = this.inhalt.match(
-      new RegExp(/\\liAufgabenMetadaten{(.*)\n}/, 's')
+      new RegExp(/\\bAufgabenMetadaten{(.*)\n}/, 's')
     )
     if (match != null) {
       const zeilen = match[1]
@@ -300,7 +300,7 @@ export class Aufgabe {
 
   /**
    * Der Titel einer Aufgabe. Er wird zuerst aus den TeX-Metadaten
-   * `\liAufgabenMetadaten` (`Titel`) gelesen, anschließend aus dem ersten
+   * `\bAufgabenMetadaten` (`Titel`) gelesen, anschließend aus dem ersten
    * `\section`-Makro. Wird kein Titel in der TeX-Datei gefunden, so lautet der
    * Titel `Aufgabe`.
    */
@@ -319,8 +319,8 @@ export class Aufgabe {
 
   /**
    * Die Thematik (wenige Wörter um sich an eine Aufgabe erinnern zu können)
-   * einer Aufgabe. Er wird zuerst aus den TeX-Metadaten `\liAufgabenMetadaten`
-   * (`Themaik`) gelesen, anschließend aus dem ersten `\liAufgabenTitel`-Makro.
+   * einer Aufgabe. Er wird zuerst aus den TeX-Metadaten `\bAufgabenMetadaten`
+   * (`Themaik`) gelesen, anschließend aus dem ersten `\bAufgabenTitel`-Makro.
    * Wird kein Titel in der TeX-Datei gefunden, so lautet der Titel `keine
    * Thematik`.
    */
@@ -449,7 +449,7 @@ export class Aufgabe {
   get einbindenTexMakro (): string {
     let relativerPfad = macheRelativenPfad(this.pfad)
     relativerPfad = relativerPfad.replace('.tex', '')
-    return `\\liAufgabe{${relativerPfad}}`
+    return `\\bAufgabe{${relativerPfad}}`
   }
 
   get relativerPfad (): string {
@@ -631,13 +631,13 @@ export class ExamensAufgabe extends Aufgabe {
    * Einbinden-Makros.
    *
    * @returns z. B.
-   * `\liExamensAufgabe{66116/2017/03/Thema-1/Teilaufgabe-1/Aufgabe-2}`
+   * `\bExamensAufgabe{66116/2017/03/Thema-1/Teilaufgabe-1/Aufgabe-2}`
    */
   get einbindenTexMakro (): string {
     let relativerPfad = macheRelativenPfad(this.pfad)
     relativerPfad = relativerPfad.replace('Staatsexamen/', '')
     relativerPfad = relativerPfad.replace('.tex', '')
-    return `\\liExamensAufgabe{${relativerPfad}}`
+    return `\\bExamensAufgabe{${relativerPfad}}`
   }
 
   /**

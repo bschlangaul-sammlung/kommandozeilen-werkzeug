@@ -105,7 +105,7 @@ programm
   .option('-n, --kein-index', 'Öffne nur die Dateien, die keinen Index haben.')
   .option(
     '-t, --kein-titel',
-    'Öffne nur die Dateien, die keinen Titel haben. \\liAufgabenTitel{}.'
+    'Öffne nur die Dateien, die keinen Titel haben. \\bAufgabenTitel{}.'
   )
   .action(aktionen.öffneDurchGlobInVSCode)
 

@@ -115,15 +115,15 @@ export function erzeugeExamenScansSammlung (): void {
       return undefined
     },
     betreteExamen (examen: Examen, monat: number, nummer: number): undefined {
-      ausgabe.sammle(`\n\\liTrennSeite{${examen.jahreszeit} ${examen.jahr}}`)
-      ausgabe.sammle(`\\liBindePdfEin{${macheRelativenPfad(examen.pfad)}}`)
+      ausgabe.sammle(`\n\\bTrennSeite{${examen.jahreszeit} ${examen.jahr}}`)
+      ausgabe.sammle(`\\bBindePdfEin{${macheRelativenPfad(examen.pfad)}}`)
       return undefined
     },
     verlasseEinzelprüfungsNr (nummer: number): undefined {
       const textKörper = ausgabe.gibText()
       const kopf =
-        `\\liPruefungsNummer{${nummer}}\n` +
-        `\\liPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`
+        `\\bPruefungsNummer{${nummer}}\n` +
+        `\\bPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`
 
       schreibeTexDatei(
         macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'),
@@ -141,15 +141,15 @@ export function erzeugeExamenScansSammlung (): void {
  * Aufgaben samt Lösungen einbindet.
  *
  * ```latex
- * \liSetzeExamen{66116}{2021}{03}
+ * \bSetzeExamen{66116}{2021}{03}
  *
- * \liSetzeExamenThemaNr{1}
+ * \bSetzeExamenThemaNr{1}
  *
- * \liSetzeExamenTeilaufgabeNr{1}
+ * \bSetzeExamenTeilaufgabeNr{1}
  *
- * \liBindeAufgabeEin{1}
- * \liBindeAufgabeEin{2}
- * \liBindeAufgabeEin{3}
+ * \bBindeAufgabeEin{1}
+ * \bBindeAufgabeEin{2}
+ * \bBindeAufgabeEin{3}
  * ```
  */
 function erzeugeExamensLösung (examen: Examen): void {
@@ -164,13 +164,13 @@ function erzeugeExamensLösung (examen: Examen): void {
   logger.verbose(examen.pfad)
   const textKörper = baum.besuche({
     betreteThema (nummer: number): string {
-      return `\n\n\\liSetzeExamenThemaNr{${nummer}}`
+      return `\n\n\\bSetzeExamenThemaNr{${nummer}}`
     },
     betreteTeilaufgabe (nummer: number): string {
-      return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`
+      return `\n\\bSetzeExamenTeilaufgabeNr{${nummer}}\n`
     },
     betreteAufgabe (aufgaben: Aufgabe, nummer: number): string {
-      return `\\liBindeAufgabeEin{${nummer}}`
+      return `\\bBindeAufgabeEin{${nummer}}`
     }
   })
 

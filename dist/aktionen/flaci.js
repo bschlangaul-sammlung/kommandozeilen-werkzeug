@@ -88,7 +88,7 @@ function formatiereKellerÜbergang(trans, states) {
     }
     const optionen = bestimmeÜbergangsOptionen(trans, 'above');
     const übergängeFormatiert = übergänge.join(';\n') + ';';
-    return `  \\liKellerKante${formatiereOptionen(optionen)}{${source}}{${target}}{\n${übergängeFormatiert}\n  }\n`;
+    return `  \\bKellerKante${formatiereOptionen(optionen)}{${source}}{${target}}{\n${übergängeFormatiert}\n  }\n`;
 }
 function formatiereTuringZeichen(zeichen) {
     if (zeichen === '☐')
@@ -108,10 +108,10 @@ function formatiereTuringÜbergang(trans, states) {
     }
     const optionen = bestimmeÜbergangsOptionen(trans, 'above');
     const übergängeFormatiert = übergänge.join(';\n') + ';';
-    return `  \\liTuringKante${formatiereOptionen(optionen)}{${source}}{${target}}{\n${übergängeFormatiert}\n  }\n`;
+    return `  \\bTuringKante${formatiereOptionen(optionen)}{${source}}{${target}}{\n${übergängeFormatiert}\n  }\n`;
 }
 function formatiereFlaciLink(def) {
-    return `\\liFlaci{A${def.GUID}}`;
+    return `\\bFlaci{A${def.GUID}}`;
 }
 function formatiereTexEnv(name, inhalt, optionen = null) {
     let opt = '';

@@ -199,7 +199,7 @@ function formatiereKellerÜbergang (
   const optionen = bestimmeÜbergangsOptionen(trans, 'above')
   const übergängeFormatiert = übergänge.join(';\n') + ';'
 
-  return `  \\liKellerKante${formatiereOptionen(
+  return `  \\bKellerKante${formatiereOptionen(
     optionen
   )}{${source}}{${target}}{\n${übergängeFormatiert}\n  }\n`
 }
@@ -228,13 +228,13 @@ function formatiereTuringÜbergang (
   const optionen = bestimmeÜbergangsOptionen(trans, 'above')
   const übergängeFormatiert = übergänge.join(';\n') + ';'
 
-  return `  \\liTuringKante${formatiereOptionen(
+  return `  \\bTuringKante${formatiereOptionen(
     optionen
   )}{${source}}{${target}}{\n${übergängeFormatiert}\n  }\n`
 }
 
 function formatiereFlaciLink (def: FlaciDefinition): string {
-  return `\\liFlaci{A${def.GUID}}`
+  return `\\bFlaci{A${def.GUID}}`
 }
 
 function formatiereTexEnv (
