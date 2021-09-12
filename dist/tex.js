@@ -45,7 +45,7 @@ exports.sammleStichwörter = sammleStichwörter;
   * Sammle alle Stichwörter einer TeX-Datei.
   */
 function sammleStichwörterEinerDatei(pfad) {
-    return sammleStichwörter(helfer_1.leseRepoDatei(pfad));
+    return sammleStichwörter((0, helfer_1.leseRepoDatei)(pfad));
 }
 exports.sammleStichwörterEinerDatei = sammleStichwörterEinerDatei;
 /**
@@ -59,7 +59,7 @@ function schreibeTexDatei(dateiPfad, klassenName, kopf, textkörper) {
     const inhalt = `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
         `\\begin{document}\n${textkörper}\n\\end{document}\n`;
     log_1.logger.debug(inhalt);
-    helfer_1.schreibeDatei(dateiPfad, inhalt);
+    (0, helfer_1.schreibeDatei)(dateiPfad, inhalt);
 }
 exports.schreibeTexDatei = schreibeTexDatei;
 function umgebeMitKlammern(text) {

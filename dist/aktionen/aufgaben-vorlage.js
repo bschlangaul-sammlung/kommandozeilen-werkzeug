@@ -16,9 +16,9 @@ function schreibeVorlage(pfad, werte = {}) {
     meta.Thematik = werte.thematik != null ? werte.thematik : '';
     meta.ZitatSchluessel =
         werte.zitatSchlüssel != null ? werte.zitatSchlüssel : '';
-    const plist = aufgaben_metadaten_1.macheAufgabenMetadatenPlist(meta);
+    const plist = (0, aufgaben_metadaten_1.macheAufgabenMetadatenPlist)(meta);
     const textkörper = plist + '\n' + '\\index{}\n' + '\\footcite{' + meta.ZitatSchluessel + '}\n';
-    tex_1.schreibeTexDatei(pfad, 'aufgabe', '', textkörper);
+    (0, tex_1.schreibeTexDatei)(pfad, 'aufgabe', '', textkörper);
 }
 function erzeugeAufgabenVorlage(titel) {
     let dateiName = 'Aufgabe_';
@@ -32,7 +32,7 @@ function erzeugeAufgabenVorlage(titel) {
             titel
         });
     }
-    helfer_1.öffneVSCode(pfad);
+    (0, helfer_1.öffneVSCode)(pfad);
 }
 exports.erzeugeAufgabenVorlage = erzeugeAufgabenVorlage;
 function schreibeExamensAufgabeVorlage(examensAufgabe) {
@@ -51,6 +51,6 @@ function schreibeExamensAufgabeVorlage(examensAufgabe) {
 function erzeugeExamensAufgabeVorlage(ref, arg1, arg2, arg3) {
     const examensAufgabe = aufgabe_1.ExamensAufgabe.erzeugeExamensAufgabe(ref, arg1, arg2, arg3);
     const pfad = schreibeExamensAufgabeVorlage(examensAufgabe);
-    helfer_1.öffneVSCode(pfad);
+    (0, helfer_1.öffneVSCode)(pfad);
 }
 exports.erzeugeExamensAufgabeVorlage = erzeugeExamensAufgabeVorlage;

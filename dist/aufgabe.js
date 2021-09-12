@@ -41,9 +41,9 @@ class Aufgabe {
             this.inhalt = '';
         }
         else {
-            this.inhalt = helfer_1.leseRepoDatei(this.pfad);
+            this.inhalt = (0, helfer_1.leseRepoDatei)(this.pfad);
         }
-        this.stichwörter = tex_1.sammleStichwörter(this.inhalt);
+        this.stichwörter = (0, tex_1.sammleStichwörter)(this.inhalt);
         const metaDaten = this.leseMetadatenVonTex();
         if (metaDaten != null) {
             this.metadaten_ = metaDaten;
@@ -153,7 +153,7 @@ class Aufgabe {
         if (gegebenerWert != null && !gültigeWerte.includes(gegebenerWert)) {
             console.log('Der Wert ist nicht gültig: ' + gegebenerWert);
             console.log('Gültige Werte: ' + gültigeWerte.toString());
-            helfer_1.öffneVSCode(this.pfad);
+            (0, helfer_1.öffneVSCode)(this.pfad);
         }
     }
     /**
@@ -184,7 +184,7 @@ class Aufgabe {
         if (((_a = this.metadaten_) === null || _a === void 0 ? void 0 : _a.Thematik) != null) {
             return this.metadaten_.Thematik;
         }
-        const thematik = tex_1.gibInhaltEinesTexMakros('bAufgabenTitel', this.inhalt);
+        const thematik = (0, tex_1.gibInhaltEinesTexMakros)('bAufgabenTitel', this.inhalt);
         if (thematik != null) {
             return thematik;
         }
@@ -282,25 +282,25 @@ class Aufgabe {
      * Formatierter Link zur Tex-Datei.
      */
     get linkTex() {
-        return helfer_1.generiereLink('.tex', this.pfad, { linkePdf: false });
+        return (0, helfer_1.generiereLink)('.tex', this.pfad, { linkePdf: false });
     }
     /**
      * Formatierter Link zur PDF-Datei auf Github mit den Stichwörtern.
      */
     get link() {
-        return (helfer_1.generiereLink(this.titelThematikFormatiert, this.pfad) +
+        return ((0, helfer_1.generiereLink)(this.titelThematikFormatiert, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +
             ') ');
     }
     get einbindenTexMakro() {
-        let relativerPfad = helfer_1.macheRelativenPfad(this.pfad);
+        let relativerPfad = (0, helfer_1.macheRelativenPfad)(this.pfad);
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\bAufgabe{${relativerPfad}}`;
     }
     get relativerPfad() {
-        return helfer_1.macheRelativenPfad(this.pfad);
+        return (0, helfer_1.macheRelativenPfad)(this.pfad);
     }
 }
 exports.Aufgabe = Aufgabe;
@@ -316,7 +316,7 @@ class ExamensAufgabe extends Aufgabe {
         examen.aufgaben[pfad] = this;
         const treffer = pfad.match(ExamensAufgabe.pfadRegExp);
         if (treffer == null || treffer.groups == null) {
-            helfer_1.zeigeFehler(`Konnte den Pfad der Examensaufgabe nicht lesen: ${pfad}`);
+            (0, helfer_1.zeigeFehler)(`Konnte den Pfad der Examensaufgabe nicht lesen: ${pfad}`);
         }
         const gruppen = treffer.groups;
         this.aufgabe = parseInt(gruppen.aufgabe);
@@ -407,7 +407,7 @@ class ExamensAufgabe extends Aufgabe {
     gibTitelNurAufgabe(alsMarkdownLink = false) {
         const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`;
         if (alsMarkdownLink) {
-            return helfer_1.generiereLink(ausgabe, this.pfad);
+            return (0, helfer_1.generiereLink)(ausgabe, this.pfad);
         }
         return ausgabe;
     }
@@ -416,7 +416,7 @@ class ExamensAufgabe extends Aufgabe {
         return `${this.examen.dateiName}_${aufgabenReferenz}`;
     }
     get link() {
-        return (helfer_1.generiereLink(this.titelKurz, this.pfad) +
+        return ((0, helfer_1.generiereLink)(this.titelKurz, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +
@@ -442,7 +442,7 @@ class ExamensAufgabe extends Aufgabe {
      * `\bExamensAufgabe{66116/2017/03/Thema-1/Teilaufgabe-1/Aufgabe-2}`
      */
     get einbindenTexMakro() {
-        let relativerPfad = helfer_1.macheRelativenPfad(this.pfad);
+        let relativerPfad = (0, helfer_1.macheRelativenPfad)(this.pfad);
         relativerPfad = relativerPfad.replace('Staatsexamen/', '');
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\bExamensAufgabe{${relativerPfad}}`;
@@ -490,7 +490,7 @@ class AufgabenSammlung {
         for (const pfad of dateien) {
             const aufgabe = this.erzeugeAufgabe(pfad);
             if (aufgabe != null) {
-                this.aufgaben[helfer_1.macheRelativenPfad(pfad)] = aufgabe;
+                this.aufgaben[(0, helfer_1.macheRelativenPfad)(pfad)] = aufgabe;
             }
         }
     }
@@ -506,14 +506,14 @@ class AufgabenSammlung {
         }
     }
     gib(pfad) {
-        return this.aufgaben[helfer_1.macheRelativenPfad(pfad)];
+        return this.aufgaben[(0, helfer_1.macheRelativenPfad)(pfad)];
     }
 }
 exports.AufgabenSammlung = AufgabenSammlung;
 let aufgabenSammlung;
 function gibAufgabenSammlung() {
     if (aufgabenSammlung == null) {
-        aufgabenSammlung = new AufgabenSammlung(examen_1.gibExamenSammlung());
+        aufgabenSammlung = new AufgabenSammlung((0, examen_1.gibExamenSammlung)());
     }
     return aufgabenSammlung;
 }

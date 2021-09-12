@@ -12,15 +12,15 @@ const string_similarity_1 = require("string-similarity");
 class StichwortBaum {
     constructor() {
         this.flach = new Set();
-        const roherBaum = js_yaml_1.default.load(helfer_1.leseRepoDatei('Stichwortverzeichnis.yml'));
+        const roherBaum = js_yaml_1.default.load((0, helfer_1.leseRepoDatei)('Stichwortverzeichnis.yml'));
         if (roherBaum == null) {
-            helfer_1.zeigeFehler('Konnte die Konfigurationsdatei nicht lesen');
+            (0, helfer_1.zeigeFehler)('Konnte die Konfigurationsdatei nicht lesen');
         }
         this.baum = this.normalisiereBaum(roherBaum);
     }
     fügeStichwortSicherHinzu(stichwort) {
         if (this.flach.has(stichwort)) {
-            helfer_1.zeigeFehler(`Doppeltes Stichwort: ${stichwort}`);
+            (0, helfer_1.zeigeFehler)(`Doppeltes Stichwort: ${stichwort}`);
         }
         else {
             this.flach.add(stichwort);
@@ -57,7 +57,7 @@ class StichwortBaum {
             }
         }
         else {
-            helfer_1.zeigeFehler('Unbekannter Datentyp für den Stichwortbaum');
+            (0, helfer_1.zeigeFehler)('Unbekannter Datentyp für den Stichwortbaum');
         }
         return ausgang;
     }
@@ -112,7 +112,7 @@ class StichwortBaum {
         }
     }
     findeÄhnliches(suche) {
-        const ergebnis = string_similarity_1.findBestMatch(suche, Array.from(this.flach));
+        const ergebnis = (0, string_similarity_1.findBestMatch)(suche, Array.from(this.flach));
         return ergebnis.bestMatch.target;
     }
 }
@@ -128,10 +128,10 @@ class StichwortVerzeichnis {
                 const aufgabe = this.aufgabenSammlung.gib(pfad);
                 for (const stichwort of aufgabe.stichwörter) {
                     if (!stichwortBaum.existiertStichwort(stichwort)) {
-                        helfer_1.öffneVSCode(pfad);
+                        (0, helfer_1.öffneVSCode)(pfad);
                         console.log('Möglicherweise war dieses Stichwort gemeint: ' +
                             this.stichwortBaum.findeÄhnliches(stichwort));
-                        helfer_1.zeigeFehler(`Das Stichwort „${stichwort}“ in der Datei „${pfad}“ gibt es nicht.`);
+                        (0, helfer_1.zeigeFehler)(`Das Stichwort „${stichwort}“ in der Datei „${pfad}“ gibt es nicht.`);
                     }
                     if (this.verzeichnis[stichwort] != null) {
                         this.verzeichnis[stichwort].add(aufgabe);
@@ -173,7 +173,7 @@ exports.gibStichwortBaum = gibStichwortBaum;
 let stichwortVerzeichnis;
 function gibStichwortVerzeichnis() {
     if (stichwortVerzeichnis == null) {
-        stichwortVerzeichnis = new StichwortVerzeichnis(gibStichwortBaum(), aufgabe_1.gibAufgabenSammlung());
+        stichwortVerzeichnis = new StichwortVerzeichnis(gibStichwortBaum(), (0, aufgabe_1.gibAufgabenSammlung)());
     }
     return stichwortVerzeichnis;
 }

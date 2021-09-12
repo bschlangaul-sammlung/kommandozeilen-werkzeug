@@ -16,8 +16,8 @@ function gibAbsolutenPfad(...segmente) {
     return path_1.default.join(übergeordneterPfad, ...segmente);
 }
 function leseTexDatei(dateiPfad) {
-    log_1.log('info', `Lese Datei: ${dateiPfad}`);
-    const inhalt = helfer_1.leseDatei(dateiPfad);
+    (0, log_1.log)('info', `Lese Datei: ${dateiPfad}`);
+    const inhalt = (0, helfer_1.leseDatei)(dateiPfad);
     const dateiName = path_1.default.basename(dateiPfad);
     const prefix = '%    \\end{macrocode}\n' +
         '% \\subsection{' +
@@ -27,10 +27,10 @@ function leseTexDatei(dateiPfad) {
     return prefix + inhalt;
 }
 function kompiliereDtxDatei() {
-    helfer_1.führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad);
-    helfer_1.führeAus('makeindex -s gglo.ist -o dokumentation.gls dokumentation.glo', übergeordneterPfad);
-    helfer_1.führeAus('makeindex -s gind.ist -o dokumentation.ind dokumentation.idx', übergeordneterPfad);
-    helfer_1.führeAus('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad);
+    (0, helfer_1.führeAus)('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad);
+    (0, helfer_1.führeAus)('makeindex -s gglo.ist -o dokumentation.gls dokumentation.glo', übergeordneterPfad);
+    (0, helfer_1.führeAus)('makeindex -s gind.ist -o dokumentation.ind dokumentation.idx', übergeordneterPfad);
+    (0, helfer_1.führeAus)('lualatex --shell-escape dokumentation.dtx', übergeordneterPfad);
 }
 function leseVerzeichnis(verzeichnis, dateiEndung) {
     const ausgabe = new helfer_1.AusgabeSammler();
@@ -43,13 +43,13 @@ function leseVerzeichnis(verzeichnis, dateiEndung) {
     return ausgabe.gibText();
 }
 function default_1() {
-    let textkörper = helfer_1.leseDatei(path_1.default.join(übergeordneterPfad, 'dokumentation_vorlage.dtx'));
+    let textkörper = (0, helfer_1.leseDatei)(path_1.default.join(übergeordneterPfad, 'dokumentation_vorlage.dtx'));
     // klassen
     textkörper = textkörper.replace('{{ klassen }}', leseVerzeichnis('klassen', 'cls'));
     // pakete
     textkörper = textkörper.replace('{{ pakete }}', leseVerzeichnis('pakete', 'sty'));
-    helfer_1.schreibeDatei(dtxPfad, textkörper);
+    (0, helfer_1.schreibeDatei)(dtxPfad, textkörper);
     kompiliereDtxDatei();
-    helfer_1.öffneProgramm('/usr/bin/xdg-open', path_1.default.join(übergeordneterPfad, 'dokumentation.pdf'));
+    (0, helfer_1.öffneProgramm)('/usr/bin/xdg-open', path_1.default.join(übergeordneterPfad, 'dokumentation.pdf'));
 }
 exports.default = default_1;

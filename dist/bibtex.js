@@ -8,7 +8,7 @@ const glob_1 = __importDefault(require("glob"));
 const biblatex_csl_converter_1 = require("biblatex-csl-converter");
 const helfer_1 = require("./helfer");
 function leseBibDatei(dateiPfad) {
-    const parser = new biblatex_csl_converter_1.BibLatexParser(helfer_1.leseRepoDatei(dateiPfad), {
+    const parser = new biblatex_csl_converter_1.BibLatexParser((0, helfer_1.leseRepoDatei)(dateiPfad), {
         processUnexpected: true,
         processUnknown: true
     });

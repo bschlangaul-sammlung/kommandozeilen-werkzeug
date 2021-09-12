@@ -21,8 +21,8 @@ function default_1() {
             if (ergebnis.status !== 0) {
                 console.log(ergebnis.stdout);
                 console.log(ergebnis.stderr);
-                helfer_1.öffneVSCode(pfad);
-                helfer_1.zeigeFehler(`Die Datei „${pfad}“ konnte nicht kompiliert werden.`);
+                (0, helfer_1.öffneVSCode)(pfad);
+                (0, helfer_1.zeigeFehler)(`Die Datei „${pfad}“ konnte nicht kompiliert werden.`);
             }
         }
     }

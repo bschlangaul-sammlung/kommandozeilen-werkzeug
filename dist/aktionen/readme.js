@@ -20,18 +20,18 @@ function generiereMarkdownAufgabenListe(aufgabenListe) {
 }
 function ersetzeStichwörterInReadme(inhalt) {
     return inhalt.replace(/\{\{ stichwort "([^"]*)" \}\}/g, function (treffer, stichwort) {
-        return generiereMarkdownAufgabenListe(stichwort_verzeichnis_1.gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort));
+        return generiereMarkdownAufgabenListe((0, stichwort_verzeichnis_1.gibStichwortVerzeichnis)().gibAufgabenMitStichwortUnterBaum(stichwort));
     });
 }
 function default_1() {
-    let inhalt = helfer_1.leseRepoDatei('README_template.md');
+    let inhalt = (0, helfer_1.leseRepoDatei)('README_template.md');
     console.log(inhalt);
     inhalt = ersetzeStichwörterInReadme(inhalt);
     console.log(inhalt);
-    const stichwörterInhalt = helfer_1.leseRepoDatei('Stichwortverzeichnis.yml');
+    const stichwörterInhalt = (0, helfer_1.leseRepoDatei)('Stichwortverzeichnis.yml');
     inhalt = inhalt.replace('{{ stichwortverzeichnis }}', stichwörterInhalt);
     console.log(inhalt);
-    inhalt = inhalt.replace('{{ staatsexamen }}', aufgaben_sammlung_1.generiereExamensÜbersicht());
+    inhalt = inhalt.replace('{{ staatsexamen }}', (0, aufgaben_sammlung_1.generiereExamensÜbersicht)());
     console.log(inhalt);
     fs_1.default.writeFileSync(path_1.default.join(helfer_1.repositoryPfad, 'README.md'), inhalt);
 }

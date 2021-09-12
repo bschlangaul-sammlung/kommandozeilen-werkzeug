@@ -11,7 +11,7 @@ class TexDateiMitSql {
     constructor(pfad) {
         this.anzahlAnfragen = 0;
         this.pfad = pfad;
-        this.inhalt = helfer_1.leseDatei(pfad);
+        this.inhalt = (0, helfer_1.leseDatei)(pfad);
         this.datenbankName = this.findeErzeugungsCode();
     }
     gibTemporärenPfad(bezeichner) {
@@ -83,7 +83,7 @@ class TexDateiMitSql {
         const regExp = /% ?Datenbankname: ?(\w+).*?\\begin\{minted\}\{sql\}(.*?)\\end\{minted\}/gs;
         const datenbank = regExp.exec(this.inhalt);
         if (datenbank == null) {
-            helfer_1.zeigeFehler('Keine Erzeugungs-Code gefunden: % Datenbankname: Name\\begin{minted}{sql}…\\end{minted}');
+            (0, helfer_1.zeigeFehler)('Keine Erzeugungs-Code gefunden: % Datenbankname: Name\\begin{minted}{sql}…\\end{minted}');
         }
         // postgresql \c funktioniert nur mit klein geschriebenen Datenbank-Namen
         const datenbankName = datenbank[1].toLowerCase();

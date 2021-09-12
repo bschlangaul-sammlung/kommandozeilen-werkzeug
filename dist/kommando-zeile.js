@@ -14,13 +14,13 @@ const log_1 = require("./log");
 function increaseVerbosity(dummyValue, verbosity) {
     verbosity = verbosity + 1;
     if (verbosity === 1) {
-        log_1.setzeLogEbene('info');
+        (0, log_1.setzeLogEbene)('info');
     }
     else if (verbosity === 2) {
-        log_1.setzeLogEbene('verbose');
+        (0, log_1.setzeLogEbene)('verbose');
     }
     else {
-        log_1.setzeLogEbene('debug');
+        (0, log_1.setzeLogEbene)('debug');
     }
     return verbosity;
 }

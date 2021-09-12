@@ -65,7 +65,7 @@ function erzeugeDateiLink(examen, dateiName) {
  * Erzeugen den Markdown-Code für die README-Datei.
  */
 function generiereExamensÜbersicht() {
-    const examenSammlung = examen_1.gibExamenSammlung();
+    const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
         log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
@@ -88,7 +88,7 @@ exports.generiereExamensÜbersicht = generiereExamensÜbersicht;
  * 65116) als eine PDF-Datei zusammenfasst.
  */
 function erzeugeExamenScansSammlung() {
-    const examenSammlung = examen_1.gibExamenSammlung();
+    const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
         log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
@@ -102,14 +102,14 @@ function erzeugeExamenScansSammlung() {
         },
         betreteExamen(examen, monat, nummer) {
             ausgabe.sammle(`\n\\bTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
-            ausgabe.sammle(`\\bBindePdfEin{${helfer_1.macheRelativenPfad(examen.pfad)}}`);
+            ausgabe.sammle(`\\bBindePdfEin{${(0, helfer_1.macheRelativenPfad)(examen.pfad)}}`);
             return undefined;
         },
         verlasseEinzelprüfungsNr(nummer) {
             const textKörper = ausgabe.gibText();
             const kopf = `\\bPruefungsNummer{${nummer}}\n` +
                 `\\bPruefungsTitel{${examen_1.Examen.fachDurchNummer(nummer)}}\n`;
-            tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
+            (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
             return undefined;
         }
     });
@@ -150,7 +150,7 @@ function erzeugeExamensLösung(examen) {
             return `\\bBindeAufgabeEin{${nummer}}`;
         }
     });
-    const kopf = tex_1.machePlist('liMetaSetze', {
+    const kopf = (0, tex_1.machePlist)('liMetaSetze', {
         ExamenNummer: examen.nummer,
         ExamenFach: examen.fach,
         ExamenJahr: examen.jahr,
@@ -160,11 +160,11 @@ function erzeugeExamensLösung(examen) {
     const pfad = examen.machePfad('Examen.tex');
     if (textKörper != null) {
         log_1.logger.log('info', 'Schreibe %s', pfad);
-        tex_1.schreibeTexDatei(pfad, 'examen', kopf, textKörper);
+        (0, tex_1.schreibeTexDatei)(pfad, 'examen', kopf, textKörper);
     }
     else {
         log_1.logger.log('verbose', 'Lösche %s', pfad);
-        helfer_1.löscheDatei(pfad);
+        (0, helfer_1.löscheDatei)(pfad);
     }
 }
 /**
@@ -173,8 +173,8 @@ function erzeugeExamensLösung(examen) {
  */
 function erzeugeExamensLösungen() {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
-    aufgabe_1.gibAufgabenSammlung();
-    const examenSammlung = examen_1.gibExamenSammlung();
+    (0, aufgabe_1.gibAufgabenSammlung)();
+    const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const examenBaum = examenSammlung.baum;
     for (const nummer in examenBaum) {
         for (const jahr in examenBaum[nummer]) {
@@ -191,8 +191,8 @@ exports.erzeugeExamensLösungen = erzeugeExamensLösungen;
  */
 function erzeugeHauptDokument() {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
-    aufgabe_1.gibAufgabenSammlung();
-    const examenSammlung = examen_1.gibExamenSammlung();
+    (0, aufgabe_1.gibAufgabenSammlung)();
+    const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
         log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
@@ -205,6 +205,6 @@ function erzeugeHauptDokument() {
             }
         }
     });
-    tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Bschlangaul-Sammlung.tex'), 'haupt', '', textkörper);
+    (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)('Bschlangaul-Sammlung.tex'), 'haupt', '', textkörper);
 }
 exports.erzeugeHauptDokument = erzeugeHauptDokument;

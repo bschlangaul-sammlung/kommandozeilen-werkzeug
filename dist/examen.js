@@ -58,7 +58,7 @@ class Examen {
      * @returns z. B. `Staatsexamen/66116/2020/09`
      */
     get verzeichnisRelativ() {
-        return helfer_1.macheRelativenPfad(this.verzeichnis);
+        return (0, helfer_1.macheRelativenPfad)(this.verzeichnis);
     }
     /**
      * Generiere eine absoluten Dateipfad, der im Verzeichnis des Examens liegt.
@@ -72,7 +72,7 @@ class Examen {
      * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
      */
     macheMarkdownLink(text, ...pfadSegmente) {
-        return helfer_1.generiereLink(text, this.machePfad(...pfadSegmente));
+        return (0, helfer_1.generiereLink)(text, this.machePfad(...pfadSegmente));
     }
     /**
      * In welcher Jahreszeit das Examen stattfindet. Der Monat 3 gibt
@@ -87,7 +87,7 @@ class Examen {
         else if (this.monat === 9) {
             return 'Herbst';
         }
-        helfer_1.zeigeFehler('Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.');
+        (0, helfer_1.zeigeFehler)('Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.');
     }
     /**
      * @returns Ein lesbarer Dateiname, der das Examen identifiziert.
@@ -139,7 +139,7 @@ class Examen {
     static erzeugeExamenVonPfad(pfad) {
         const treffer = pfad.match(Examen.regExp);
         if (treffer == null || treffer.groups == null) {
-            helfer_1.zeigeFehler(`Konnten den Examenspfad nicht lesen: ${pfad}`);
+            (0, helfer_1.zeigeFehler)(`Konnten den Examenspfad nicht lesen: ${pfad}`);
         }
         const gruppen = treffer.groups;
         return Examen.erzeugeExamenDurchTextArgumente(gruppen.nummer, gruppen.jahr, gruppen.monat);
@@ -147,7 +147,7 @@ class Examen {
     static gibReferenzVonPfad(pfad) {
         const treffer = pfad.match(Examen.regExp);
         if (treffer == null || treffer.groups == null) {
-            helfer_1.zeigeFehler(`Konnten den Examenspfad nicht lesen: ${pfad}`);
+            (0, helfer_1.zeigeFehler)(`Konnten den Examenspfad nicht lesen: ${pfad}`);
         }
         const gruppen = treffer.groups;
         return `${gruppen.nummer}:${gruppen.jahr}:${gruppen.monat}`;
@@ -155,7 +155,7 @@ class Examen {
     static erzeugeExamenVonReferenz(referenz) {
         const ergebnis = referenz.split(':');
         if (ergebnis.length !== 3) {
-            helfer_1.zeigeFehler('Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09');
+            (0, helfer_1.zeigeFehler)('Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09');
         }
         return Examen.erzeugeExamenDurchTextArgumente(ergebnis[0], ergebnis[1], ergebnis[2]);
     }

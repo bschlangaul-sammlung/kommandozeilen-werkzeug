@@ -20,14 +20,14 @@ function schreibe(dateiPfad, aufgabenInhalt, titelTexMakro) {
         aufgabenTitelErsetzt = aufgabenInhalt.replace(/(\\begin\{document\})/, '$1\n' + titelTexMakro);
     }
     if (aufgabenInhalt !== aufgabenTitelErsetzt) {
-        helfer_1.schreibeDatei(dateiPfad, aufgabenTitelErsetzt);
+        (0, helfer_1.schreibeDatei)(dateiPfad, aufgabenTitelErsetzt);
         return true;
     }
     return false;
 }
 exports.schreibe = schreibe;
 function macheAufgabenMetadatenPlist(meta) {
-    return tex_1.machePlist('bAufgabenMetadaten', meta, [
+    return (0, tex_1.machePlist)('bAufgabenMetadaten', meta, [
         'Titel',
         'Thematik',
         'ZitatBeschreibung',
@@ -54,9 +54,9 @@ exports.macheAufgabenMetadatenPlist = macheAufgabenMetadatenPlist;
  */
 function default_1(dateiPfad) {
     dateiPfad = path_1.default.resolve(dateiPfad);
-    const aufgabenSammlung = aufgabe_1.gibAufgabenSammlung();
+    const aufgabenSammlung = (0, aufgabe_1.gibAufgabenSammlung)();
     const aufgabe = aufgabenSammlung.gib(dateiPfad);
-    const texPlist = tex_1.machePlist('bAufgabenMetadaten', aufgabe.erzeugeMetadaten(), ['Titel', 'Thematik', 'ZitatBeschreibung', 'Stichwoerter']);
+    const texPlist = (0, tex_1.machePlist)('bAufgabenMetadaten', aufgabe.erzeugeMetadaten(), ['Titel', 'Thematik', 'ZitatBeschreibung', 'Stichwoerter']);
     if (aufgabe.inhalt !== null) {
         const inhalt = aufgabe.inhalt;
         schreibe(dateiPfad, inhalt, texPlist);
