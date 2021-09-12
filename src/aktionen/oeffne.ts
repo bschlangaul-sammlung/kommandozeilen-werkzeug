@@ -53,7 +53,7 @@ export function öffneDurchStichwort (stichwort: string): void {
     )
   } else {
     for (const aufgabe of aufgaben) {
-      console.log(aufgabe.texEinbindenMakro)
+      console.log(aufgabe.einbindenTexMakro)
       öffneProgramm('code', aufgabe.pfad)
     }
   }

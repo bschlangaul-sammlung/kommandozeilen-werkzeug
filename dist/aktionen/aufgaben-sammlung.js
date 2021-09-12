@@ -199,14 +199,10 @@ function erzeugeHauptDokument() {
         return;
     }
     const textkörper = baum.besuche({
-        betreteEinzelprüfungsNr(nummer) {
-            return `\n% ${nummer.toString()}`;
-        },
-        betreteExamen(examen, monat, nummer) {
-            return undefined;
-        },
         betreteAufgabe(aufgabe, nummer) {
-            return '% ' + aufgabe.titelFormatiert;
+            if (aufgabe.istKorrekt) {
+                return '% ' + aufgabe.texEinbindenMakro;
+            }
         }
     });
     tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Bschlangaul-Sammlung.tex'), 'examen', '', textkörper);

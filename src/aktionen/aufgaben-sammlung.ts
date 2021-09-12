@@ -226,15 +226,10 @@ export function erzeugeHauptDokument (): void {
   }
 
   const textkörper = baum.besuche({
-    betreteEinzelprüfungsNr (nummer: number): string {
-      return `\n% ${nummer.toString()}`
-    },
-    betreteExamen (examen: Examen, monat: number, nummer: number): undefined {
-      return undefined
-    },
-
-    betreteAufgabe (aufgabe: Aufgabe, nummer: number): string {
-      return '% ' + aufgabe.titelFormatiert
+    betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
+      if (aufgabe.istKorrekt) {
+        return '% ' + aufgabe.einbindenTexMakro
+      }
     }
   })
   schreibeTexDatei(

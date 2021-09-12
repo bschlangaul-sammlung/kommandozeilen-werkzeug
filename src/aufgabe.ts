@@ -28,7 +28,7 @@ const bearbeitungsStand = [
  * Wie ist der Bearbeitungsstand in Bezug auf den Satz im TeX-System.
  *
  * - unbekannt:  Werden die Metadaten automatisch erzeugt, ist der
- *               Bearbeitungsstand zu erst unbekannt
+ *               Bearbeitungsstand zuerst unbekannt.
  * - OCR:        Das Ergebnis der Texterkennung (OCR = Optical Character
  *               Recognition) wurde übernommen. Außer der TeX-Klasse ist noch
  *               nichts geTeXt.
@@ -38,21 +38,19 @@ const bearbeitungsStand = [
 type BearbeitungsStand = typeof bearbeitungsStand[number]
 
 const korrektheit = [
+  'wahrscheinlich falsch',
   'unbekannt',
-  'unsicher',
-  'überprüft',
-  'automatisch überprüft',
-  'korrekt'
+  'korrekt',
+  'korrekt und überprüft'
 ] as const
 
 /**
  * Information im Bezug auf die Korrektheit der Lösung.
  *
- * - unbekannt
- * - unsicher: Die Korrektheit der Lösung ist unsicher
- * - überprüft: Die Lösung wurde von einem Menschen überprüft
- * - automatisch überprüft: Die Korrektheit der Lösung wurde von einem Computer überprüft
- * - korrekt: ist Lösung ist korrekt.
+ * - `wahrscheinlich falsch`: Die Lösung ist wahrscheinlich falsch.
+ * - `unbekannt`: Die Korrektheit der Lösung ist unbekannt.
+ * - `korrekt`: Die Lösung ist korrekt.
+ * - `korrekt und überprüft`: Die Lösung ist korrekt, da sie überprüft und bestätigt wurde.
  */
 type Korrektheit = typeof korrektheit[number]
 
@@ -378,6 +376,17 @@ export class Aufgabe {
   }
 
   /**
+   * Zeigt an, ob die Aufgabe korrekt ist. Das ist der Fall wenn in den
+   * Aufgabenmetadaten `korrekt` oder `korrekt und überprüft` steht.
+   */
+  get istKorrekt (): boolean {
+    return (
+      this.korrektheit === 'korrekt' ||
+      this.korrektheit === 'korrekt und überprüft'
+    )
+  }
+
+  /**
    * Siehe Dokumentation des Typs
    */
   get identischeAufgabe (): string | undefined {
@@ -437,7 +446,7 @@ export class Aufgabe {
     )
   }
 
-  get texEinbindenMakro (): string {
+  get einbindenTexMakro (): string {
     let relativerPfad = macheRelativenPfad(this.pfad)
     relativerPfad = relativerPfad.replace('.tex', '')
     return `\\liAufgabe{${relativerPfad}}`
@@ -566,31 +575,6 @@ export class ExamensAufgabe extends Aufgabe {
     return this.aufgabenReferenz.replace(/ +/g, '')
   }
 
-  get einbindenTexMakro (): string {
-    let aufgabe = ''
-    let suffix = ''
-    const examen = `${this.examen.nummer} / ${this.examen.jahr} / ${this.examen.monat} :`
-    if (
-      this.thema != null &&
-      this.teilaufgabe != null &&
-      this.aufgabe != null
-    ) {
-      aufgabe = `Thema ${this.thema} Teilaufgabe ${this.teilaufgabe} Aufgabe ${this.aufgabe}`
-      suffix = 'TTA'
-    } else if (
-      this.thema != null &&
-      this.aufgabe != null &&
-      this.teilaufgabe == null
-    ) {
-      aufgabe = `Thema ${this.thema} Aufgabe ${this.aufgabe}`
-      suffix = 'TA'
-    } else {
-      aufgabe = `Aufgabe ${this.aufgabe}`
-      suffix = 'A'
-    }
-    return `\n\\ExamensAufgabe${suffix} ${examen} ${aufgabe}`
-  }
-
   /**
    * `„Greedy-Färben von Intervallen“ Examen 66115 Herbst 2017 T1 A8`
    */
@@ -641,11 +625,52 @@ export class ExamensAufgabe extends Aufgabe {
     }
   }
 
-  get texEinbindenMakro (): string {
+  /**
+   * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
+   * eingebunden werden kann. Es handelt sich hierbei um die neue Version des
+   * Einbinden-Makros.
+   *
+   * @returns z. B.
+   * `\liExamensAufgabe{66116/2017/03/Thema-1/Teilaufgabe-1/Aufgabe-2}`
+   */
+  get einbindenTexMakro (): string {
     let relativerPfad = macheRelativenPfad(this.pfad)
     relativerPfad = relativerPfad.replace('Staatsexamen/', '')
     relativerPfad = relativerPfad.replace('.tex', '')
     return `\\liExamensAufgabe{${relativerPfad}}`
+  }
+
+  /**
+   * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
+   * eingebunden werden kann. Es handelt sich hierbei um die alte Version des
+   * Einbinden-Makros.
+   *
+   * @returns z. B. `\ExamensAufgabeTTA 66116 / 2021 / 03 : Thema 1 Teilaufgabe
+   * 1 Aufgabe 1`
+   */
+  get einbindenTexMakroAlt (): string {
+    let aufgabe = ''
+    let suffix = ''
+    const examen = `${this.examen.nummer} / ${this.examen.jahr} / ${this.examen.monat} :`
+    if (
+      this.thema != null &&
+      this.teilaufgabe != null &&
+      this.aufgabe != null
+    ) {
+      aufgabe = `Thema ${this.thema} Teilaufgabe ${this.teilaufgabe} Aufgabe ${this.aufgabe}`
+      suffix = 'TTA'
+    } else if (
+      this.thema != null &&
+      this.aufgabe != null &&
+      this.teilaufgabe == null
+    ) {
+      aufgabe = `Thema ${this.thema} Aufgabe ${this.aufgabe}`
+      suffix = 'TA'
+    } else {
+      aufgabe = `Aufgabe ${this.aufgabe}`
+      suffix = 'A'
+    }
+    return `\n\\ExamensAufgabe${suffix} ${examen} ${aufgabe}`
   }
 }
 

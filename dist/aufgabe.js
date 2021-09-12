@@ -20,11 +20,10 @@ const bearbeitungsStand = [
     'mit Lösung'
 ];
 const korrektheit = [
+    'wahrscheinlich falsch',
     'unbekannt',
-    'unsicher',
-    'überprüft',
-    'automatisch überprüft',
-    'korrekt'
+    'korrekt',
+    'korrekt und überprüft'
 ];
 /**
  * Eine allgemeine Aufgabe, die keinem Examen zugeordnet werden kann.
@@ -226,6 +225,14 @@ class Aufgabe {
         return 'unbekannt';
     }
     /**
+     * Zeigt an, ob die Aufgabe korrekt ist. Das ist der Fall wenn in den
+     * Aufgabenmetadaten `korrekt` oder `korrekt und überprüft` steht.
+     */
+    get istKorrekt() {
+        return (this.korrektheit === 'korrekt' ||
+            this.korrektheit === 'korrekt und überprüft');
+    }
+    /**
      * Siehe Dokumentation des Typs
      */
     get identischeAufgabe() {
@@ -376,6 +383,13 @@ class ExamensAufgabe extends Aufgabe {
     get aufgabenReferenzKurz() {
         return this.aufgabenReferenz.replace(/ +/g, '');
     }
+    /**
+     * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
+     * eingebunden werden kann.
+     *
+     * @returns
+     * z. B. `\ExamensAufgabeTTA 66116 / 2021 / 03 : Thema 1 Teilaufgabe 1 Aufgabe 1`
+     */
     get einbindenTexMakro() {
         let aufgabe = '';
         let suffix = '';
