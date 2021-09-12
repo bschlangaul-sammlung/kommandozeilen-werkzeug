@@ -277,21 +277,27 @@ class ExamenAufgabenBaum {
             }
             throw new Error('Konnte keine Zahl finden');
         }
+        let themaNr;
+        let teilaufgabeNr;
+        let aufgabeNr;
         const rufeBesucherFunktionAuf = (titel, aufgabe) => {
             const nr = extrahiereNummer(titel);
             if (titel.indexOf('Thema ') === 0) {
+                themaNr = nr;
                 if (besucher.betreteThema != null) {
-                    ausgabe.sammle(besucher.betreteThema(nr, this.examen, aufgabe));
+                    ausgabe.sammle(besucher.betreteThema(themaNr, this.examen));
                 }
             }
             else if (titel.indexOf('Teilaufgabe ') === 0) {
-                if (besucher.betreteTeilaufgabe != null) {
-                    ausgabe.sammle(besucher.betreteTeilaufgabe(nr, this.examen, aufgabe));
+                teilaufgabeNr = nr;
+                if (besucher.betreteTeilaufgabe != null && themaNr != null) {
+                    ausgabe.sammle(besucher.betreteTeilaufgabe(teilaufgabeNr, themaNr, this.examen));
                 }
             }
             else if (titel.indexOf('Aufgabe ') === 0) {
-                if (besucher.betreteAufgabe != null) {
-                    ausgabe.sammle(besucher.betreteAufgabe(nr, this.examen, aufgabe));
+                aufgabeNr = nr;
+                if (besucher.betreteAufgabe != null && aufgabe != null) {
+                    ausgabe.sammle(besucher.betreteAufgabe(aufgabe, aufgabeNr, teilaufgabeNr, themaNr));
                 }
             }
         };
@@ -392,7 +398,7 @@ class ExamenBaum {
         }
         return baum;
     }
-    besuche(besucher, besucheAufgaben = false) {
+    besuche(besucher) {
         var _a;
         const examenBaum = examenSammlung.baum;
         const ausgabe = new helfer_1.AusgabeSammler();
@@ -409,8 +415,10 @@ class ExamenBaum {
                     if (besucher.betreteExamen != null) {
                         ausgabe.sammle(besucher.betreteExamen(examen, parseInt(monat), parseInt(jahr), parseInt(nummer)));
                     }
-                    if (besucheAufgaben) {
-                        (_a = examen.aufgabenBaum) === null || _a === void 0 ? void 0 : _a.besuche(besucher);
+                    if (besucher.betreteThema != null ||
+                        besucher.betreteTeilaufgabe != null ||
+                        besucher.betreteAufgabe) {
+                        ausgabe.sammle((_a = examen.aufgabenBaum) === null || _a === void 0 ? void 0 : _a.besuche(besucher));
                     }
                 }
             }

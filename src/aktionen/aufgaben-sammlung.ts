@@ -49,11 +49,7 @@ function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
       ebene++
       return ausgabe
     },
-    betreteAufgabe (
-      nummer: number,
-      examen?: Examen,
-      aufgabe?: ExamensAufgabe
-    ): string {
+    betreteAufgabe (aufgabe: ExamensAufgabe, nummer: number): string {
       let titel: string
       if (aufgabe != null) {
         titel = aufgabe.gibTitelNurAufgabe(true)
@@ -173,7 +169,7 @@ function erzeugeExamensLösung (examen: Examen): void {
     betreteTeilaufgabe (nummer: number): string {
       return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`
     },
-    betreteAufgabe (nummer: number): string {
+    betreteAufgabe (aufgaben: Aufgabe, nummer: number): string {
       return `\\liBindeAufgabeEin{${nummer}}`
     }
   })
@@ -219,6 +215,8 @@ export function erzeugeExamensLösungen (): void {
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
 export function erzeugeHauptDokument (): void {
+  // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
+  gibAufgabenSammlung()
   const examenSammlung = gibExamenSammlung()
 
   const baum = examenSammlung.examenBaum
@@ -233,12 +231,11 @@ export function erzeugeHauptDokument (): void {
     },
     betreteExamen (examen: Examen, monat: number, nummer: number): undefined {
       return undefined
+    },
+
+    betreteAufgabe (aufgabe: Aufgabe, nummer: number): string {
+      return '% ' + aufgabe.titelFormatiert
     }
-
-    // betreteAufgabe(nummer: number, examen: Examen, aufgabe: Aufgabe): string {
-    //   return ''
-    // }
-
   })
   schreibeTexDatei(
     macheRepoPfad('Bschlangaul-Sammlung.tex'),

@@ -271,22 +271,19 @@ interface ExamensAufgabenBesucher {
     nummer: number
   ) => string | undefined
 
-  betreteThema?: (
-    nummer: number,
-    examen?: Examen,
-    aufgabe?: ExamensAufgabe
-  ) => string | undefined
+  betreteThema?: (themaNr: number, examen: Examen) => string | undefined
 
   betreteTeilaufgabe?: (
-    nummer: number,
-    examen?: Examen,
-    aufgabe?: ExamensAufgabe
+    teilaufgabeNr: number,
+    themaNr: number,
+    examen: Examen
   ) => string | undefined
 
   betreteAufgabe?: (
-    nummer: number,
-    examen?: Examen,
-    aufgabe?: ExamensAufgabe
+    aufgabe: ExamensAufgabe,
+    aufgabeNr: number,
+    teilaufgabeNr?: number,
+    themaNr?: number
   ) => string | undefined
 
   /**
@@ -423,22 +420,33 @@ class ExamenAufgabenBaum {
       throw new Error('Konnte keine Zahl finden')
     }
 
+    let themaNr: number | undefined
+    let teilaufgabeNr: number | undefined
+    let aufgabeNr: number | undefined
+
     const rufeBesucherFunktionAuf = (
       titel: string,
       aufgabe?: ExamensAufgabe
     ): void => {
       const nr = extrahiereNummer(titel)
       if (titel.indexOf('Thema ') === 0) {
+        themaNr = nr
         if (besucher.betreteThema != null) {
-          ausgabe.sammle(besucher.betreteThema(nr, this.examen, aufgabe))
+          ausgabe.sammle(besucher.betreteThema(themaNr, this.examen))
         }
       } else if (titel.indexOf('Teilaufgabe ') === 0) {
-        if (besucher.betreteTeilaufgabe != null) {
-          ausgabe.sammle(besucher.betreteTeilaufgabe(nr, this.examen, aufgabe))
+        teilaufgabeNr = nr
+        if (besucher.betreteTeilaufgabe != null && themaNr != null) {
+          ausgabe.sammle(
+            besucher.betreteTeilaufgabe(teilaufgabeNr, themaNr, this.examen)
+          )
         }
       } else if (titel.indexOf('Aufgabe ') === 0) {
-        if (besucher.betreteAufgabe != null) {
-          ausgabe.sammle(besucher.betreteAufgabe(nr, this.examen, aufgabe))
+        aufgabeNr = nr
+        if (besucher.betreteAufgabe != null && aufgabe != null) {
+          ausgabe.sammle(
+            besucher.betreteAufgabe(aufgabe, aufgabeNr, teilaufgabeNr, themaNr)
+          )
         }
       }
     }
@@ -570,10 +578,7 @@ class ExamenBaum {
     return baum
   }
 
-  besuche (
-    besucher: ExamensAufgabenBesucher,
-    besucheAufgaben: boolean = false
-  ): string {
+  besuche (besucher: ExamensAufgabenBesucher): string {
     const examenBaum = examenSammlung.baum as any
     const ausgabe = new AusgabeSammler()
     for (const nummer in examenBaum) {
@@ -596,8 +601,12 @@ class ExamenBaum {
               )
             )
           }
-          if (besucheAufgaben) {
-            examen.aufgabenBaum?.besuche(besucher)
+          if (
+            besucher.betreteThema != null ||
+            besucher.betreteTeilaufgabe != null ||
+            besucher.betreteAufgabe
+          ) {
+            ausgabe.sammle(examen.aufgabenBaum?.besuche(besucher))
           }
         }
       }

@@ -43,7 +43,7 @@ function erzeugeAufgabenBaumMarkdown(examen) {
             ebene++;
             return ausgabe;
         },
-        betreteAufgabe(nummer, examen, aufgabe) {
+        betreteAufgabe(aufgabe, nummer) {
             let titel;
             if (aufgabe != null) {
                 titel = aufgabe.gibTitelNurAufgabe(true);
@@ -146,7 +146,7 @@ function erzeugeExamensLösung(examen) {
         betreteTeilaufgabe(nummer) {
             return `\n\\liSetzeExamenTeilaufgabeNr{${nummer}}\n`;
         },
-        betreteAufgabe(nummer) {
+        betreteAufgabe(aufgaben, nummer) {
             return `\\liBindeAufgabeEin{${nummer}}`;
         }
     });
@@ -190,6 +190,8 @@ exports.erzeugeExamensLösungen = erzeugeExamensLösungen;
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
 function erzeugeHauptDokument() {
+    // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
+    aufgabe_1.gibAufgabenSammlung();
     const examenSammlung = examen_1.gibExamenSammlung();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
@@ -202,10 +204,10 @@ function erzeugeHauptDokument() {
         },
         betreteExamen(examen, monat, nummer) {
             return undefined;
+        },
+        betreteAufgabe(aufgabe, nummer) {
+            return '% ' + aufgabe.titelFormatiert;
         }
-        // betreteAufgabe(nummer: number, examen: Examen, aufgabe: Aufgabe): string {
-        //   return ''
-        // }
     });
     tex_1.schreibeTexDatei(helfer_1.macheRepoPfad('Bschlangaul-Sammlung.tex'), 'examen', '', textkörper);
 }
