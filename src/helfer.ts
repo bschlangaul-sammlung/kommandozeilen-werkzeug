@@ -158,11 +158,17 @@ export class AusgabeSammler {
     this.redselig = redselig
   }
 
+  /**
+   * Sammle Textausgaben. Sie werden nur gesammelt, wenn sie nicht null und kein
+   * leerer String ist.
+   *
+   * @param ausgabe - Die Textausgabe, die gespeichert werden soll.
+   */
   public sammle (ausgabe: string | undefined): void {
     if (this.redselig) {
       console.log(ausgabe)
     }
-    if (ausgabe != null) {
+    if (ausgabe != null && ausgabe !== '') {
       this.speicher.push(ausgabe)
     }
   }
