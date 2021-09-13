@@ -143,9 +143,9 @@ export function erzeugeExamenScansSammlung (): void {
  * ```latex
  * \bSetzeExamen{66116}{2021}{03}
  *
- * \bSetzeExamenThemaNr{1}
+ * \bSetzeThemaNr{1}
  *
- * \bSetzeExamenTeilaufgabeNr{1}
+ * \bSetzeTeilaufgabeNr{1}
  *
  * \bBindeAufgabeEin{1}
  * \bBindeAufgabeEin{2}
@@ -164,10 +164,10 @@ function erzeugeExamensLösung (examen: Examen): void {
   log('verbose', examen.pfad)
   const textKörper = baum.besuche({
     betreteThema (nummer: number): string {
-      return `\n\n\\bSetzeExamenThemaNr{${nummer}}`
+      return `\n\n\\bSetzeThemaNr{${nummer}}`
     },
     betreteTeilaufgabe (nummer: number): string {
-      return `\n\\bSetzeExamenTeilaufgabeNr{${nummer}}\n`
+      return `\n\\bSetzeTeilaufgabeNr{${nummer}}\n`
     },
     betreteAufgabe (aufgaben: Aufgabe, nummer: number): string {
       return `\\bBindeAufgabeEin{${nummer}}`
@@ -175,11 +175,11 @@ function erzeugeExamensLösung (examen: Examen): void {
   })
 
   const kopf = machePlist('liMetaSetze', {
-    ExamenNummer: examen.nummer,
+    EinzelpruefungsNr: examen.nummer,
     ExamenFach: examen.fach,
-    ExamenJahr: examen.jahr,
-    ExamenMonat: examen.monatMitNullen,
-    ExamenJahreszeit: examen.jahreszeit
+    Jahr: examen.jahr,
+    Monat: examen.monatMitNullen,
+    Jahreszeit: examen.jahreszeit
   })
 
   const pfad = examen.machePfad('Examen.tex')

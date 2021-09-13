@@ -88,12 +88,12 @@ class Aufgabe {
      *   Thematik = {Regal mit DVDs, CDs und BDs},
      *   RelativerPfad = Staatsexamen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
      *   ZitatSchluessel = examen:66116:2014:09,
-     *   ExamenNummer = 66116,
-     *   ExamenJahr = 2014,
-     *   ExamenMonat = 09,
-     *   ExamenThemaNr = 2,
-     *   ExamenTeilaufgabeNr = 2,
-     *   ExamenAufgabeNr = 5,
+     *   EinzelpruefungsNr = 66116,
+     *   Jahr = 2014,
+     *   Monat = 09,
+     *   ThemaNr = 2,
+     *   TeilaufgabeNr = 2,
+     *   AufgabeNr = 5,
      * }
      * ```
      */
@@ -127,6 +127,7 @@ class Aufgabe {
         const meta = {
             Titel: umgebeMitKlammern(this.titel),
             Thematik: umgebeMitKlammern(this.thematik),
+            Referenz: this.referenz,
             RelativerPfad: this.relativerPfad
         };
         if (this.identischeAufgabe != null) {
@@ -242,9 +243,9 @@ class Aufgabe {
         }
     }
     /**
-     * Ein kurzer String mit der die Aufgabe eindeutig referenziert werden kann,
+     * Ein kurzer String, mit dem die Aufgabe eindeutig referenziert werden kann,
      * z. B. über das `\ref{}` TeX-Makro. Für die Referenz von normalen Aufgaben
-     * verwenden wir den relativen Pfad und entfernen eine nicht relevante
+     * verwenden wir den relativen Pfad und entfernen einige nicht relevante
      * Zeichenketten.
      */
     get referenz() {
@@ -371,16 +372,16 @@ class ExamensAufgabe extends Aufgabe {
     }
     erzeugeMetadaten() {
         const meta = super.erzeugeMetadaten();
-        meta.ExamenNummer = this.examen.nummer;
-        meta.ExamenJahr = this.examen.jahr;
-        meta.ExamenMonat = this.examen.monatMitNullen;
+        meta.EinzelpruefungsNr = this.examen.nummer;
+        meta.Jahr = this.examen.jahr;
+        meta.Monat = this.examen.monatMitNullen;
         if (this.thema != null) {
-            meta.ExamenThemaNr = this.thema;
+            meta.ThemaNr = this.thema;
         }
         if (this.teilaufgabe != null) {
-            meta.ExamenTeilaufgabeNr = this.teilaufgabe;
+            meta.TeilaufgabeNr = this.teilaufgabe;
         }
-        meta.ExamenAufgabeNr = this.aufgabe;
+        meta.AufgabeNr = this.aufgabe;
         return meta;
     }
     /**

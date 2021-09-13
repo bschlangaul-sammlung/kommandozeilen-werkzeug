@@ -62,8 +62,21 @@ type Korrektheit = typeof korrektheit[number]
  * Siehe `.tex/pakete/aufgaben-metadaten.sty` und `.tex/pakete/basis.sty`
  */
 export interface AufgabenMetadaten {
+  /**
+   * Der Titel der Aufgabe. Bei Examensaufgabe schlichtweg `Aufgabe 1`
+   */
   Titel: string
+
+  /**
+   * Kurze Beschreibung, damit wir uns an die Aufgabe erinnern können. Was ist
+   * das besondere an dieser Aufgabe?
+   */
   Thematik?: string
+
+  /**
+   *
+   */
+  Referenz?: string
 
   /**
    * Alle Stichwörter mit `, ` zu einem String zusammengefügt.
@@ -93,8 +106,8 @@ export interface AufgabenMetadaten {
   Korrektheit: Korrektheit
 
   /**
-   * Mit welchem Online-Tool wurde die Aufgabe überprüft. Wer hat die Aufgabe
-   * überprüft.
+   * Wie würde die Korrektheit der Aufgabe überprüft? Mit welchem Online-Tool
+   * wurde die Aufgabe überprüft. Wer hat die Aufgabe überprüft?
    */
   Ueberprueft?: string
 
@@ -111,7 +124,7 @@ export interface AufgabenMetadaten {
   /**
    * Die sogenannte Einzelprüfungsnummer, z. B. `66115`.
    */
-  ExamenNummer?: number
+  EinzelpruefungsNr?: number
 
   /**
    * z. B. `Datenbanksysteme / Softwaretechnologie (vertieft)`
@@ -123,22 +136,22 @@ export interface AufgabenMetadaten {
    *
    * z. B. `2021`
    */
-  ExamenJahr?: number
+  Jahr?: number
 
   /**
    * Der Monat mit Nullen, in dem das Examen stattfindet. Für Frühjahr `03` und
    * für Herbst `09`.
    */
-  ExamenMonat?: string
+  Monat?: string
 
   /**
    * In welcher Jahreszeit das Examen stattfindet. Der Monat 3 gibt
    * `Frühjahr` und der Monat 9 `Herbst`.
    */
-  ExamenJahreszeit?: string
-  ExamenThemaNr?: number
-  ExamenTeilaufgabeNr?: number
-  ExamenAufgabeNr?: number
+  Jahreszeit?: string
+  ThemaNr?: number
+  TeilaufgabeNr?: number
+  AufgabeNr?: number
 }
 
 /**
@@ -226,12 +239,12 @@ export class Aufgabe {
    *   Thematik = {Regal mit DVDs, CDs und BDs},
    *   RelativerPfad = Staatsexamen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
    *   ZitatSchluessel = examen:66116:2014:09,
-   *   ExamenNummer = 66116,
-   *   ExamenJahr = 2014,
-   *   ExamenMonat = 09,
-   *   ExamenThemaNr = 2,
-   *   ExamenTeilaufgabeNr = 2,
-   *   ExamenAufgabeNr = 5,
+   *   EinzelpruefungsNr = 66116,
+   *   Jahr = 2014,
+   *   Monat = 09,
+   *   ThemaNr = 2,
+   *   TeilaufgabeNr = 2,
+   *   AufgabeNr = 5,
    * }
    * ```
    */
@@ -268,6 +281,7 @@ export class Aufgabe {
     const meta: AufgabenMetadaten = {
       Titel: umgebeMitKlammern(this.titel),
       Thematik: umgebeMitKlammern(this.thematik),
+      Referenz: this.referenz,
       RelativerPfad: this.relativerPfad
     } as AufgabenMetadaten
 
@@ -402,9 +416,9 @@ export class Aufgabe {
   }
 
   /**
-   * Ein kurzer String mit der die Aufgabe eindeutig referenziert werden kann,
+   * Ein kurzer String, mit dem die Aufgabe eindeutig referenziert werden kann,
    * z. B. über das `\ref{}` TeX-Makro. Für die Referenz von normalen Aufgaben
-   * verwenden wir den relativen Pfad und entfernen eine nicht relevante
+   * verwenden wir den relativen Pfad und entfernen einige nicht relevante
    * Zeichenketten.
    */
   get referenz (): string {
@@ -563,18 +577,18 @@ export class ExamensAufgabe extends Aufgabe {
   erzeugeMetadaten (): AufgabenMetadaten {
     const meta = super.erzeugeMetadaten()
 
-    meta.ExamenNummer = this.examen.nummer
-    meta.ExamenJahr = this.examen.jahr
-    meta.ExamenMonat = this.examen.monatMitNullen
+    meta.EinzelpruefungsNr = this.examen.nummer
+    meta.Jahr = this.examen.jahr
+    meta.Monat = this.examen.monatMitNullen
 
     if (this.thema != null) {
-      meta.ExamenThemaNr = this.thema
+      meta.ThemaNr = this.thema
     }
     if (this.teilaufgabe != null) {
-      meta.ExamenTeilaufgabeNr = this.teilaufgabe
+      meta.TeilaufgabeNr = this.teilaufgabe
     }
 
-    meta.ExamenAufgabeNr = this.aufgabe
+    meta.AufgabeNr = this.aufgabe
     return meta
   }
 
