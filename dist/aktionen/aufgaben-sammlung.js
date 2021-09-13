@@ -23,7 +23,7 @@ const tex_1 = require("../tex");
 function erzeugeAufgabenBaumMarkdown(examen) {
     const baum = examen.aufgabenBaum;
     if (baum == null) {
-        log_1.logger.log('debug', 'Examen hat keine Aufgaben');
+        (0, log_1.log)('debug', 'Examen hat keine Aufgaben');
         return '';
     }
     function rückeEin() {
@@ -68,7 +68,7 @@ function generiereExamensÜbersicht() {
     const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
-        log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
+        (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
         return '';
     }
     return baum.besuche({
@@ -91,7 +91,7 @@ function erzeugeExamenScansSammlung() {
     const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
-        log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
+        (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
         return;
     }
     const ausgabe = new helfer_1.AusgabeSammler();
@@ -132,13 +132,13 @@ exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
  * ```
  */
 function erzeugeExamensLösung(examen) {
-    log_1.logger.log('debug', 'Besuche Examen %s', examen.referenz);
+    (0, log_1.log)('debug', 'Besuche Examen %s', examen.referenz);
     const baum = examen.aufgabenBaum;
     if (baum == null) {
-        log_1.logger.log('debug', 'Examen hat keine Aufgaben');
+        (0, log_1.log)('debug', 'Examen hat keine Aufgaben');
         return;
     }
-    log_1.logger.verbose(examen.pfad);
+    (0, log_1.log)('verbose', examen.pfad);
     const textKörper = baum.besuche({
         betreteThema(nummer) {
             return `\n\n\\bSetzeExamenThemaNr{${nummer}}`;
@@ -159,11 +159,11 @@ function erzeugeExamensLösung(examen) {
     });
     const pfad = examen.machePfad('Examen.tex');
     if (textKörper != null) {
-        log_1.logger.log('info', 'Schreibe %s', pfad);
+        (0, log_1.log)('info', 'Schreibe %s', pfad);
         (0, tex_1.schreibeTexDatei)(pfad, 'examen', kopf, textKörper);
     }
     else {
-        log_1.logger.log('verbose', 'Lösche %s', pfad);
+        (0, log_1.log)('verbose', 'Lösche %s', pfad);
         (0, helfer_1.löscheDatei)(pfad);
     }
 }
@@ -195,14 +195,16 @@ function erzeugeHauptDokument() {
     const examenSammlung = (0, examen_1.gibExamenSammlung)();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
-        log_1.logger.log('info', 'Konnte keinen Examensbaum aufbauen');
+        (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
         return;
     }
     const textkörper = baum.besuche({
         betreteAufgabe(aufgabe, nummer) {
             if (aufgabe.istKorrekt) {
+                (0, log_1.log)('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
                 return aufgabe.einbindenTexMakro;
             }
+            (0, log_1.log)('verbose', 'Die Aufgabe %s wurde noch nicht überprüft.', aufgabe.referenz);
         }
     });
     (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)('Bschlangaul-Sammlung.tex'), 'haupt', '', textkörper);

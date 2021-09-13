@@ -58,7 +58,7 @@ function schreibeTexDatei(dateiPfad, klassenName, kopf, textkörper) {
     textkörper = textkörper.trim();
     const inhalt = `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
         `\\begin{document}\n${textkörper}\n\\end{document}\n`;
-    log_1.logger.debug(inhalt);
+    (0, log_1.log)('debug', inhalt);
     (0, helfer_1.schreibeDatei)(dateiPfad, inhalt);
 }
 exports.schreibeTexDatei = schreibeTexDatei;

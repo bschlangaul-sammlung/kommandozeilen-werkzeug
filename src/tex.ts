@@ -3,7 +3,7 @@
  */
 
 import { leseRepoDatei, schreibeDatei } from './helfer'
-import { logger } from './log'
+import { log } from './log'
 
 function baueMakroRegExp (macroName: string): RegExp {
   // Probleme mit `\bAufgabenTitel`: `\b` ist angeblich ein Sonderzeichen
@@ -68,7 +68,7 @@ export function schreibeTexDatei (
   const inhalt =
      `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
      `\\begin{document}\n${textkörper}\n\\end{document}\n`
-  logger.debug(inhalt)
+  log('debug', inhalt)
   schreibeDatei(dateiPfad, inhalt)
 }
 

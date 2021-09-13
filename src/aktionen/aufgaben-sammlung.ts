@@ -3,7 +3,7 @@
  */
 
 import { Aufgabe, ExamensAufgabe, gibAufgabenSammlung } from '../aufgabe'
-import { logger } from '../log'
+import { log } from '../log'
 import { gibExamenSammlung, Examen } from '../examen'
 import {
   macheRepoPfad,
@@ -27,7 +27,7 @@ import { schreibeTexDatei, machePlist } from '../tex'
 function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
   const baum = examen.aufgabenBaum
   if (baum == null) {
-    logger.log('debug', 'Examen hat keine Aufgaben')
+    log('debug', 'Examen hat keine Aufgaben')
     return ''
   }
 
@@ -76,7 +76,7 @@ export function generiereExamensÜbersicht (): string {
 
   const baum = examenSammlung.examenBaum
   if (baum == null) {
-    logger.log('info', 'Konnte keinen Examensbaum aufbauen')
+    log('info', 'Konnte keinen Examensbaum aufbauen')
     return ''
   }
 
@@ -103,7 +103,7 @@ export function erzeugeExamenScansSammlung (): void {
 
   const baum = examenSammlung.examenBaum
   if (baum == null) {
-    logger.log('info', 'Konnte keinen Examensbaum aufbauen')
+    log('info', 'Konnte keinen Examensbaum aufbauen')
     return
   }
 
@@ -153,15 +153,15 @@ export function erzeugeExamenScansSammlung (): void {
  * ```
  */
 function erzeugeExamensLösung (examen: Examen): void {
-  logger.log('debug', 'Besuche Examen %s', examen.referenz)
+  log('debug', 'Besuche Examen %s', examen.referenz)
 
   const baum = examen.aufgabenBaum
   if (baum == null) {
-    logger.log('debug', 'Examen hat keine Aufgaben')
+    log('debug', 'Examen hat keine Aufgaben')
     return
   }
 
-  logger.verbose(examen.pfad)
+  log('verbose', examen.pfad)
   const textKörper = baum.besuche({
     betreteThema (nummer: number): string {
       return `\n\n\\bSetzeExamenThemaNr{${nummer}}`
@@ -184,10 +184,10 @@ function erzeugeExamensLösung (examen: Examen): void {
 
   const pfad = examen.machePfad('Examen.tex')
   if (textKörper != null) {
-    logger.log('info', 'Schreibe %s', pfad)
+    log('info', 'Schreibe %s', pfad)
     schreibeTexDatei(pfad, 'examen', kopf, textKörper)
   } else {
-    logger.log('verbose', 'Lösche %s', pfad)
+    log('verbose', 'Lösche %s', pfad)
     löscheDatei(pfad)
   }
 }
@@ -221,15 +221,17 @@ export function erzeugeHauptDokument (): void {
 
   const baum = examenSammlung.examenBaum
   if (baum == null) {
-    logger.log('info', 'Konnte keinen Examensbaum aufbauen')
+    log('info', 'Konnte keinen Examensbaum aufbauen')
     return
   }
 
   const textkörper = baum.besuche({
     betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
       if (aufgabe.istKorrekt) {
+        log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz)
         return aufgabe.einbindenTexMakro
       }
+      log('verbose', 'Die Aufgabe %s wurde noch nicht überprüft.', aufgabe.referenz)
     }
   })
   schreibeTexDatei(

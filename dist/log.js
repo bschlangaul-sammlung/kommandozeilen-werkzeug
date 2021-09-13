@@ -30,7 +30,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setzeLogEbene = exports.log = exports.logger = void 0;
+exports.gibLogEbene = exports.setzeLogEbene = exports.log = void 0;
 const winston_1 = __importStar(require("winston"));
 const customLevels = {
     levels: {
@@ -53,7 +53,7 @@ const console = new winston_1.default.transports.Console({
     level: 'error'
 });
 winston_1.default.addColors(customLevels.colors);
-exports.logger = winston_1.default.createLogger({
+const logger = winston_1.default.createLogger({
     level: 'error',
     transports: [console],
     levels: customLevels.levels
@@ -70,10 +70,14 @@ exports.logger = winston_1.default.createLogger({
  * ```
  */
 function log(level, message, ...meta) {
-    exports.logger.log(level, message, ...meta);
+    logger.log(level, message, ...meta);
 }
 exports.log = log;
 function setzeLogEbene(ebene) {
     console.level = ebene;
 }
 exports.setzeLogEbene = setzeLogEbene;
+function gibLogEbene() {
+    return console.level;
+}
+exports.gibLogEbene = gibLogEbene;

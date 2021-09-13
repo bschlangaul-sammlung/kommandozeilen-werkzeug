@@ -402,6 +402,21 @@ export class Aufgabe {
   }
 
   /**
+   * Ein kurzer String mit der die Aufgabe eindeutig referenziert werden kann,
+   * z. B. über das `\ref{}` TeX-Makro. Für die Referenz von normalen Aufgaben
+   * verwenden wir den relativen Pfad und entfernen eine nicht relevante
+   * Zeichenketten.
+   */
+  get referenz (): string {
+    return this.relativerPfad
+      .replace('Module/', '')
+      .replace('Aufgabe_', '')
+      .replace('.tex', '')
+      .replace(/\d\d_/g, '')
+      .replace(/\//g, '.')
+  }
+
+  /**
    * Siehe Dokumentation des Typs
    */
   get identischeAufgabe (): string | undefined {
@@ -563,6 +578,9 @@ export class ExamensAufgabe extends Aufgabe {
     return meta
   }
 
+  /**
+   * z. B. `66116:2021:09`
+   */
   get examensReferenz (): string {
     return this.examen.referenz
   }
@@ -571,6 +589,9 @@ export class ExamensAufgabe extends Aufgabe {
     return `Aufgabe ${this.aufgabe}`
   }
 
+  /**
+   * z. B. `T1 TA2 A1`
+   */
   get aufgabenReferenz (): string {
     const output = []
     if (this.thema != null) {
@@ -584,10 +605,28 @@ export class ExamensAufgabe extends Aufgabe {
   }
 
   /**
-   * Wie this.aufgabenReferenz bloß ohne Leerzeichen
+   * Wie `this.aufgabenReferenz` bloß ohne Leerzeichen, z. B.
    */
   get aufgabenReferenzKurz (): string {
     return this.aufgabenReferenz.replace(/ +/g, '')
+  }
+
+  /**
+   * Ein kurzer String mit der die Aufgabe eindeutig referenziert werden kann,
+   * z. B. über das `\ref{}` TeX-Makro.
+   *
+   * `66116-2020-H.T1-TA1-A1`
+   */
+  get referenz (): string {
+    return (
+      this.examen.nummer.toString() +
+      '-' +
+      this.examen.jahr.toString() +
+      '-' +
+      this.examen.jahreszeitBuchstabe +
+      '.' +
+      this.aufgabenReferenz.replace(/ +/g, '-')
+    )
   }
 
   /**

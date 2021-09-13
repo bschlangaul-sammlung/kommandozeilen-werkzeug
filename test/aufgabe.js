@@ -1,6 +1,10 @@
 const assert = require('assert')
 const path = require('path')
-const { Aufgabe, gibAufgabenSammlung, ExamensAufgabe } = require('../dist/aufgabe.js')
+const {
+  Aufgabe,
+  gibAufgabenSammlung,
+  ExamensAufgabe
+} = require('../dist/aufgabe.js')
 
 const aufgabenSammlung = gibAufgabenSammlung()
 
@@ -55,6 +59,16 @@ describe('aufgabe.ts', function () {
       assert.strictEqual(titel.ZitatBeschreibung, 'Seite 4, Aufgabe 3')
       assert.strictEqual(titel.ZitatSchluessel, 'theo:ab:1')
     })
+
+    it('Normale Aufgabe keine Examensaufgabe', function () {
+      const aufgabe = aufgabenSammlung.gib(
+        'Module/30_AUD/20_Vollstaendige-Induktion/Aufgabe_Geometrische-Summenformel.tex'
+      )
+      assert.strictEqual(
+        aufgabe.referenz,
+        'AUD.Vollstaendige-Induktion.Geometrische-Summenformel'
+      )
+    })
   })
 
   describe('Klasse ExamensAufgabe()', function () {
@@ -63,18 +77,28 @@ describe('aufgabe.ts', function () {
         'Staatsexamen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
       )
       assert.strictEqual(aufgabe.istExamen, true)
+      assert.strictEqual(aufgabe.referenz, '66116-2020-H.T1-TA1-A1')
     })
 
     describe('Statische Methode „ExamensAufgabe.erzeugeExamensAufgabe()“', function () {
       it('66116:2020:09 1 2 3', function () {
-        const aufgabe = ExamensAufgabe.erzeugeExamensAufgabe('66116:2020:09', 1, 2, 3)
+        const aufgabe = ExamensAufgabe.erzeugeExamensAufgabe(
+          '66116:2020:09',
+          1,
+          2,
+          3
+        )
         assert.strictEqual(aufgabe.thema, 1)
         assert.strictEqual(aufgabe.teilaufgabe, 2)
         assert.strictEqual(aufgabe.aufgabe, 3)
       })
 
       it('66116:2020:09 1 2', function () {
-        const aufgabe = ExamensAufgabe.erzeugeExamensAufgabe('66116:2020:09', 1, 2)
+        const aufgabe = ExamensAufgabe.erzeugeExamensAufgabe(
+          '66116:2020:09',
+          1,
+          2
+        )
         assert.strictEqual(aufgabe.thema, 1)
         assert.strictEqual(aufgabe.teilaufgabe, undefined)
         assert.strictEqual(aufgabe.aufgabe, 2)

@@ -90,6 +90,15 @@ class Examen {
         (0, helfer_1.zeigeFehler)('Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.');
     }
     /**
+     * In welcher Jahreszeit das Examen stattfindet. Der Monat `3` gibt
+     * `F` (Frühjahr) und der Monat `9` `H` (Herbst).
+     *
+     * @returns `F` oder `H`
+     */
+    get jahreszeitBuchstabe() {
+        return this.jahreszeit.charAt(0);
+    }
+    /**
      * @returns Ein lesbarer Dateiname, der das Examen identifiziert.
      */
     get dateiName() {

@@ -19,6 +19,7 @@ describe('examen.js', function () {
       assert.strictEqual(examen.jahr, 1995)
       assert.strictEqual(examen.monat, 3)
       assert.strictEqual(examen.jahreszeit, 'Frühjahr')
+      assert.strictEqual(examen.jahreszeitBuchstabe, 'F')
       assert.strictEqual(examen.referenz, '46111:1995:03')
     })
 

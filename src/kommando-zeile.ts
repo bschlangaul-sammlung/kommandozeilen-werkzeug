@@ -9,9 +9,9 @@ import { Command } from 'commander'
 import { repositoryPfad } from './helfer'
 import aktionen from './aktionen'
 
-import { setzeLogEbene } from './log'
+import { setzeLogEbene, gibLogEbene, log } from './log'
 
-function increaseVerbosity (dummyValue: any, verbosity: number): number {
+function steigereRedseligkeit (dummyValue: any, verbosity: number): number {
   verbosity = verbosity + 1
   if (verbosity === 1) {
     setzeLogEbene('info')
@@ -29,10 +29,14 @@ const programm = new Command()
   .version('0.1.0')
   .option(
     '-v, --verbose',
-    'verbosity that can be increased',
-    increaseVerbosity,
+    'Die mehrmalige Angabe der Option steigert die Redseligkeit.',
+    steigereRedseligkeit,
     0
   )
+
+programm.hook('preAction', () => {
+  log('info', 'Log-Ebene: %s', gibLogEbene())
+})
 
 programm.on('command:*', function () {
   console.error(

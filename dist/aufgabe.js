@@ -242,6 +242,20 @@ class Aufgabe {
         }
     }
     /**
+     * Ein kurzer String mit der die Aufgabe eindeutig referenziert werden kann,
+     * z. B. über das `\ref{}` TeX-Makro. Für die Referenz von normalen Aufgaben
+     * verwenden wir den relativen Pfad und entfernen eine nicht relevante
+     * Zeichenketten.
+     */
+    get referenz() {
+        return this.relativerPfad
+            .replace('Module/', '')
+            .replace('Aufgabe_', '')
+            .replace('.tex', '')
+            .replace(/\d\d_/g, '')
+            .replace(/\//g, '.');
+    }
+    /**
      * Siehe Dokumentation des Typs
      */
     get identischeAufgabe() {
@@ -369,12 +383,18 @@ class ExamensAufgabe extends Aufgabe {
         meta.ExamenAufgabeNr = this.aufgabe;
         return meta;
     }
+    /**
+     * z. B. `66116:2021:09`
+     */
     get examensReferenz() {
         return this.examen.referenz;
     }
     get aufgabeFormatiert() {
         return `Aufgabe ${this.aufgabe}`;
     }
+    /**
+     * z. B. `T1 TA2 A1`
+     */
     get aufgabenReferenz() {
         const output = [];
         if (this.thema != null) {
@@ -387,10 +407,25 @@ class ExamensAufgabe extends Aufgabe {
         return output.join(' ');
     }
     /**
-     * Wie this.aufgabenReferenz bloß ohne Leerzeichen
+     * Wie `this.aufgabenReferenz` bloß ohne Leerzeichen, z. B.
      */
     get aufgabenReferenzKurz() {
         return this.aufgabenReferenz.replace(/ +/g, '');
+    }
+    /**
+     * Ein kurzer String mit der die Aufgabe eindeutig referenziert werden kann,
+     * z. B. über das `\ref{}` TeX-Makro.
+     *
+     * `66116-2020-H.T1-TA1-A1`
+     */
+    get referenz() {
+        return (this.examen.nummer.toString() +
+            '-' +
+            this.examen.jahr.toString() +
+            '-' +
+            this.examen.jahreszeitBuchstabe +
+            '.' +
+            this.aufgabenReferenz.replace(/ +/g, '-'));
     }
     /**
      * `„Greedy-Färben von Intervallen“ Examen 66115 Herbst 2017 T1 A8`

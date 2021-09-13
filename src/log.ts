@@ -29,6 +29,11 @@ const customLevels = {
   }
 }
 
+/**
+ * Die Log-Ebenen.
+ */
+type LogEbene = 'error' | 'warn' | 'info' | 'verbose' | 'debug'
+
 const console = new winston.transports.Console({
   format: format.combine(format.colorize(), format.splat(), format.simple()),
   level: 'error'
@@ -36,7 +41,7 @@ const console = new winston.transports.Console({
 
 winston.addColors(customLevels.colors)
 
-export const logger = winston.createLogger({
+const logger = winston.createLogger({
   level: 'error',
   transports: [console],
   levels: customLevels.levels
@@ -53,16 +58,14 @@ export const logger = winston.createLogger({
  * }
  * ```
  */
-export function log (
-  level: 'error' | 'warn' | 'info' | 'verbose' | 'debug',
-  message: string,
-  ...meta: any[]
-): void {
+export function log (level: LogEbene, message: string, ...meta: any[]): void {
   logger.log(level, message, ...meta)
 }
 
-export function setzeLogEbene (
-  ebene: 'error' | 'warn' | 'info' | 'verbose' | 'debug'
-): void {
+export function setzeLogEbene (ebene: LogEbene): void {
   console.level = ebene
+}
+
+export function gibLogEbene (): string | undefined {
+  return console.level
 }

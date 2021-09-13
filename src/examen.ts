@@ -132,6 +132,16 @@ export class Examen {
   }
 
   /**
+   * In welcher Jahreszeit das Examen stattfindet. Der Monat `3` gibt
+   * `F` (Frühjahr) und der Monat `9` `H` (Herbst).
+   *
+   * @returns `F` oder `H`
+   */
+  get jahreszeitBuchstabe (): string {
+    return this.jahreszeit.charAt(0)
+  }
+
+  /**
    * @returns Ein lesbarer Dateiname, der das Examen identifiziert.
    */
   get dateiName (): string {

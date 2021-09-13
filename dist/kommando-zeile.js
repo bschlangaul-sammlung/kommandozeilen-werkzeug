@@ -11,7 +11,7 @@ const commander_1 = require("commander");
 const helfer_1 = require("./helfer");
 const aktionen_1 = __importDefault(require("./aktionen"));
 const log_1 = require("./log");
-function increaseVerbosity(dummyValue, verbosity) {
+function steigereRedseligkeit(dummyValue, verbosity) {
     verbosity = verbosity + 1;
     if (verbosity === 1) {
         (0, log_1.setzeLogEbene)('info');
@@ -28,7 +28,10 @@ const programm = new commander_1.Command()
     .description(`Repository-Pfad: ${helfer_1.repositoryPfad}`)
     .name('bschlangaul-werkzeug.js')
     .version('0.1.0')
-    .option('-v, --verbose', 'verbosity that can be increased', increaseVerbosity, 0);
+    .option('-v, --verbose', 'Die mehrmalige Angabe der Option steigert die Redseligkeit.', steigereRedseligkeit, 0);
+programm.hook('preAction', () => {
+    (0, log_1.log)('info', 'Log-Ebene: %s', (0, log_1.gibLogEbene)());
+});
 programm.on('command:*', function () {
     console.error('Ungültiger Befehl: %s\nBenutze das Argument --help, um eine Liste der verfügbaren Befehle anzuzeigen.', programm.args.join(' '));
     process.exit(1);
