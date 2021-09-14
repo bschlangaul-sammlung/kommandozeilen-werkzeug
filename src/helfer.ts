@@ -1,7 +1,7 @@
+import chalk from 'chalk'
+import childProcess from 'child_process'
 import fs from 'fs'
 import path from 'path'
-import childProcess from 'child_process'
-import chalk from 'chalk'
 
 const konfigurationsDateiPfad = path.join(
   path.sep,
