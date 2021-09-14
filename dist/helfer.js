@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AusgabeSammler = exports.öffneVSCode = exports.öffneProgramm = exports.führeAus = exports.generiereLink = exports.macheRepoPfad = exports.leseRepoDatei = exports.macheRelativenPfad = exports.repositoryPfad = exports.zeigeFehler = exports.schreibeDatei = exports.löscheDatei = exports.leseDatei = void 0;
+const chalk_1 = __importDefault(require("chalk"));
+const child_process_1 = __importDefault(require("child_process"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const child_process_1 = __importDefault(require("child_process"));
-const chalk_1 = __importDefault(require("chalk"));
-const konfigurationsDateiPfad = path_1.default.join(path_1.default.sep, 'etc', 'lehramt-informatik.config.tex');
+const konfigurationsDateiPfad = path_1.default.join(path_1.default.sep, 'etc', 'bschlangaul.config.tex');
 const githubRawUrl = 'https://raw.githubusercontent.com/hbschlang/lehramt-informatik/main';
 function leseDatei(pfad) {
     return fs_1.default.readFileSync(pfad, { encoding: 'utf-8' });
