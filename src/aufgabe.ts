@@ -301,6 +301,8 @@ export class Aufgabe {
     meta.Korrektheit = this.korrektheit
     if (this.überprüft != null) {
       meta.Ueberprueft = umgebeMitKlammern(this.überprüft)
+    } else {
+      meta.Ueberprueft = umgebeMitKlammern('unbekannt')
     }
 
     if (this.stichwörter.length > 0) {

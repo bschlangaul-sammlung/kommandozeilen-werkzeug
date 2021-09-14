@@ -145,6 +145,9 @@ class Aufgabe {
         if (this.überprüft != null) {
             meta.Ueberprueft = umgebeMitKlammern(this.überprüft);
         }
+        else {
+            meta.Ueberprueft = umgebeMitKlammern('unbekannt');
+        }
         if (this.stichwörter.length > 0) {
             meta.Stichwoerter = umgebeMitKlammern(this.stichwörter.join(', '));
         }
