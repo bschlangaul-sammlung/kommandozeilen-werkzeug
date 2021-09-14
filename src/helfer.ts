@@ -6,7 +6,7 @@ import chalk from 'chalk'
 const konfigurationsDateiPfad = path.join(
   path.sep,
   'etc',
-  'lehramt-informatik.config.tex'
+  'bschlangaul.config.tex'
 )
 
 const githubRawUrl =

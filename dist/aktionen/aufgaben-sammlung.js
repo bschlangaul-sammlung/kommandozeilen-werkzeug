@@ -198,11 +198,21 @@ function erzeugeHauptDokument() {
         (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
         return;
     }
+    let einzelprüfungsNr;
     const textkörper = baum.besuche({
         betreteAufgabe(aufgabe, nummer) {
-            if (aufgabe.istKorrekt) {
+            if (aufgabe.istExamen && aufgabe.istKorrekt) {
+                const examensAufgabe = aufgabe;
+                const examen = examensAufgabe.examen;
                 (0, log_1.log)('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
-                return aufgabe.einbindenTexMakro;
+                let ausgabe = '';
+                if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
+                    (0, log_1.log)('verbose', 'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.', einzelprüfungsNr);
+                    einzelprüfungsNr = examen.nummer;
+                    const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')';
+                    ausgabe += `\n\\section{${überschrift}}\n`;
+                }
+                return ausgabe + aufgabe.einbindenTexMakro;
             }
             (0, log_1.log)('verbose', 'Die Aufgabe %s wurde noch nicht überprüft.', aufgabe.referenz);
         }

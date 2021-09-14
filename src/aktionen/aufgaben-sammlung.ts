@@ -225,13 +225,32 @@ export function erzeugeHauptDokument (): void {
     return
   }
 
+  let einzelprüfungsNr: number
+
   const textkörper = baum.besuche({
     betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
-      if (aufgabe.istKorrekt) {
+      if (aufgabe.istExamen && aufgabe.istKorrekt) {
+        const examensAufgabe = aufgabe as ExamensAufgabe
+        const examen = examensAufgabe.examen
         log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz)
-        return aufgabe.einbindenTexMakro
+        let ausgabe: string = ''
+        if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
+          log(
+            'verbose',
+            'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.',
+            einzelprüfungsNr
+          )
+          einzelprüfungsNr = examen.nummer
+          const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')'
+          ausgabe += `\n\\section{${überschrift}}\n`
+        }
+        return ausgabe + aufgabe.einbindenTexMakro
       }
-      log('verbose', 'Die Aufgabe %s wurde noch nicht überprüft.', aufgabe.referenz)
+      log(
+        'verbose',
+        'Die Aufgabe %s wurde noch nicht überprüft.',
+        aufgabe.referenz
+      )
     }
   })
   schreibeTexDatei(
