@@ -8,7 +8,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
-const helfer_1 = require("./helfer");
 const aktionen_1 = __importDefault(require("./aktionen"));
 const log_1 = require("./log");
 function steigereRedseligkeit(dummyValue, verbosity) {
@@ -25,8 +24,8 @@ function steigereRedseligkeit(dummyValue, verbosity) {
     return verbosity;
 }
 const programm = new commander_1.Command()
-    .description(`Repository-Pfad: ${helfer_1.repositoryPfad}`)
-    .name('bschlangaul-werkzeug.js')
+    .description('Ein Kommandozeilen-Tool (Werkzeug), um verschiedene administrative Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen etc. zu erledigen.')
+    .name('bschlangaul-werkzeug')
     .version('0.1.0')
     .option('-v, --verbose', 'Die mehrmalige Angabe der Option steigert die Redseligkeit.', steigereRedseligkeit, 0);
 programm.hook('preAction', () => {

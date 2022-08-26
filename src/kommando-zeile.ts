@@ -6,7 +6,6 @@
 
 import { Command } from 'commander'
 
-import { repositoryPfad } from './helfer'
 import aktionen from './aktionen'
 
 import { setzeLogEbene, gibLogEbene, log } from './log'
@@ -24,8 +23,10 @@ function steigereRedseligkeit (dummyValue: any, verbosity: number): number {
 }
 
 const programm = new Command()
-  .description(`Repository-Pfad: ${repositoryPfad}`)
-  .name('bschlangaul-werkzeug.js')
+  .description(
+    'Ein Kommandozeilen-Tool (Werkzeug), um verschiedene administrative Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen etc. zu erledigen.'
+  )
+  .name('bschlangaul-werkzeug')
   .version('0.1.0')
   .option(
     '-v, --verbose',

@@ -33,6 +33,9 @@
     "build": "tsc",
     "install": "sudo rm -f /usr/local/bin/bschlangaul-werkzeug.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/bschlangaul-werkzeug.js;"
   },
+  "bin": {
+    "bschlangaul-werkzeug": "./dist/main.js"
+  },
   "author": "Hermine Bschlangaul",
   "license": "GPL-3.0-or-later"
 }
