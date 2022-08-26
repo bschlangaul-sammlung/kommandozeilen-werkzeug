@@ -537,7 +537,7 @@ export class ExamensAufgabe extends Aufgabe {
   }
 
   /**
-   * @param ref z. B. `66116:2021:03`
+   * @param referenz z. B. `66116:2021:03`
    * @param arg1 Thema-Nummer, Teilaufgaben-Nummer oder Aufgaben-Nummer
    * @param arg2 Teilaufgabe-Nummer oder Aufgabe-Nummer
    * @param arg3 Aufgabe-Nummer
@@ -661,7 +661,14 @@ export class ExamensAufgabe extends Aufgabe {
   gibTitelNurAufgabe (alsMarkdownLink: boolean = false): string {
     const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`
     if (alsMarkdownLink) {
-      return generiereLink(ausgabe, this.pfad)
+      return (
+        generiereLink(ausgabe, this.pfad) +
+        ' (' +
+        generiereLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
+          linkePdf: false
+        }) +
+        ')'
+      )
     }
     return ausgabe
   }
