@@ -37,7 +37,7 @@ function zeigeFehler(meldung) {
 exports.zeigeFehler = zeigeFehler;
 function leseKonfigurationsDatei(pfad) {
     const inhalt = leseDatei(pfad);
-    const treffer = inhalt.match(/\\LehramtInformatikRepository\{(.*)\}/);
+    const treffer = inhalt.match(/\\bPfadAufgaben\{(.*)\}/);
     if (treffer == null) {
         zeigeFehler(`Konfigurations-Datei nicht gefunden: ${pfad}`);
     }

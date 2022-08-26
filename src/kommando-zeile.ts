@@ -157,7 +157,7 @@ sammlung
   .alias('e')
   .description(
     'Erzeuge pro Examen eine TeX-Datei. ' +
-       'Das Examen muss mindestens eine gelöste Aufgabe haben'
+      'Das Examen muss mindestens eine gelöste Aufgabe haben'
   )
   .action(aktionen.erzeugeExamensLösungen)
 
@@ -197,8 +197,8 @@ programm
   .alias('v')
   .description(
     'Überprüfe / validiere ob es die Stichwörter in \\index{} gibt. ' +
-       'Ob es die Werte für die Metadaten-Schlüssel BearbeitungsStand und ' +
-       'Korrektheit in den Metadaten gibt'
+      'Ob es die Werte für die Metadaten-Schlüssel BearbeitungsStand und ' +
+      'Korrektheit in den Metadaten gibt'
   )
   .action(aktionen.validiere)
 

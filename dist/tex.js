@@ -22,11 +22,11 @@ function gibInhaltEinesTexMakros(makroName, markup) {
 }
 exports.gibInhaltEinesTexMakros = gibInhaltEinesTexMakros;
 /**
-  * Sammle alle Stichwörter eines TeX-Inhaltes (string). Doppelte Stichwörter
-  * werden nur als eins aufgelistet.
-  *
-  * @param inhalt - Der Textinhalt einer TeX-Datei.
-  */
+ * Sammle alle Stichwörter eines TeX-Inhaltes (string). Doppelte Stichwörter
+ * werden nur als eins aufgelistet.
+ *
+ * @param inhalt - Der Textinhalt einer TeX-Datei.
+ */
 function sammleStichwörter(inhalt) {
     const re = baueMakroRegExp('index');
     let übereinstimmung;
@@ -42,18 +42,18 @@ function sammleStichwörter(inhalt) {
 }
 exports.sammleStichwörter = sammleStichwörter;
 /**
-  * Sammle alle Stichwörter einer TeX-Datei.
-  */
+ * Sammle alle Stichwörter einer TeX-Datei.
+ */
 function sammleStichwörterEinerDatei(pfad) {
     return sammleStichwörter((0, helfer_1.leseRepoDatei)(pfad));
 }
 exports.sammleStichwörterEinerDatei = sammleStichwörterEinerDatei;
 /**
-  * @param dateiPfad - Ein Dateipfad.
-  * @param klassenName - Ein Klassenname (ohne Präfix `bschlangaul-`)
-  * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
-  * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
-  */
+ * @param dateiPfad - Ein Dateipfad.
+ * @param klassenName - Ein Klassenname (ohne Präfix `bschlangaul-`)
+ * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
+ * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
+ */
 function schreibeTexDatei(dateiPfad, klassenName, kopf, textkörper) {
     textkörper = textkörper.trim();
     const inhalt = `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
@@ -70,23 +70,23 @@ function umgebeMitKlammern(text) {
     return text;
 }
 /**
-  * @returns
-  *
-  * ```latex
-  * \makroName{
-  *   Titel = Aufgabe 2,
-  *   Thematik = Petri-Netz,
-  *   RelativerPfad = Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,
-  *   ZitatSchluessel = sosy:pu:4,
-  *   EinzelpruefungsNr = 46116,
-  *   Jahr = 2016,
-  *   Monat = 03,
-  *   ThemaNr = 2,
-  *   TeilaufgabeNr = 1,
-  *   AufgabeNr = 2,
-  * }
-  * ```
-  */
+ * @returns
+ *
+ * ```latex
+ * \makroName{
+ *   Titel = Aufgabe 2,
+ *   Thematik = Petri-Netz,
+ *   RelativerPfad = Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,
+ *   ZitatSchluessel = sosy:pu:4,
+ *   EinzelpruefungsNr = 46116,
+ *   Jahr = 2016,
+ *   Monat = 03,
+ *   ThemaNr = 2,
+ *   TeilaufgabeNr = 1,
+ *   AufgabeNr = 2,
+ * }
+ * ```
+ */
 function machePlist(makroName, daten, schlüsselMitKlammern) {
     if (schlüsselMitKlammern != null) {
         for (const schlüssel of schlüsselMitKlammern) {

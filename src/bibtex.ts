@@ -27,9 +27,7 @@ class BibtexSammlung {
     for (const key in entries) {
       const entry = entries[key]
       if (entry?.unexpected_fields?.file != null) {
-        this.index[
-          entry.entry_key
-        ] = BibtexSammlung.findeMehrerePdfDateien(
+        this.index[entry.entry_key] = BibtexSammlung.findeMehrerePdfDateien(
           entry.unexpected_fields.file as string
         )
       }

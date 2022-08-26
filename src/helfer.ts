@@ -39,7 +39,7 @@ export function zeigeFehler (meldung: string): never {
 
 function leseKonfigurationsDatei (pfad: string): string {
   const inhalt = leseDatei(pfad)
-  const treffer = inhalt.match(/\\LehramtInformatikRepository\{(.*)\}/)
+  const treffer = inhalt.match(/\\bPfadAufgaben\{(.*)\}/)
   if (treffer == null) {
     zeigeFehler(`Konfigurations-Datei nicht gefunden: ${pfad}`)
   }
