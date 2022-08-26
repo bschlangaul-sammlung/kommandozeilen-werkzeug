@@ -72,7 +72,9 @@ class Examen {
      * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
      */
     macheMarkdownLink(text, ...pfadSegmente) {
-        return (0, helfer_1.generiereLink)(text, this.machePfad(...pfadSegmente));
+        return (0, helfer_1.generiereLink)(text, this.machePfad(...pfadSegmente), {
+            linkePdf: false
+        });
     }
     /**
      * In welcher Jahreszeit das Examen stattfindet. Der Monat 3 gibt

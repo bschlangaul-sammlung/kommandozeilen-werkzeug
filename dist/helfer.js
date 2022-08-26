@@ -95,10 +95,8 @@ exports.macheRepoPfad = macheRepoPfad;
  */
 function generiereLink(text, pfad, einstellung) {
     let linkePdf = true;
-    if (einstellung != null) {
-        if (einstellung.linkePdf !== undefined) {
-            linkePdf = einstellung.linkePdf;
-        }
+    if (typeof (einstellung === null || einstellung === void 0 ? void 0 : einstellung.linkePdf) === 'boolean') {
+        linkePdf = einstellung.linkePdf;
     }
     pfad = pfad.replace(exports.repositoryPfad, '');
     pfad = pfad.replace(/^\//, '');

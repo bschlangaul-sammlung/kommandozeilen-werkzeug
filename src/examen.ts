@@ -111,7 +111,9 @@ export class Examen {
    * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
    */
   public macheMarkdownLink (text: string, ...pfadSegmente: string[]): string {
-    return generiereLink(text, this.machePfad(...pfadSegmente))
+    return generiereLink(text, this.machePfad(...pfadSegmente), {
+      linkePdf: false
+    })
   }
 
   /**

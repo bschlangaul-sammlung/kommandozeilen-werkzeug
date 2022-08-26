@@ -110,10 +110,8 @@ export function generiereLink (
   einstellung?: LinkEinstellung
 ): string {
   let linkePdf = true
-  if (einstellung != null) {
-    if (einstellung.linkePdf !== undefined) {
-      linkePdf = einstellung.linkePdf
-    }
+  if (typeof einstellung?.linkePdf === 'boolean') {
+    linkePdf = einstellung.linkePdf
   }
   pfad = pfad.replace(repositoryPfad, '')
   pfad = pfad.replace(/^\//, '')
