@@ -10,7 +10,7 @@ const konfigurationsDateiPfad = path.join(
 )
 
 const githubRawUrl =
-  'https://raw.githubusercontent.com/hbschlang/lehramt-informatik/main'
+  'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main'
 
 export function leseDatei (pfad: string): string {
   return fs.readFileSync(pfad, { encoding: 'utf-8' })

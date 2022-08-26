@@ -9,7 +9,7 @@ const child_process_1 = __importDefault(require("child_process"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const konfigurationsDateiPfad = path_1.default.join(path_1.default.sep, 'etc', 'bschlangaul.config.tex');
-const githubRawUrl = 'https://raw.githubusercontent.com/hbschlang/lehramt-informatik/main';
+const githubRawUrl = 'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main';
 function leseDatei(pfad) {
     return fs_1.default.readFileSync(pfad, { encoding: 'utf-8' });
 }
