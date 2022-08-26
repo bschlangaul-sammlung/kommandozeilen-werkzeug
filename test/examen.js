@@ -66,11 +66,11 @@ describe('examen.js', function () {
       )
     })
 
-    it('Getter Methode „macheMarkdownLink()“', function () {
+    it('Methode „macheMarkdownLink()“', function () {
       const examen = sammlung.gibDurchReferenz('66116:2021:03')
       assert.strictEqual(
         examen.macheMarkdownLink('text', 'Thema-1', 'Aufgabe-2.tex'),
-        '[text](https://raw.githubusercontent.com/hbschlang/lehramt-informatik/main/Staatsexamen/66116/2021/03/Thema-1/Aufgabe-2.pdf)'
+        '[text](https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main/Staatsexamen/66116/2021/03/Thema-1/Aufgabe-2.tex)'
       )
     })
   })
