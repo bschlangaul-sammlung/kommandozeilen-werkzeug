@@ -221,6 +221,9 @@ class Aufgabe {
         }
         return 'unbekannt';
     }
+    get bearbeitungsStandNr() {
+        return bearbeitungsStand.indexOf(this.bearbeitungsStand);
+    }
     /**
      * Siehe Dokumentation des Typs
      */
@@ -230,6 +233,9 @@ class Aufgabe {
             return this.metadaten_.Korrektheit;
         }
         return 'unbekannt';
+    }
+    get korrektheitNr() {
+        return korrektheit.indexOf(this.korrektheit);
     }
     /**
      * Zeigt an, ob die Aufgabe korrekt ist. Das ist der Fall wenn in den

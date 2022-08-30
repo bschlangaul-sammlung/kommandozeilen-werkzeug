@@ -151,7 +151,7 @@ sammlung
   .description(
     'Erzeuge das Haupt-Dokument mit dem Namen Bschlangaul-Sammlung.tex'
   )
-  .action(aktionen.erzeugeHauptDokument)
+  .action(aktionen.erzeugeAufgabenSammlung)
 
 sammlung
   .command('examen')

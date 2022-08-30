@@ -105,7 +105,7 @@ sammlung
     .command('haupt')
     .alias('h')
     .description('Erzeuge das Haupt-Dokument mit dem Namen Bschlangaul-Sammlung.tex')
-    .action(aktionen_1.default.erzeugeHauptDokument);
+    .action(aktionen_1.default.erzeugeAufgabenSammlung);
 sammlung
     .command('examen')
     .alias('e')

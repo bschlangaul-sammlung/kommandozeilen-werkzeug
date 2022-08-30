@@ -3,7 +3,7 @@
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.erzeugeHauptDokument = exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
+exports.erzeugeAufgabenSammlung = exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
 const aufgabe_1 = require("../aufgabe");
 const log_1 = require("../log");
 const examen_1 = require("../examen");
@@ -189,7 +189,7 @@ exports.erzeugeExamensLösungen = erzeugeExamensLösungen;
 /**
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
-function erzeugeHauptDokument() {
+function erzeugeAufgabenSammlung(nurExamen = true, minKorrektheitNr = 2) {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
     (0, aufgabe_1.gibAufgabenSammlung)();
     const examenSammlung = (0, examen_1.gibExamenSammlung)();
@@ -201,22 +201,25 @@ function erzeugeHauptDokument() {
     let einzelprüfungsNr;
     const textkörper = baum.besuche({
         betreteAufgabe(aufgabe, nummer) {
-            if (aufgabe.istExamen && aufgabe.istKorrekt) {
-                const examensAufgabe = aufgabe;
-                const examen = examensAufgabe.examen;
-                (0, log_1.log)('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
-                let ausgabe = '';
-                if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
-                    (0, log_1.log)('verbose', 'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.', einzelprüfungsNr);
-                    einzelprüfungsNr = examen.nummer;
-                    const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')';
-                    ausgabe += `\n\\section{${überschrift}}\n`;
-                }
-                return ausgabe + aufgabe.einbindenTexMakro;
+            if (nurExamen && !aufgabe.istExamen) {
+                return;
             }
-            (0, log_1.log)('verbose', 'Die Aufgabe %s wurde noch nicht überprüft.', aufgabe.referenz);
+            if (aufgabe.korrektheitNr < minKorrektheitNr) {
+                return;
+            }
+            const examensAufgabe = aufgabe;
+            const examen = examensAufgabe.examen;
+            (0, log_1.log)('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
+            let ausgabe = '';
+            if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
+                (0, log_1.log)('verbose', 'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.', einzelprüfungsNr);
+                einzelprüfungsNr = examen.nummer;
+                const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')';
+                ausgabe += `\n\\section{${überschrift}}\n`;
+            }
+            return ausgabe + aufgabe.einbindenTexMakro;
         }
     });
     (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)('Bschlangaul-Sammlung.tex'), 'haupt', '', textkörper);
 }
-exports.erzeugeHauptDokument = erzeugeHauptDokument;
+exports.erzeugeAufgabenSammlung = erzeugeAufgabenSammlung;

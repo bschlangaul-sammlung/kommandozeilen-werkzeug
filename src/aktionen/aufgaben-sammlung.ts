@@ -214,7 +214,10 @@ export function erzeugeExamensLösungen (): void {
 /**
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
-export function erzeugeHauptDokument (): void {
+export function erzeugeAufgabenSammlung (
+  nurExamen: boolean = true,
+  minKorrektheitNr: number = 2
+): void {
   // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
   gibAufgabenSammlung()
   const examenSammlung = gibExamenSammlung()
@@ -229,28 +232,30 @@ export function erzeugeHauptDokument (): void {
 
   const textkörper = baum.besuche({
     betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
-      if (aufgabe.istExamen && aufgabe.istKorrekt) {
-        const examensAufgabe = aufgabe as ExamensAufgabe
-        const examen = examensAufgabe.examen
-        log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz)
-        let ausgabe: string = ''
-        if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
-          log(
-            'verbose',
-            'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.',
-            einzelprüfungsNr
-          )
-          einzelprüfungsNr = examen.nummer
-          const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')'
-          ausgabe += `\n\\section{${überschrift}}\n`
-        }
-        return ausgabe + aufgabe.einbindenTexMakro
+      if (nurExamen && !aufgabe.istExamen) {
+        return
       }
-      log(
-        'verbose',
-        'Die Aufgabe %s wurde noch nicht überprüft.',
-        aufgabe.referenz
-      )
+
+      if (aufgabe.korrektheitNr < minKorrektheitNr) {
+        return
+      }
+
+      const examensAufgabe = aufgabe as ExamensAufgabe
+      const examen = examensAufgabe.examen
+      log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz)
+      let ausgabe: string = ''
+      if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
+        log(
+          'verbose',
+          'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.',
+          einzelprüfungsNr
+        )
+        einzelprüfungsNr = examen.nummer
+        const überschrift =
+          einzelprüfungsNr.toString() + ' (' + examen.fach + ')'
+        ausgabe += `\n\\section{${überschrift}}\n`
+      }
+      return ausgabe + aufgabe.einbindenTexMakro
     }
   })
   schreibeTexDatei(

@@ -390,6 +390,10 @@ export class Aufgabe {
     return 'unbekannt'
   }
 
+  get bearbeitungsStandNr (): number {
+    return bearbeitungsStand.indexOf(this.bearbeitungsStand)
+  }
+
   /**
    * Siehe Dokumentation des Typs
    */
@@ -398,6 +402,10 @@ export class Aufgabe {
       return this.metadaten_.Korrektheit
     }
     return 'unbekannt'
+  }
+
+  get korrektheitNr (): number {
+    return korrektheit.indexOf(this.korrektheit)
   }
 
   /**

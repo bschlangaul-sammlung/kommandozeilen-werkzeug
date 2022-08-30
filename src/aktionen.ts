@@ -22,7 +22,7 @@ import {
 import {
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen,
-  erzeugeHauptDokument
+  erzeugeAufgabenSammlung
 } from './aktionen/aufgaben-sammlung'
 import {
   rotierePdf,
@@ -39,7 +39,7 @@ export default {
   erzeugeExamensAufgabeVorlage,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen,
-  erzeugeHauptDokument,
+  erzeugeAufgabenSammlung,
   erzeugeListenElemente,
   erzeugeReadme,
   erzeugeTexDokumentation,

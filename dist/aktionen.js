@@ -26,7 +26,7 @@ exports.default = {
     erzeugeExamensAufgabeVorlage: aufgaben_vorlage_1.erzeugeExamensAufgabeVorlage,
     erzeugeExamenScansSammlung: aufgaben_sammlung_1.erzeugeExamenScansSammlung,
     erzeugeExamensLösungen: aufgaben_sammlung_1.erzeugeExamensLösungen,
-    erzeugeHauptDokument: aufgaben_sammlung_1.erzeugeHauptDokument,
+    erzeugeAufgabenSammlung: aufgaben_sammlung_1.erzeugeAufgabenSammlung,
     erzeugeListenElemente: tex_formatierung_1.erzeugeListenElemente,
     erzeugeReadme: readme_1.default,
     erzeugeTexDokumentation: tex_dokumentation_1.default,
