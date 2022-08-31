@@ -88,16 +88,24 @@ programm
     'Öffne eine fehlerhafte TeX-Datei im Editor „Visual Studio Code“'
   )
   .option(
-    '--module',
+    '-m, --module',
     'Kompiliere alle TeX-Dateien im Unterverzeichnis „Module“'
   )
   .option(
-    '--examen',
+    '-e, --examen',
     'Kompiliere alle TeX-Dateien im Unterverzeichnis „Staatsexamen“'
   )
   .option(
-    '--unter-verzeichnis <relativer-pfad>',
+    '-x, --ausschliessen <zeichenkette>',
+    'Dateien ausschließen, die die gegebene Zeichenkette enthalten.'
+  )
+  .option(
+    '-b, --unter-verzeichnis <relativer-pfad>',
     'Nur TeX-Dateien in dem angegeben Unterverzeichnis neu kompilieren.'
+  )
+  .option(
+    '-d, --trockener-lauf',
+    'Nichts kompilieren, nur die Dateien auflisten, die kompiliert werden.'
   )
   .action(aktionen.kompiliereTex)
 

@@ -7,11 +7,9 @@ const child_process_1 = __importDefault(require("child_process"));
 const glob_1 = __importDefault(require("glob"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
-const aufgabe_1 = require("../aufgabe");
 const helfer_1 = require("../helfer");
 const fehler = [];
 function default_1(opts) {
-    console.log(opts);
     let cwd;
     if (opts.unterVerzeichnis != null) {
         cwd = path_1.default.join(helfer_1.repositoryPfad, opts.unterVerzeichnis);
@@ -25,14 +23,25 @@ function default_1(opts) {
     else {
         cwd = helfer_1.repositoryPfad;
     }
-    console.log(cwd);
+    console.log(`Kompiliere alle TeX-Dateien im Verzeichnis: ${cwd}`);
     const dateien = glob_1.default.sync('**/*.tex', { cwd });
     for (let pfad of dateien) {
         pfad = path_1.default.join(cwd, pfad);
-        if (pfad.match(aufgabe_1.ExamensAufgabe.schwacherPfadRegExp) != null) {
-            const ergebnis = child_process_1.default.spawnSync('latexmk', ['-shell-escape', '-cd', '--lualatex', pfad], {
-                encoding: 'utf-8'
-            });
+        if (opts.ausschliessen != null && pfad.includes(opts.ausschliessen)) {
+            console.log('ausgeschossen: ' + pfad);
+        }
+        else {
+            let ergebnis;
+            if (opts.trockenerLauf != null && opts.trockenerLauf) {
+                ergebnis = child_process_1.default.spawnSync('cat', [pfad], {
+                    encoding: 'utf-8'
+                });
+            }
+            else {
+                ergebnis = child_process_1.default.spawnSync('latexmk', ['-shell-escape', '-cd', '--lualatex', pfad], {
+                    encoding: 'utf-8'
+                });
+            }
             if (ergebnis.status === 0) {
                 console.log(chalk_1.default.green(pfad));
             }

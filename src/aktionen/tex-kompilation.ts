@@ -3,7 +3,6 @@ import glob from 'glob'
 import path from 'path'
 import chalk from 'chalk'
 
-import { ExamensAufgabe } from '../aufgabe'
 import { repositoryPfad, öffneVSCode } from '../helfer'
 
 const fehler: string[] = []
@@ -13,6 +12,8 @@ interface Optionen {
   unterVerzeichnis?: string
   examen?: boolean
   module?: boolean
+  trockenerLauf?: boolean
+  ausschliessen?: string
 }
 
 export default function (opts: Optionen): void {
@@ -31,14 +32,24 @@ export default function (opts: Optionen): void {
   const dateien = glob.sync('**/*.tex', { cwd })
   for (let pfad of dateien) {
     pfad = path.join(cwd, pfad)
-    if (pfad.match(ExamensAufgabe.schwacherPfadRegExp) != null) {
-      const ergebnis = childProcess.spawnSync(
-        'latexmk',
-        ['-shell-escape', '-cd', '--lualatex', pfad],
-        {
+
+    if (opts.ausschliessen != null && pfad.includes(opts.ausschliessen)) {
+      console.log('ausgeschossen: ' + pfad)
+    } else {
+      let ergebnis: childProcess.SpawnSyncReturns<string>
+      if (opts.trockenerLauf != null && opts.trockenerLauf) {
+        ergebnis = childProcess.spawnSync('cat', [pfad], {
           encoding: 'utf-8'
-        }
-      )
+        })
+      } else {
+        ergebnis = childProcess.spawnSync(
+          'latexmk',
+          ['-shell-escape', '-cd', '--lualatex', pfad],
+          {
+            encoding: 'utf-8'
+          }
+        )
+      }
 
       if (ergebnis.status === 0) {
         console.log(chalk.green(pfad))

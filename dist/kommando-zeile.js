@@ -65,9 +65,11 @@ programm
     .description('Kompiliere mehrere TeX-Dateien auf einmal.')
     .alias('k')
     .option('--oeffne-editor', 'Öffne eine fehlerhafte TeX-Datei im Editor „Visual Studio Code“')
-    .option('--module', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Module“')
-    .option('--examen', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Staatsexamen“')
-    .option('--unter-verzeichnis <relativer-pfad>', 'Nur TeX-Dateien in dem angegeben Unterverzeichnis neu kompilieren.')
+    .option('-m, --module', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Module“')
+    .option('-e, --examen', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Staatsexamen“')
+    .option('-x, --ausschliessen <zeichenkette>', 'Dateien ausschließen, die die gegebene Zeichenkette enthalten.')
+    .option('-b, --unter-verzeichnis <relativer-pfad>', 'Nur TeX-Dateien in dem angegeben Unterverzeichnis neu kompilieren.')
+    .option('-d, --trockener-lauf', 'Nichts kompilieren, nur die Dateien auflisten, die kompiliert werden.')
     .action(aktionen_1.default.kompiliereTex);
 programm
     .command('sql <tex-datei>')
