@@ -189,7 +189,7 @@ exports.erzeugeExamensLösungen = erzeugeExamensLösungen;
 /**
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
-function erzeugeAufgabenSammlung(nurExamen = true, minKorrektheitNr = 2) {
+function erzeugeAufgabenSammlung(opts) {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
     (0, aufgabe_1.gibAufgabenSammlung)();
     const examenSammlung = (0, examen_1.gibExamenSammlung)();
@@ -201,10 +201,15 @@ function erzeugeAufgabenSammlung(nurExamen = true, minKorrektheitNr = 2) {
     let einzelprüfungsNr;
     const textkörper = baum.besuche({
         betreteAufgabe(aufgabe, nummer) {
-            if (nurExamen && !aufgabe.istExamen) {
+            if (opts.examen != null && opts.examen && !aufgabe.istExamen) {
                 return;
             }
-            if (aufgabe.korrektheitNr < minKorrektheitNr) {
+            if (opts.korrektheit != null &&
+                parseInt(opts.korrektheit) >= aufgabe.korrektheitGrad) {
+                return;
+            }
+            if (opts.bearbeitungsStand != null &&
+                parseInt(opts.bearbeitungsStand) >= aufgabe.bearbeitungsStandGrad) {
                 return;
             }
             const examensAufgabe = aufgabe;
@@ -220,6 +225,10 @@ function erzeugeAufgabenSammlung(nurExamen = true, minKorrektheitNr = 2) {
             return ausgabe + aufgabe.einbindenTexMakro;
         }
     });
-    (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)('Bschlangaul-Sammlung.tex'), 'haupt', '', textkörper);
+    let ziel = 'Bschlangaul-Sammlung';
+    if (opts.ziel != null) {
+        ziel = opts.ziel;
+    }
+    (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)(ziel + '.tex'), 'haupt', '', textkörper);
 }
 exports.erzeugeAufgabenSammlung = erzeugeAufgabenSammlung;

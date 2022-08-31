@@ -108,9 +108,14 @@ const sammlung = new commander_1.Command('sammlungen')
     .description('Erzeuge verschiedene Sammlungen (z. B. Alle Aufgaben eines Examens)')
     .alias('sa');
 sammlung
-    .command('haupt')
-    .alias('h')
-    .description('Erzeuge das Haupt-Dokument mit dem Namen Bschlangaul-Sammlung.tex')
+    .command('aufgaben')
+    .alias('as')
+    .description('Erzeuge eine Sammlung an Aufgaben, d. h. ein Dokument in dem mehrere Aufgaben nach verschiedenen Kritieren eingebunden werden.')
+    .option('-b, --bearbeitungs-stand <grad>', 'Nur Aufgaben mit mindestens den Bearbeitungsstand.')
+    .option('-k, --korrektheit <grad>', 'Nur Aufgaben mit mindesten dem Grad an Korrektheit.')
+    .option('-z, --ziel <pfad>', '')
+    .option('-e, --examen', 'Nur Examensaufgaben')
+    .option('-m, --module', 'Nur Module')
     .action(aktionen_1.default.erzeugeAufgabenSammlung);
 sammlung
     .command('examen')

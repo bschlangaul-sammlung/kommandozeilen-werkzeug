@@ -392,7 +392,7 @@ export class Aufgabe {
     return 'unbekannt'
   }
 
-  get bearbeitungsStandNr (): number {
+  get bearbeitungsStandGrad (): number {
     return bearbeitungsStand.indexOf(this.bearbeitungsStand)
   }
 
@@ -406,7 +406,7 @@ export class Aufgabe {
     return 'unbekannt'
   }
 
-  get korrektheitNr (): number {
+  get korrektheitGrad (): number {
     return korrektheit.indexOf(this.korrektheit)
   }
 

@@ -16,6 +16,7 @@ function umgebeMitKlammern(text) {
 const bearbeitungsStand = [
     'unbekannt',
     'OCR',
+    'TeX-Fehler',
     'nur Angabe',
     'mit Lösung'
 ];
@@ -221,7 +222,7 @@ class Aufgabe {
         }
         return 'unbekannt';
     }
-    get bearbeitungsStandNr() {
+    get bearbeitungsStandGrad() {
         return bearbeitungsStand.indexOf(this.bearbeitungsStand);
     }
     /**
@@ -234,7 +235,7 @@ class Aufgabe {
         }
         return 'unbekannt';
     }
-    get korrektheitNr() {
+    get korrektheitGrad() {
         return korrektheit.indexOf(this.korrektheit);
     }
     /**

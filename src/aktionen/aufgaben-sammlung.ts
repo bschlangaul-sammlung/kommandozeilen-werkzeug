@@ -211,12 +211,19 @@ export function erzeugeExamensLösungen (): void {
   }
 }
 
+interface AufgabenSammlungenOptionen {
+  bearbeitungsStand?: string
+  korrektheit?: string
+  ziel?: string
+  examen?: boolean
+  module?: boolean
+}
+
 /**
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
 export function erzeugeAufgabenSammlung (
-  nurExamen: boolean = true,
-  minKorrektheitNr: number = 2
+  opts: AufgabenSammlungenOptionen
 ): void {
   // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
   gibAufgabenSammlung()
@@ -232,11 +239,21 @@ export function erzeugeAufgabenSammlung (
 
   const textkörper = baum.besuche({
     betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
-      if (nurExamen && !aufgabe.istExamen) {
+      if (opts.examen != null && opts.examen && !aufgabe.istExamen) {
         return
       }
 
-      if (aufgabe.korrektheitNr < minKorrektheitNr) {
+      if (
+        opts.korrektheit != null &&
+        parseInt(opts.korrektheit) >= aufgabe.korrektheitGrad
+      ) {
+        return
+      }
+
+      if (
+        opts.bearbeitungsStand != null &&
+        parseInt(opts.bearbeitungsStand) >= aufgabe.bearbeitungsStandGrad
+      ) {
         return
       }
 
@@ -258,10 +275,9 @@ export function erzeugeAufgabenSammlung (
       return ausgabe + aufgabe.einbindenTexMakro
     }
   })
-  schreibeTexDatei(
-    macheRepoPfad('Bschlangaul-Sammlung.tex'),
-    'haupt',
-    '',
-    textkörper
-  )
+  let ziel = 'Bschlangaul-Sammlung'
+  if (opts.ziel != null) {
+    ziel = opts.ziel
+  }
+  schreibeTexDatei(macheRepoPfad(ziel + '.tex'), 'haupt', '', textkörper)
 }
