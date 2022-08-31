@@ -20,6 +20,7 @@ function umgebeMitKlammern (text: string): string {
 const bearbeitungsStand = [
   'unbekannt',
   'OCR',
+  'TeX-Fehler',
   'nur Angabe',
   'mit Lösung'
 ] as const
@@ -32,6 +33,7 @@ const bearbeitungsStand = [
  * - OCR:        Das Ergebnis der Texterkennung (OCR = Optical Character
  *               Recognition) wurde übernommen. Außer der TeX-Klasse ist noch
  *               nichts geTeXt.
+ * - TeX-Fehler: Die TeX-Datei kompiliert nicht.
  * - nur Angabe: Die Angabe, d.h. die Aufgabenstellung wurde geTeXt.
  * - mit Lösung: Auch die Lösung wurde geTeXt.
  */
