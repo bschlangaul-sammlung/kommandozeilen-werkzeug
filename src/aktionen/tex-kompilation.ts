@@ -1,31 +1,60 @@
 import childProcess from 'child_process'
 import glob from 'glob'
 import path from 'path'
+import chalk from 'chalk'
 
 import { ExamensAufgabe } from '../aufgabe'
-import { repositoryPfad, öffneVSCode, zeigeFehler } from '../helfer'
+import { repositoryPfad, öffneVSCode } from '../helfer'
 
-export default function (): void {
-  const staatsexamenPath = path.join(repositoryPfad, 'Staatsexamen')
-  const dateien = glob.sync('**/*.tex', { cwd: staatsexamenPath })
+const fehler: string[] = []
+
+interface Optionen {
+  oeffneEditor?: boolean
+  unterVerzeichnis?: string
+  examen?: boolean
+  module?: boolean
+}
+
+export default function (opts: Optionen): void {
+  let cwd: string
+  if (opts.unterVerzeichnis != null) {
+    cwd = path.join(repositoryPfad, opts.unterVerzeichnis)
+  } else if (opts.examen != null && opts.examen) {
+    cwd = path.join(repositoryPfad, 'Staatsexamen')
+  } else if (opts.module != null && opts.module) {
+    cwd = path.join(repositoryPfad, 'Module')
+  } else {
+    cwd = repositoryPfad
+  }
+  console.log(`Kompiliere alle TeX-Dateien im Verzeichnis: ${cwd}`)
+
+  const dateien = glob.sync('**/*.tex', { cwd })
   for (let pfad of dateien) {
-    pfad = path.join(staatsexamenPath, pfad)
+    pfad = path.join(cwd, pfad)
     if (pfad.match(ExamensAufgabe.schwacherPfadRegExp) != null) {
-      console.log(pfad)
       const ergebnis = childProcess.spawnSync(
-        '/usr/local/texlive/bin/x86_64-linux/latexmk',
+        'latexmk',
         ['-shell-escape', '-cd', '--lualatex', pfad],
         {
           encoding: 'utf-8'
         }
       )
 
-      if (ergebnis.status !== 0) {
-        console.log(ergebnis.stdout)
-        console.log(ergebnis.stderr)
-        öffneVSCode(pfad)
-        zeigeFehler(`Die Datei „${pfad}“ konnte nicht kompiliert werden.`)
+      if (ergebnis.status === 0) {
+        console.log(chalk.green(pfad))
+      } else {
+        fehler.push(pfad)
+        console.log(chalk.yellow(ergebnis.stdout))
+        console.log(chalk.red(ergebnis.stderr))
+        if (opts.oeffneEditor != null && opts.oeffneEditor) {
+          öffneVSCode(pfad)
+        }
+        console.log(chalk.red(pfad))
       }
     }
+  }
+
+  for (const pfad of fehler) {
+    console.log(chalk.red(pfad))
   }
 }

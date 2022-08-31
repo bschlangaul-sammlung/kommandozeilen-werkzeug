@@ -80,9 +80,25 @@ programm
   .action(aktionen.erzeugeReadme)
 
 programm
-  .command('kompiliere-aufgaben')
-  .description('Kompiliere alle TeX-Dateien der Aufgaben.')
+  .command('kompiliere-tex')
+  .description('Kompiliere mehrere TeX-Dateien auf einmal.')
   .alias('k')
+  .option(
+    '--oeffne-editor',
+    'Öffne eine fehlerhafte TeX-Datei im Editor „Visual Studio Code“'
+  )
+  .option(
+    '--module',
+    'Kompiliere alle TeX-Dateien im Unterverzeichnis „Module“'
+  )
+  .option(
+    '--examen',
+    'Kompiliere alle TeX-Dateien im Unterverzeichnis „Staatsexamen“'
+  )
+  .option(
+    '--unter-verzeichnis <relativer-pfad>',
+    'Nur TeX-Dateien in dem angegeben Unterverzeichnis neu kompilieren.'
+  )
   .action(aktionen.kompiliereTex)
 
 programm
