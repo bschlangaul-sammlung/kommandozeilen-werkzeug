@@ -3,6 +3,25 @@
 /**
  * Mit Hilfe des Pakets `commander` ein Kommandozeilen-Interface bereitstellen.
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -10,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const aktionen_1 = __importDefault(require("./aktionen"));
 const log_1 = require("./log");
+const aufgabe = __importStar(require("./aufgabe"));
 function steigereRedseligkeit(dummyValue, verbosity) {
     verbosity = verbosity + 1;
     if (verbosity === 1) {
@@ -22,6 +42,14 @@ function steigereRedseligkeit(dummyValue, verbosity) {
         (0, log_1.setzeLogEbene)('debug');
     }
     return verbosity;
+}
+function konvertierteGradFeldFürHilfe(grad) {
+    const ausgabe = [];
+    for (let index = 0; index < grad.length; index++) {
+        const value = grad[index];
+        ausgabe.push(`${index}: ${value}`);
+    }
+    return ausgabe.join(', ');
 }
 const programm = new commander_1.Command()
     .description('Ein Kommandozeilen-Tool (Werkzeug), um verschiedene administrative Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen etc. zu erledigen.')
@@ -111,8 +139,10 @@ sammlung
     .command('aufgaben')
     .alias('as')
     .description('Erzeuge eine Sammlung an Aufgaben, d. h. ein Dokument in dem mehrere Aufgaben nach verschiedenen Kritieren eingebunden werden.')
-    .option('-b, --bearbeitungs-stand <grad>', 'Nur Aufgaben mit mindestens den Bearbeitungsstand.')
-    .option('-k, --korrektheit <grad>', 'Nur Aufgaben mit mindesten dem Grad an Korrektheit.')
+    .option('-b, --bearbeitungs-stand <grad>', 'Nur Aufgaben mit mindestens den Bearbeitungsstand. ' +
+    konvertierteGradFeldFürHilfe(aufgabe.bearbeitungsStand))
+    .option('-k, --korrektheit <grad>', 'Nur Aufgaben mit mindestens dem Grad an Korrektheit. ' +
+    konvertierteGradFeldFürHilfe(aufgabe.korrektheit))
     .option('-z, --ziel <pfad>', '')
     .option('-e, --examen', 'Nur Examensaufgaben')
     .option('-m, --module', 'Nur Module')

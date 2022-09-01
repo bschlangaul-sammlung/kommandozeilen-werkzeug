@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.gibAufgabenSammlung = exports.AufgabenSammlung = exports.ExamensAufgabe = exports.Aufgabe = void 0;
+exports.gibAufgabenSammlung = exports.AufgabenSammlung = exports.ExamensAufgabe = exports.Aufgabe = exports.korrektheit = exports.bearbeitungsStand = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const glob_1 = __importDefault(require("glob"));
@@ -13,14 +13,14 @@ const examen_1 = require("./examen");
 function umgebeMitKlammern(text) {
     return `{${text}}`;
 }
-const bearbeitungsStand = [
+exports.bearbeitungsStand = [
     'unbekannt',
     'OCR',
     'TeX-Fehler',
     'nur Angabe',
     'mit Lösung'
 ];
-const korrektheit = [
+exports.korrektheit = [
     'wahrscheinlich falsch',
     'unbekannt',
     'korrekt',
@@ -49,8 +49,8 @@ class Aufgabe {
         if (metaDaten != null) {
             this.metadaten_ = metaDaten;
         }
-        this.validiere(this.bearbeitungsStand, bearbeitungsStand);
-        this.validiere(this.korrektheit, korrektheit);
+        this.validiere(this.bearbeitungsStand, exports.bearbeitungsStand);
+        this.validiere(this.korrektheit, exports.korrektheit);
     }
     /**
      * Normalisiere den Dateipfad der Aufgabe. Er sollte immer als absoluter Pfad vorliegen.
@@ -223,7 +223,7 @@ class Aufgabe {
         return 'unbekannt';
     }
     get bearbeitungsStandGrad() {
-        return bearbeitungsStand.indexOf(this.bearbeitungsStand);
+        return exports.bearbeitungsStand.indexOf(this.bearbeitungsStand);
     }
     /**
      * Siehe Dokumentation des Typs
@@ -236,7 +236,7 @@ class Aufgabe {
         return 'unbekannt';
     }
     get korrektheitGrad() {
-        return korrektheit.indexOf(this.korrektheit);
+        return exports.korrektheit.indexOf(this.korrektheit);
     }
     /**
      * Zeigt an, ob die Aufgabe korrekt ist. Das ist der Fall wenn in den

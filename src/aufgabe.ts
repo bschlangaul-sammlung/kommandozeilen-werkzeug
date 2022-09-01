@@ -17,7 +17,7 @@ function umgebeMitKlammern (text: string): string {
   return `{${text}}`
 }
 
-const bearbeitungsStand = [
+export const bearbeitungsStand = [
   'unbekannt',
   'OCR',
   'TeX-Fehler',
@@ -39,7 +39,7 @@ const bearbeitungsStand = [
  */
 type BearbeitungsStand = typeof bearbeitungsStand[number]
 
-const korrektheit = [
+export const korrektheit = [
   'wahrscheinlich falsch',
   'unbekannt',
   'korrekt',

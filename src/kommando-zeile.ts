@@ -9,6 +9,7 @@ import { Command } from 'commander'
 import aktionen from './aktionen'
 
 import { setzeLogEbene, gibLogEbene, log } from './log'
+import * as aufgabe from './aufgabe'
 
 function steigereRedseligkeit (dummyValue: any, verbosity: number): number {
   verbosity = verbosity + 1
@@ -20,6 +21,17 @@ function steigereRedseligkeit (dummyValue: any, verbosity: number): number {
     setzeLogEbene('debug')
   }
   return verbosity
+}
+
+function konvertierteGradFeldFürHilfe (
+  grad: typeof aufgabe.korrektheit | typeof aufgabe.bearbeitungsStand
+): string {
+  const ausgabe = []
+  for (let index = 0; index < grad.length; index++) {
+    const value = grad[index]
+    ausgabe.push(`${index}: ${value}`)
+  }
+  return ausgabe.join(', ')
 }
 
 const programm = new Command()
@@ -177,11 +189,13 @@ sammlung
   )
   .option(
     '-b, --bearbeitungs-stand <grad>',
-    'Nur Aufgaben mit mindestens den Bearbeitungsstand.'
+    'Nur Aufgaben mit mindestens den Bearbeitungsstand. ' +
+      konvertierteGradFeldFürHilfe(aufgabe.bearbeitungsStand)
   )
   .option(
     '-k, --korrektheit <grad>',
-    'Nur Aufgaben mit mindesten dem Grad an Korrektheit.'
+    'Nur Aufgaben mit mindestens dem Grad an Korrektheit. ' +
+      konvertierteGradFeldFürHilfe(aufgabe.korrektheit)
   )
   .option('-z, --ziel <pfad>', '')
   .option('-e, --examen', 'Nur Examensaufgaben')
