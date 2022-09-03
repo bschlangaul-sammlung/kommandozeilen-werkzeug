@@ -9,5 +9,6 @@
     "**/*.pdf": true,
     "**/*.synctex.gz": true
   },
-  "mochaExplorer.nodeArgv": ["--experimental-specifier-resolution=node"]
+  "mochaExplorer.nodeArgv": ["--experimental-specifier-resolution=node"],
+  "mochaExplorer.require": ["ts-node/register"]
 }

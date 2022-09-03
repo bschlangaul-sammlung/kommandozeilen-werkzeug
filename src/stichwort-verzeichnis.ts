@@ -201,3 +201,7 @@ export function gibStichwortVerzeichnis (): StichwortVerzeichnis {
   }
   return stichwortVerzeichnis
 }
+
+export function gibAufgaben (stichwort: string): Set<Aufgabe> {
+  return gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort)
+}

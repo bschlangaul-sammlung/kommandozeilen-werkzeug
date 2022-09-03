@@ -23,7 +23,6 @@ export default function () {
     inhalt = nunjucks.renderString(inhalt, {
         gibAufgabenListe: ersetzeStichwörterInReadme
     });
-    // inhalt = ersetzeStichwörterInReadme(inhalt)
     console.log(inhalt);
     const stichwörterInhalt = leseRepoDatei('Stichwortverzeichnis.yml');
     inhalt = inhalt.replace('{{ stichwortverzeichnis }}', stichwörterInhalt);

@@ -168,4 +168,7 @@ export function gibStichwortVerzeichnis() {
     }
     return stichwortVerzeichnis;
 }
+export function gibAufgaben(stichwort) {
+    return gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort);
+}
 //# sourceMappingURL=stichwort-verzeichnis.js.map

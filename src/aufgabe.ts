@@ -502,6 +502,9 @@ export class Aufgabe {
     )
   }
 
+  /**
+   * @return z. B. `Module/30_AUD/40_Sortieralgorithmen/Aufgabe_Haendisches-Sortieren`
+   */
   get einbindenTexMakro (): string {
     let relativerPfad = macheRelativenPfad(this.pfad)
     relativerPfad = relativerPfad.replace('.tex', '')
