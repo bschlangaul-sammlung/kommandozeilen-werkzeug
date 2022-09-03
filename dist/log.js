@@ -81,3 +81,4 @@ function gibLogEbene() {
     return console.level;
 }
 exports.gibLogEbene = gibLogEbene;
+//# sourceMappingURL=log.js.map

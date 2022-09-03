@@ -178,3 +178,4 @@ function gibStichwortVerzeichnis() {
     return stichwortVerzeichnis;
 }
 exports.gibStichwortVerzeichnis = gibStichwortVerzeichnis;
+//# sourceMappingURL=stichwort-verzeichnis.js.map

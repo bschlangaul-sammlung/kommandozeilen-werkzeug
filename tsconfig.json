@@ -9,7 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
     "allowJs": false,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "sourceMap": true
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

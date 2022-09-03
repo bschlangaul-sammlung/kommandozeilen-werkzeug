@@ -41,3 +41,4 @@ exports.default = {
     rotierePdf: externe_befehle_1.rotierePdf,
     validiere: validiere_1.default
 };
+//# sourceMappingURL=aktionen.js.map

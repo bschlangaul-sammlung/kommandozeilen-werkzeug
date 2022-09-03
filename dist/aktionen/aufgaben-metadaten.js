@@ -64,3 +64,4 @@ function default_1(dateiPfad) {
     console.log(texPlist);
 }
 exports.default = default_1;
+//# sourceMappingURL=aufgaben-metadaten.js.map

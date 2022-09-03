@@ -36,3 +36,4 @@ function default_1() {
     fs_1.default.writeFileSync(path_1.default.join(helfer_1.repositoryPfad, 'README.md'), inhalt);
 }
 exports.default = default_1;
+//# sourceMappingURL=readme.js.map

@@ -62,3 +62,4 @@ function gibBibtexSammlung() {
     return bibtexSammlung;
 }
 exports.gibBibtexSammlung = gibBibtexSammlung;
+//# sourceMappingURL=bibtex.js.map

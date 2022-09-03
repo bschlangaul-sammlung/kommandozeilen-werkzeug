@@ -6,3 +6,4 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const kommando_zeile_1 = __importDefault(require("./kommando-zeile"));
 kommando_zeile_1.default.parse(process.argv);
+//# sourceMappingURL=main.js.map

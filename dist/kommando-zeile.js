@@ -186,3 +186,4 @@ programm
     'Korrektheit in den Metadaten gibt')
     .action(aktionen_1.default.validiere);
 exports.default = programm;
+//# sourceMappingURL=kommando-zeile.js.map

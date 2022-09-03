@@ -232,3 +232,4 @@ function erzeugeAufgabenSammlung(opts) {
     (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)(ziel + '.tex'), 'haupt', '', textkörper);
 }
 exports.erzeugeAufgabenSammlung = erzeugeAufgabenSammlung;
+//# sourceMappingURL=aufgaben-sammlung.js.map

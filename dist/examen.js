@@ -469,3 +469,4 @@ function gibExamenSammlung() {
     return examenSammlung;
 }
 exports.gibExamenSammlung = gibExamenSammlung;
+//# sourceMappingURL=examen.js.map

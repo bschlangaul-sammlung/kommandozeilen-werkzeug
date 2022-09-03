@@ -132,3 +132,4 @@ function default_1(pfad, cmdObj) {
     }
 }
 exports.default = default_1;
+//# sourceMappingURL=sql.js.map

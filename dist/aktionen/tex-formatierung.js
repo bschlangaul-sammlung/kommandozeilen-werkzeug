@@ -15,3 +15,4 @@ function erzeugeListenElemente(dateiPfad) {
     (0, helfer_1.schreibeDatei)(dateiPfad, inhalt);
 }
 exports.erzeugeListenElemente = erzeugeListenElemente;
+//# sourceMappingURL=tex-formatierung.js.map

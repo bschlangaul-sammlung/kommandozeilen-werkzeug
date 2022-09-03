@@ -169,3 +169,4 @@ class AusgabeSammler {
     }
 }
 exports.AusgabeSammler = AusgabeSammler;
+//# sourceMappingURL=helfer.js.map

@@ -180,3 +180,4 @@ function default_1(jsonDateiPfad) {
     console.log(formatiereAutomat(definition));
 }
 exports.default = default_1;
+//# sourceMappingURL=flaci.js.map

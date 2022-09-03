@@ -569,3 +569,4 @@ function gibAufgabenSammlung() {
     return aufgabenSammlung;
 }
 exports.gibAufgabenSammlung = gibAufgabenSammlung;
+//# sourceMappingURL=aufgabe.js.map

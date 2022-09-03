@@ -91,3 +91,4 @@ function öffneDurchGlobInVSCode(globMuster, cmdObj) {
     }
 }
 exports.öffneDurchGlobInVSCode = öffneDurchGlobInVSCode;
+//# sourceMappingURL=oeffne.js.map

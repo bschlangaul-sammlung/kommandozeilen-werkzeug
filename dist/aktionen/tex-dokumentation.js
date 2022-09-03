@@ -53,3 +53,4 @@ function default_1() {
     (0, helfer_1.öffneProgramm)('/usr/bin/xdg-open', path_1.default.join(übergeordneterPfad, 'dokumentation.pdf'));
 }
 exports.default = default_1;
+//# sourceMappingURL=tex-dokumentation.js.map

@@ -61,3 +61,4 @@ function default_1(opts) {
     }
 }
 exports.default = default_1;
+//# sourceMappingURL=tex-kompilation.js.map

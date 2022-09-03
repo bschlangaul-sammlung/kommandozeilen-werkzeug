@@ -54,3 +54,4 @@ function erzeugeExamensAufgabeVorlage(ref, arg1, arg2, arg3) {
     (0, helfer_1.öffneVSCode)(pfad);
 }
 exports.erzeugeExamensAufgabeVorlage = erzeugeExamensAufgabeVorlage;
+//# sourceMappingURL=aufgaben-vorlage.js.map

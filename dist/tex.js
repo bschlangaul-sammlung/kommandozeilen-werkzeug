@@ -107,3 +107,4 @@ function machePlist(makroName, daten, schlüsselMitKlammern) {
     return `\\${makroName}{\n${schlüsselWerte}\n}`;
 }
 exports.machePlist = machePlist;
+//# sourceMappingURL=tex.js.map

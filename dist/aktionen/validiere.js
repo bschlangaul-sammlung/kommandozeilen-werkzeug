@@ -7,3 +7,4 @@ function default_1() {
     (0, aufgabe_1.gibAufgabenSammlung)();
 }
 exports.default = default_1;
+//# sourceMappingURL=validiere.js.map

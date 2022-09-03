@@ -59,3 +59,4 @@ function löscheGeradeSeitenInPdf(datei) {
     ]);
 }
 exports.löscheGeradeSeitenInPdf = löscheGeradeSeitenInPdf;
+//# sourceMappingURL=externe-befehle.js.map
