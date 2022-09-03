@@ -1,6 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 
+import nunjucks from 'nunjucks'
+
 import { Aufgabe } from '../aufgabe'
 import { gibStichwortVerzeichnis } from '../stichwort-verzeichnis'
 import { repositoryPfad, leseRepoDatei } from '../helfer'
@@ -16,22 +18,20 @@ function generiereMarkdownAufgabenListe (aufgabenListe: Set<Aufgabe>): string {
   return teil.join('\n')
 }
 
-function ersetzeStichwörterInReadme (inhalt: string): string {
-  return inhalt.replace(/\{\{ stichwort "([^"]*)" \}\}/g, function (
-    treffer,
-    stichwort
-  ) {
-    return generiereMarkdownAufgabenListe(
-      gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort)
-    )
-  })
+function ersetzeStichwörterInReadme (stichwort: string): string {
+  return generiereMarkdownAufgabenListe(
+    gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort)
+  )
 }
 
 export default function (): void {
   let inhalt = leseRepoDatei('README_template.md')
   console.log(inhalt)
 
-  inhalt = ersetzeStichwörterInReadme(inhalt)
+  inhalt = nunjucks.renderString(inhalt, {
+    gibAufgabenListe: ersetzeStichwörterInReadme
+  })
+
   console.log(inhalt)
 
   const stichwörterInhalt = leseRepoDatei('Stichwortverzeichnis.yml')

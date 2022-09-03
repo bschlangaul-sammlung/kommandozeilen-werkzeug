@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import nunjucks from 'nunjucks';
 import { Aufgabe } from '../aufgabe';
 import { gibStichwortVerzeichnis } from '../stichwort-verzeichnis';
 import { repositoryPfad, leseRepoDatei } from '../helfer';
@@ -13,15 +14,16 @@ function generiereMarkdownAufgabenListe(aufgabenListe) {
     }
     return teil.join('\n');
 }
-function ersetzeStichwörterInReadme(inhalt) {
-    return inhalt.replace(/\{\{ stichwort "([^"]*)" \}\}/g, function (treffer, stichwort) {
-        return generiereMarkdownAufgabenListe(gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort));
-    });
+function ersetzeStichwörterInReadme(stichwort) {
+    return generiereMarkdownAufgabenListe(gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort));
 }
 export default function () {
     let inhalt = leseRepoDatei('README_template.md');
     console.log(inhalt);
-    inhalt = ersetzeStichwörterInReadme(inhalt);
+    inhalt = nunjucks.renderString(inhalt, {
+        gibAufgabenListe: ersetzeStichwörterInReadme
+    });
+    // inhalt = ersetzeStichwörterInReadme(inhalt)
     console.log(inhalt);
     const stichwörterInhalt = leseRepoDatei('Stichwortverzeichnis.yml');
     inhalt = inhalt.replace('{{ stichwortverzeichnis }}', stichwörterInhalt);

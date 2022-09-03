@@ -8,11 +8,13 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/nunjucks": "^3.2.1",
     "biblatex-csl-converter": "2.0.4",
     "chalk": "5.0.1",
     "commander": "9.4.0",
     "glob": "8.0.3",
     "js-yaml": "4.1.0",
+    "nunjucks": "^3.2.3",
     "string-similarity": "4.0.4",
     "winston": "3.8.1"
   },
@@ -35,8 +37,13 @@
     "install": "sudo rm -f /usr/local/bin/bschlangaul-werkzeug.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/bschlangaul-werkzeug.js;"
   },
   "mocha": {
-    "node-option": ["experimental-specifier-resolution=node", "no-warnings"],
-    "spec": ["test/**/*.js"]
+    "node-option": [
+      "experimental-specifier-resolution=node",
+      "no-warnings"
+    ],
+    "spec": [
+      "test/**/*.js"
+    ]
   },
   "bin": {
     "bschlangaul-werkzeug.js": "./dist/main.js"
