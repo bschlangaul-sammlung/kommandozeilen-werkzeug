@@ -10,11 +10,17 @@ function generiereAufgabenListe(aufgabenListe, stichwort, ueberschrift = 0) {
     if (ueberschrift > 0) {
         let makro;
         switch (ueberschrift) {
+            case 1:
+                makro = 'chapter';
+                break;
             case 2:
                 makro = 'section';
                 break;
             case 3:
-                makro = 'section';
+                makro = 'subsection';
+                break;
+            case 4:
+                makro = 'subsubsection';
                 break;
             default:
                 makro = 'section';
