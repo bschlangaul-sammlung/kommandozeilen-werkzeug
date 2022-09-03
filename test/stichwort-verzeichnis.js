@@ -1,18 +1,26 @@
-var assert = require('assert');
+/* globals describe it */
 
-const { gibStichwortBaum, gibStichwortVerzeichnis } = require('../dist/stichwort-verzeichnis.js')
+var assert = require('assert')
+
+const {
+  gibStichwortBaum,
+  gibStichwortVerzeichnis
+} = require('../dist/stichwort-verzeichnis.js')
 
 const stichwortBaum = gibStichwortBaum()
 const stichwortVerzeichnis = gibStichwortVerzeichnis()
 
-describe('stichwort-verzeichnis.ts', function() {
+describe('stichwort-verzeichnis.ts', function () {
   describe('Klasse StichwortBaum()', function () {
-    it('Methode gibUnterBaum()', function() {
+    it('Methode gibUnterBaum()', function () {
       const baum = stichwortBaum.gibUnterBaum('DB')
-      assert.strictEqual(baum['Datenbankentwurf']['Entity-Relation-Modell']['IS-A'], true)
+      assert.strictEqual(
+        baum.Datenbankentwurf['Entity-Relation-Modell']['IS-A'],
+        true
+      )
     })
 
-    it('Methode gibFlacheListe()', function() {
+    it('Methode gibFlacheListe()', function () {
       const liste = stichwortBaum.gibFlacheListe('DB')
       assert.ok(liste.has('DB'))
       assert.ok(liste.has('SQL'))
@@ -21,8 +29,8 @@ describe('stichwort-verzeichnis.ts', function() {
   })
 
   describe('Klasse StichwortVerzeichnis()', function () {
-    it('Attribut verzeichnis', function() {
-      assert.ok(stichwortVerzeichnis.verzeichnis['SQL'])
+    it('Attribut verzeichnis', function () {
+      assert.ok(stichwortVerzeichnis.verzeichnis.SQL)
     })
 
     it('Methode gibAufgabenMitStichwort()', function () {

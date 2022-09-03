@@ -1,3 +1,5 @@
+/* globals describe it */
+
 var assert = require('assert')
 
 const { gibExamenSammlung } = require('../dist/examen.js')

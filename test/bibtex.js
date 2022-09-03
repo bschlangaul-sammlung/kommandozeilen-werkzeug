@@ -1,3 +1,5 @@
+/* globals describe it */
+
 const assert = require('assert')
 const { leseBibDatei, gibBibtexSammlung } = require('../dist/bibtex.js')
 
@@ -9,6 +11,8 @@ describe('bibtex.ts', function () {
 
   it('Funktion „gibBibtexSammlung()“', function () {
     const sammlung = gibBibtexSammlung()
-    assert.deepStrictEqual(sammlung.index['db:fs:1'], ['DB_1 ER_Relationenmodell'])
+    assert.deepStrictEqual(sammlung.index['db:fs:1'], [
+      'DB_1 ER_Relationenmodell'
+    ])
   })
 })
