@@ -1,4 +1,3 @@
-"use strict";
 /**
  * ```js
  * {
@@ -10,28 +9,7 @@
  * }
  * ```
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.gibLogEbene = exports.setzeLogEbene = exports.log = void 0;
-const winston_1 = __importStar(require("winston"));
+import winston, { format } from 'winston';
 const customLevels = {
     levels: {
         error: 0,
@@ -48,12 +26,12 @@ const customLevels = {
         debug: 'magenta'
     }
 };
-const console = new winston_1.default.transports.Console({
-    format: winston_1.format.combine(winston_1.format.colorize(), winston_1.format.splat(), winston_1.format.simple()),
+const console = new winston.transports.Console({
+    format: format.combine(format.colorize(), format.splat(), format.simple()),
     level: 'error'
 });
-winston_1.default.addColors(customLevels.colors);
-const logger = winston_1.default.createLogger({
+winston.addColors(customLevels.colors);
+const logger = winston.createLogger({
     level: 'error',
     transports: [console],
     levels: customLevels.levels
@@ -69,16 +47,13 @@ const logger = winston_1.default.createLogger({
  * }
  * ```
  */
-function log(level, message, ...meta) {
+export function log(level, message, ...meta) {
     logger.log(level, message, ...meta);
 }
-exports.log = log;
-function setzeLogEbene(ebene) {
+export function setzeLogEbene(ebene) {
     console.level = ebene;
 }
-exports.setzeLogEbene = setzeLogEbene;
-function gibLogEbene() {
+export function gibLogEbene() {
     return console.level;
 }
-exports.gibLogEbene = gibLogEbene;
 //# sourceMappingURL=log.js.map

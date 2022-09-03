@@ -369,7 +369,7 @@ class ExamenAufgabenBaum {
       return segment.replace('-', ' ').replace('.tex', '')
     }
 
-    var collator = new Intl.Collator(undefined, {
+    const collator = new Intl.Collator(undefined, {
       numeric: true,
       sensitivity: 'base'
     })

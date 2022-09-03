@@ -1,17 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = __importDefault(require("child_process"));
-const fs_1 = __importDefault(require("fs"));
-const chalk_1 = __importDefault(require("chalk"));
-const helfer_1 = require("../helfer");
+import childProcess from 'child_process';
+import fs from 'fs';
+import chalk from 'chalk';
+import { leseDatei, zeigeFehler } from '../helfer';
 class TexDateiMitSql {
     constructor(pfad) {
         this.anzahlAnfragen = 0;
         this.pfad = pfad;
-        this.inhalt = (0, helfer_1.leseDatei)(pfad);
+        this.inhalt = leseDatei(pfad);
         this.datenbankName = this.findeErzeugungsCode();
     }
     gibTemporärenPfad(bezeichner) {
@@ -31,13 +26,13 @@ class TexDateiMitSql {
         return this.gibTemporärenPfad('loeschung');
     }
     schreibeTemporäreSqlDatei(bezeichner, inhalt) {
-        fs_1.default.writeFileSync(`${this.pfad}_${bezeichner}_tmp.sql`, inhalt);
+        fs.writeFileSync(`${this.pfad}_${bezeichner}_tmp.sql`, inhalt);
     }
     führePostgresqlAus(datei, redselig = true) {
-        const pygmentize = child_process_1.default.spawnSync('pygmentize', ['-l', 'sql', datei], { encoding: 'utf-8' });
+        const pygmentize = childProcess.spawnSync('pygmentize', ['-l', 'sql', datei], { encoding: 'utf-8' });
         if (redselig)
             console.log(pygmentize.stdout);
-        const prozess = child_process_1.default.spawnSync('sudo', [
+        const prozess = childProcess.spawnSync('sudo', [
             '-u',
             'postgres',
             'psql',
@@ -52,8 +47,8 @@ class TexDateiMitSql {
             shell: '/usr/bin/zsh'
         });
         if (prozess.status !== 0) {
-            console.log(chalk_1.default.red(prozess.stderr));
-            console.log(chalk_1.default.red(prozess.stdout));
+            console.log(chalk.red(prozess.stderr));
+            console.log(chalk.red(prozess.stdout));
             // zeigeFehler('Postgresql wurde mit einem Fehler beendet.')
         }
         else {
@@ -66,7 +61,7 @@ class TexDateiMitSql {
     }
     führeAnfrageAus(anfragenNummer) {
         this.erzeugeDatenbank();
-        console.log(chalk_1.default.red(`Anfrage Nummer ${anfragenNummer}:\n`));
+        console.log(chalk.red(`Anfrage Nummer ${anfragenNummer}:\n`));
         this.führePostgresqlAus(this.gibTemporärenAnfragenPfad(anfragenNummer));
     }
     führeAlleAnfragenAus() {
@@ -83,7 +78,7 @@ class TexDateiMitSql {
         const regExp = /% ?Datenbankname: ?(\w+).*?\\begin\{minted\}\{sql\}(.*?)\\end\{minted\}/gs;
         const datenbank = regExp.exec(this.inhalt);
         if (datenbank == null) {
-            (0, helfer_1.zeigeFehler)('Keine Erzeugungs-Code gefunden: % Datenbankname: Name\\begin{minted}{sql}…\\end{minted}');
+            zeigeFehler('Keine Erzeugungs-Code gefunden: % Datenbankname: Name\\begin{minted}{sql}…\\end{minted}');
         }
         // postgresql \c funktioniert nur mit klein geschriebenen Datenbank-Namen
         const datenbankName = datenbank[1].toLowerCase();
@@ -111,14 +106,14 @@ class TexDateiMitSql {
     aufräumen() {
         this.erzeugeLöschungsCode();
         this.führePostgresqlAus(this.gibTemporärenLöschungsPfad());
-        fs_1.default.unlinkSync(this.gibTemporärenErzeugungsPfad());
+        fs.unlinkSync(this.gibTemporärenErzeugungsPfad());
         for (let index = 1; index <= this.anzahlAnfragen; index++) {
-            fs_1.default.unlinkSync(this.gibTemporärenAnfragenPfad(index));
+            fs.unlinkSync(this.gibTemporärenAnfragenPfad(index));
         }
-        fs_1.default.unlinkSync(this.gibTemporärenLöschungsPfad());
+        fs.unlinkSync(this.gibTemporärenLöschungsPfad());
     }
 }
-function default_1(pfad, cmdObj) {
+export default function (pfad, cmdObj) {
     const datei = new TexDateiMitSql(pfad);
     datei.findeAnfragen();
     if (cmdObj.anfrage != null) {
@@ -131,5 +126,4 @@ function default_1(pfad, cmdObj) {
         datei.aufräumen();
     }
 }
-exports.default = default_1;
 //# sourceMappingURL=sql.js.map

@@ -1,40 +1,30 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AusgabeSammler = exports.öffneVSCode = exports.öffneProgramm = exports.führeAus = exports.generiereLink = exports.macheRepoPfad = exports.leseRepoDatei = exports.macheRelativenPfad = exports.repositoryPfad = exports.zeigeFehler = exports.schreibeDatei = exports.löscheDatei = exports.leseDatei = void 0;
-const chalk_1 = __importDefault(require("chalk"));
-const child_process_1 = __importDefault(require("child_process"));
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const konfigurationsDateiPfad = path_1.default.join(path_1.default.sep, 'etc', 'bschlangaul.config.tex');
+import chalk from 'chalk';
+import childProcess from 'child_process';
+import fs from 'fs';
+import path from 'path';
+const konfigurationsDateiPfad = path.join(path.sep, 'etc', 'bschlangaul.config.tex');
 const githubRawUrl = 'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main';
-function leseDatei(pfad) {
-    return fs_1.default.readFileSync(pfad, { encoding: 'utf-8' });
+export function leseDatei(pfad) {
+    return fs.readFileSync(pfad, { encoding: 'utf-8' });
 }
-exports.leseDatei = leseDatei;
-function löscheDatei(pfad) {
-    if (!fs_1.default.existsSync(pfad)) {
+export function löscheDatei(pfad) {
+    if (!fs.existsSync(pfad)) {
         return;
     }
-    fs_1.default.unlinkSync(pfad);
+    fs.unlinkSync(pfad);
 }
-exports.löscheDatei = löscheDatei;
 /**
  * @param pfad - Der Dateipfad, an dem die Text-Datei erzeugt werden soll.
  * @param inhalt - Der Text-Inhalt, der in die Datei geschrieben werden soll.
  */
-function schreibeDatei(pfad, inhalt) {
-    fs_1.default.mkdirSync(path_1.default.dirname(pfad), { recursive: true });
-    fs_1.default.writeFileSync(pfad, inhalt, { encoding: 'utf-8' });
+export function schreibeDatei(pfad, inhalt) {
+    fs.mkdirSync(path.dirname(pfad), { recursive: true });
+    fs.writeFileSync(pfad, inhalt, { encoding: 'utf-8' });
 }
-exports.schreibeDatei = schreibeDatei;
-function zeigeFehler(meldung) {
-    console.error(chalk_1.default.red(meldung));
+export function zeigeFehler(meldung) {
+    console.error(chalk.red(meldung));
     process.exit(1);
 }
-exports.zeigeFehler = zeigeFehler;
 function leseKonfigurationsDatei(pfad) {
     const inhalt = leseDatei(pfad);
     const treffer = inhalt.match(/\\bPfadAufgaben\{(.*)\}/);
@@ -43,7 +33,7 @@ function leseKonfigurationsDatei(pfad) {
     }
     return treffer[1];
 }
-exports.repositoryPfad = leseKonfigurationsDatei(konfigurationsDateiPfad);
+export const repositoryPfad = leseKonfigurationsDatei(konfigurationsDateiPfad);
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
  *
@@ -51,11 +41,10 @@ exports.repositoryPfad = leseKonfigurationsDatei(konfigurationsDateiPfad);
  *
  * @returns z. B. `Staatsexamen/66116.../`
  */
-function macheRelativenPfad(pfad) {
-    pfad = pfad.replace(exports.repositoryPfad, '');
+export function macheRelativenPfad(pfad) {
+    pfad = pfad.replace(repositoryPfad, '');
     return pfad.replace(/^\//, '');
 }
-exports.macheRelativenPfad = macheRelativenPfad;
 /**
  * Lese eine Text-Datei. Die Pfad kann in Segmenten angegeben werden. Handelt es
  * sich um keinen absoluten Pfad, wird angenommen, das er relativ zum
@@ -65,25 +54,23 @@ exports.macheRelativenPfad = macheRelativenPfad;
  *
  * @returns Der Inhalt der Text-Datei als String.
  */
-function leseRepoDatei(...args) {
-    let elternPfad = exports.repositoryPfad;
+export function leseRepoDatei(...args) {
+    let elternPfad = repositoryPfad;
     // Überprüfe, ob es sich bereits um einen absoluten Pfad handelt
-    if (args[0].charAt(0) === path_1.default.sep) {
+    if (args[0].charAt(0) === path.sep) {
         elternPfad = '';
     }
-    if (args[0].includes(exports.repositoryPfad)) {
-        return leseDatei(path_1.default.join(...args));
+    if (args[0].includes(repositoryPfad)) {
+        return leseDatei(path.join(...args));
     }
-    return leseDatei(path_1.default.join(elternPfad, ...args));
+    return leseDatei(path.join(elternPfad, ...args));
 }
-exports.leseRepoDatei = leseRepoDatei;
-function macheRepoPfad(...args) {
-    if (args[0].includes(exports.repositoryPfad)) {
-        return path_1.default.join(...args);
+export function macheRepoPfad(...args) {
+    if (args[0].includes(repositoryPfad)) {
+        return path.join(...args);
     }
-    return path_1.default.join(exports.repositoryPfad, ...args);
+    return path.join(repositoryPfad, ...args);
 }
-exports.macheRepoPfad = macheRepoPfad;
 /**
  * Generiere einen Markdown- oder HTML-Link.
  *
@@ -93,21 +80,20 @@ exports.macheRepoPfad = macheRepoPfad;
  * @returns Ein Link zu einer Datei auf Github, entweder im Markdown- oder im
  * HTML-Format.
  */
-function generiereLink(text, pfad, einstellung) {
+export function generiereLink(text, pfad, einstellung) {
     let linkePdf = true;
     if (typeof (einstellung === null || einstellung === void 0 ? void 0 : einstellung.linkePdf) === 'boolean') {
         linkePdf = einstellung.linkePdf;
     }
-    pfad = pfad.replace(exports.repositoryPfad, '');
+    pfad = pfad.replace(repositoryPfad, '');
     pfad = pfad.replace(/^\//, '');
     if (linkePdf) {
         pfad = pfad.replace(/\.[\w]+$/, '.pdf');
     }
     return `[${text}](${githubRawUrl}/${pfad})`;
 }
-exports.generiereLink = generiereLink;
-function führeAus(programm, cwd) {
-    const process = child_process_1.default.spawnSync(programm, {
+export function führeAus(programm, cwd) {
+    const process = childProcess.spawnSync(programm, {
         cwd: cwd,
         encoding: 'utf-8',
         shell: true
@@ -116,24 +102,21 @@ function führeAus(programm, cwd) {
         throw Error(process.stderr + process.stdout);
     console.log(process.stdout);
 }
-exports.führeAus = führeAus;
-function öffneProgramm(programm, pfad) {
-    const subprocess = child_process_1.default.spawn(programm, [pfad], {
+export function öffneProgramm(programm, pfad) {
+    const subprocess = childProcess.spawn(programm, [pfad], {
         detached: true,
         stdio: 'ignore'
     });
     subprocess.unref();
 }
-exports.öffneProgramm = öffneProgramm;
-function öffneVSCode(pfad) {
+export function öffneVSCode(pfad) {
     öffneProgramm('/usr/bin/code', macheRepoPfad(pfad));
 }
-exports.öffneVSCode = öffneVSCode;
 /**
  * Kleine Helfer-Klasse um Strings zu sammeln in einem Array zu speichern
  * und dann per Join über Zeileumbrüche zusammenzufügen.
  */
-class AusgabeSammler {
+export class AusgabeSammler {
     constructor(redselig = false) {
         this.speicher = [];
         this.redselig = redselig;
@@ -168,5 +151,4 @@ class AusgabeSammler {
         return this.speicher.join('\n');
     }
 }
-exports.AusgabeSammler = AusgabeSammler;
 //# sourceMappingURL=helfer.js.map

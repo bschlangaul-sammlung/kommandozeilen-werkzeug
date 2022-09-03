@@ -1,11 +1,8 @@
-"use strict";
 /**
  * TeX-Datei
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.machePlist = exports.schreibeTexDatei = exports.sammleStichwörterEinerDatei = exports.sammleStichwörter = exports.gibInhaltEinesTexMakros = void 0;
-const helfer_1 = require("./helfer");
-const log_1 = require("./log");
+import { leseRepoDatei, schreibeDatei } from './helfer';
+import { log } from './log';
 function baueMakroRegExp(macroName) {
     // Probleme mit `\bAufgabenTitel`: `\b` ist angeblich ein Sonderzeichen
     return new RegExp(`\\\\${macroName}{([^}]*)}`, 'g');
@@ -13,21 +10,20 @@ function baueMakroRegExp(macroName) {
 function säubereStichwort(stichwort) {
     return stichwort.replace(/\s+/g, ' ');
 }
-function gibInhaltEinesTexMakros(makroName, markup) {
+export function gibInhaltEinesTexMakros(makroName, markup) {
     const regExp = baueMakroRegExp(makroName);
     const übereinstimmung = regExp.exec(markup);
     if (übereinstimmung != null) {
         return übereinstimmung[1];
     }
 }
-exports.gibInhaltEinesTexMakros = gibInhaltEinesTexMakros;
 /**
  * Sammle alle Stichwörter eines TeX-Inhaltes (string). Doppelte Stichwörter
  * werden nur als eins aufgelistet.
  *
  * @param inhalt - Der Textinhalt einer TeX-Datei.
  */
-function sammleStichwörter(inhalt) {
+export function sammleStichwörter(inhalt) {
     const re = baueMakroRegExp('index');
     let übereinstimmung;
     const stichwörter = new Set();
@@ -40,28 +36,25 @@ function sammleStichwörter(inhalt) {
     } while (übereinstimmung != null);
     return Array.from(stichwörter);
 }
-exports.sammleStichwörter = sammleStichwörter;
 /**
  * Sammle alle Stichwörter einer TeX-Datei.
  */
-function sammleStichwörterEinerDatei(pfad) {
-    return sammleStichwörter((0, helfer_1.leseRepoDatei)(pfad));
+export function sammleStichwörterEinerDatei(pfad) {
+    return sammleStichwörter(leseRepoDatei(pfad));
 }
-exports.sammleStichwörterEinerDatei = sammleStichwörterEinerDatei;
 /**
  * @param dateiPfad - Ein Dateipfad.
  * @param klassenName - Ein Klassenname (ohne Präfix `bschlangaul-`)
  * @param kopf - Das TeX-Markup, das vor `\begin{document}` erscheint.
  * @param textkörper - Der Text der innerhalb der document-Umgebung erscheint.
  */
-function schreibeTexDatei(dateiPfad, klassenName, kopf, textkörper) {
+export function schreibeTexDatei(dateiPfad, klassenName, kopf, textkörper) {
     textkörper = textkörper.trim();
     const inhalt = `\\documentclass{bschlangaul-${klassenName}}\n${kopf}\n` +
         `\\begin{document}\n${textkörper}\n\\end{document}\n`;
-    (0, log_1.log)('debug', inhalt);
-    (0, helfer_1.schreibeDatei)(dateiPfad, inhalt);
+    log('debug', inhalt);
+    schreibeDatei(dateiPfad, inhalt);
 }
-exports.schreibeTexDatei = schreibeTexDatei;
 function umgebeMitKlammern(text) {
     text = text.trim();
     if (text.charAt(0) !== '{' && text.charAt(text.length - 1) !== '}') {
@@ -87,7 +80,7 @@ function umgebeMitKlammern(text) {
  * }
  * ```
  */
-function machePlist(makroName, daten, schlüsselMitKlammern) {
+export function machePlist(makroName, daten, schlüsselMitKlammern) {
     if (schlüsselMitKlammern != null) {
         for (const schlüssel of schlüsselMitKlammern) {
             if (daten[schlüssel] != null) {
@@ -106,5 +99,4 @@ function machePlist(makroName, daten, schlüsselMitKlammern) {
     const schlüsselWerte = schlüsselWertPaare.join('\n');
     return `\\${makroName}{\n${schlüsselWerte}\n}`;
 }
-exports.machePlist = machePlist;
 //# sourceMappingURL=tex.js.map

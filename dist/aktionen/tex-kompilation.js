@@ -1,64 +1,58 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = __importDefault(require("child_process"));
-const glob_1 = __importDefault(require("glob"));
-const path_1 = __importDefault(require("path"));
-const chalk_1 = __importDefault(require("chalk"));
-const helfer_1 = require("../helfer");
+import childProcess from 'child_process';
+import glob from 'glob';
+import path from 'path';
+import chalk from 'chalk';
+import { repositoryPfad, öffneVSCode } from '../helfer';
 const fehler = [];
-function default_1(opts) {
+export default function (opts) {
     let cwd;
     if (opts.unterVerzeichnis != null) {
-        cwd = path_1.default.join(helfer_1.repositoryPfad, opts.unterVerzeichnis);
+        cwd = path.join(repositoryPfad, opts.unterVerzeichnis);
     }
     else if (opts.examen != null && opts.examen) {
-        cwd = path_1.default.join(helfer_1.repositoryPfad, 'Staatsexamen');
+        cwd = path.join(repositoryPfad, 'Staatsexamen');
     }
     else if (opts.module != null && opts.module) {
-        cwd = path_1.default.join(helfer_1.repositoryPfad, 'Module');
+        cwd = path.join(repositoryPfad, 'Module');
     }
     else {
-        cwd = helfer_1.repositoryPfad;
+        cwd = repositoryPfad;
     }
     console.log(`Kompiliere alle TeX-Dateien im Verzeichnis: ${cwd}`);
-    const dateien = glob_1.default.sync('**/*.tex', { cwd });
+    const dateien = glob.sync('**/*.tex', { cwd });
     for (let pfad of dateien) {
-        pfad = path_1.default.join(cwd, pfad);
+        pfad = path.join(cwd, pfad);
         if (opts.ausschliessen != null && pfad.includes(opts.ausschliessen)) {
             console.log('ausgeschossen: ' + pfad);
         }
         else {
             let ergebnis;
             if (opts.trockenerLauf != null && opts.trockenerLauf) {
-                ergebnis = child_process_1.default.spawnSync('cat', [pfad], {
+                ergebnis = childProcess.spawnSync('cat', [pfad], {
                     encoding: 'utf-8'
                 });
             }
             else {
-                ergebnis = child_process_1.default.spawnSync('latexmk', ['-shell-escape', '-cd', '--lualatex', pfad], {
+                ergebnis = childProcess.spawnSync('latexmk', ['-shell-escape', '-cd', '--lualatex', pfad], {
                     encoding: 'utf-8'
                 });
             }
             if (ergebnis.status === 0) {
-                console.log(chalk_1.default.green(pfad));
+                console.log(chalk.green(pfad));
             }
             else {
                 fehler.push(pfad);
-                console.log(chalk_1.default.yellow(ergebnis.stdout));
-                console.log(chalk_1.default.red(ergebnis.stderr));
+                console.log(chalk.yellow(ergebnis.stdout));
+                console.log(chalk.red(ergebnis.stderr));
                 if (opts.oeffneEditor != null && opts.oeffneEditor) {
-                    (0, helfer_1.öffneVSCode)(pfad);
+                    öffneVSCode(pfad);
                 }
-                console.log(chalk_1.default.red(pfad));
+                console.log(chalk.red(pfad));
             }
         }
     }
     for (const pfad of fehler) {
-        console.log(chalk_1.default.red(pfad));
+        console.log(chalk.red(pfad));
     }
 }
-exports.default = default_1;
 //# sourceMappingURL=tex-kompilation.js.map

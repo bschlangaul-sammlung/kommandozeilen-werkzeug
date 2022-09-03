@@ -1,14 +1,11 @@
-"use strict";
 /**
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.erzeugeAufgabenSammlung = exports.erzeugeExamensLösungen = exports.erzeugeExamenScansSammlung = exports.generiereExamensÜbersicht = void 0;
-const aufgabe_1 = require("../aufgabe");
-const log_1 = require("../log");
-const examen_1 = require("../examen");
-const helfer_1 = require("../helfer");
-const tex_1 = require("../tex");
+import { gibAufgabenSammlung } from '../aufgabe';
+import { log } from '../log';
+import { gibExamenSammlung, Examen } from '../examen';
+import { macheRepoPfad, löscheDatei, AusgabeSammler, macheRelativenPfad } from '../helfer';
+import { schreibeTexDatei, machePlist } from '../tex';
 /**
  * ```md
  * - 2015 Frühjahr: [Scan.pdf](...46116/2015/03/Scan.pdf) [OCR.txt](…46116/2015/03/OCR.txt)
@@ -23,7 +20,7 @@ const tex_1 = require("../tex");
 function erzeugeAufgabenBaumMarkdown(examen) {
     const baum = examen.aufgabenBaum;
     if (baum == null) {
-        (0, log_1.log)('debug', 'Examen hat keine Aufgaben');
+        log('debug', 'Examen hat keine Aufgaben');
         return '';
     }
     function rückeEin() {
@@ -64,16 +61,16 @@ function erzeugeDateiLink(examen, dateiName) {
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
-function generiereExamensÜbersicht() {
-    const examenSammlung = (0, examen_1.gibExamenSammlung)();
+export function generiereExamensÜbersicht() {
+    const examenSammlung = gibExamenSammlung();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
-        (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
+        log('info', 'Konnte keinen Examensbaum aufbauen');
         return '';
     }
     return baum.besuche({
         betreteEinzelprüfungsNr(nummer) {
-            return `\n### ${nummer}: ${examen_1.Examen.fachDurchNummer(nummer)}\n`;
+            return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`;
         },
         betreteExamen(examen, monat, nummer) {
             const scanLink = erzeugeDateiLink(examen, 'Scan.pdf');
@@ -82,19 +79,18 @@ function generiereExamensÜbersicht() {
         }
     });
 }
-exports.generiereExamensÜbersicht = generiereExamensÜbersicht;
 /**
  * Erzeugt eine TeX-Datei, die alle Examens-Scans eines bestimmten Fachs (z. B.
  * 65116) als eine PDF-Datei zusammenfasst.
  */
-function erzeugeExamenScansSammlung() {
-    const examenSammlung = (0, examen_1.gibExamenSammlung)();
+export function erzeugeExamenScansSammlung() {
+    const examenSammlung = gibExamenSammlung();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
-        (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
+        log('info', 'Konnte keinen Examensbaum aufbauen');
         return;
     }
-    const ausgabe = new helfer_1.AusgabeSammler();
+    const ausgabe = new AusgabeSammler();
     baum.besuche({
         betreteEinzelprüfungsNr(nummer) {
             ausgabe.leere();
@@ -102,19 +98,18 @@ function erzeugeExamenScansSammlung() {
         },
         betreteExamen(examen, monat, nummer) {
             ausgabe.sammle(`\n\\bTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
-            ausgabe.sammle(`\\bBindePdfEin{${(0, helfer_1.macheRelativenPfad)(examen.pfad)}}`);
+            ausgabe.sammle(`\\bBindePdfEin{${macheRelativenPfad(examen.pfad)}}`);
             return undefined;
         },
         verlasseEinzelprüfungsNr(nummer) {
             const textKörper = ausgabe.gibText();
             const kopf = `\\bPruefungsNummer{${nummer}}\n` +
-                `\\bPruefungsTitel{${examen_1.Examen.fachDurchNummer(nummer)}}\n`;
-            (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
+                `\\bPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`;
+            schreibeTexDatei(macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
             return undefined;
         }
     });
 }
-exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
 /**
  * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
  * Aufgaben samt Lösungen einbindet.
@@ -132,13 +127,13 @@ exports.erzeugeExamenScansSammlung = erzeugeExamenScansSammlung;
  * ```
  */
 function erzeugeExamensLösung(examen) {
-    (0, log_1.log)('debug', 'Besuche Examen %s', examen.referenz);
+    log('debug', 'Besuche Examen %s', examen.referenz);
     const baum = examen.aufgabenBaum;
     if (baum == null) {
-        (0, log_1.log)('debug', 'Examen hat keine Aufgaben');
+        log('debug', 'Examen hat keine Aufgaben');
         return;
     }
-    (0, log_1.log)('verbose', examen.pfad);
+    log('verbose', examen.pfad);
     const textKörper = baum.besuche({
         betreteThema(nummer) {
             return `\n\n\\bSetzeThemaNr{${nummer}}`;
@@ -150,7 +145,7 @@ function erzeugeExamensLösung(examen) {
             return `\\bBindeAufgabeEin{${nummer}}`;
         }
     });
-    const kopf = (0, tex_1.machePlist)('liMetaSetze', {
+    const kopf = machePlist('liMetaSetze', {
         EinzelpruefungsNr: examen.nummer,
         ExamenFach: examen.fach,
         Jahr: examen.jahr,
@@ -159,22 +154,22 @@ function erzeugeExamensLösung(examen) {
     });
     const pfad = examen.machePfad('Examen.tex');
     if (textKörper != null) {
-        (0, log_1.log)('info', 'Schreibe %s', pfad);
-        (0, tex_1.schreibeTexDatei)(pfad, 'examen', kopf, textKörper);
+        log('info', 'Schreibe %s', pfad);
+        schreibeTexDatei(pfad, 'examen', kopf, textKörper);
     }
     else {
-        (0, log_1.log)('verbose', 'Lösche %s', pfad);
-        (0, helfer_1.löscheDatei)(pfad);
+        log('verbose', 'Lösche %s', pfad);
+        löscheDatei(pfad);
     }
 }
 /**
  * Erzeugt pro Examen eine TeX-Datei, die alle zum diesem Examen gehörenden
  * Aufgaben samt Lösungen einbindet.
  */
-function erzeugeExamensLösungen() {
+export function erzeugeExamensLösungen() {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
-    (0, aufgabe_1.gibAufgabenSammlung)();
-    const examenSammlung = (0, examen_1.gibExamenSammlung)();
+    gibAufgabenSammlung();
+    const examenSammlung = gibExamenSammlung();
     const examenBaum = examenSammlung.baum;
     for (const nummer in examenBaum) {
         for (const jahr in examenBaum[nummer]) {
@@ -185,17 +180,16 @@ function erzeugeExamensLösungen() {
         }
     }
 }
-exports.erzeugeExamensLösungen = erzeugeExamensLösungen;
 /**
  * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
  */
-function erzeugeAufgabenSammlung(opts) {
+export function erzeugeAufgabenSammlung(opts) {
     // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
-    (0, aufgabe_1.gibAufgabenSammlung)();
-    const examenSammlung = (0, examen_1.gibExamenSammlung)();
+    gibAufgabenSammlung();
+    const examenSammlung = gibExamenSammlung();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
-        (0, log_1.log)('info', 'Konnte keinen Examensbaum aufbauen');
+        log('info', 'Konnte keinen Examensbaum aufbauen');
         return;
     }
     let einzelprüfungsNr;
@@ -214,10 +208,10 @@ function erzeugeAufgabenSammlung(opts) {
             }
             const examensAufgabe = aufgabe;
             const examen = examensAufgabe.examen;
-            (0, log_1.log)('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
+            log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
             let ausgabe = '';
             if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
-                (0, log_1.log)('verbose', 'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.', einzelprüfungsNr);
+                log('verbose', 'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.', einzelprüfungsNr);
                 einzelprüfungsNr = examen.nummer;
                 const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')';
                 ausgabe += `\n\\section{${überschrift}}\n`;
@@ -229,7 +223,6 @@ function erzeugeAufgabenSammlung(opts) {
     if (opts.ziel != null) {
         ziel = opts.ziel;
     }
-    (0, tex_1.schreibeTexDatei)((0, helfer_1.macheRepoPfad)(ziel + '.tex'), 'haupt', '', textkörper);
+    schreibeTexDatei(macheRepoPfad(ziel + '.tex'), 'haupt', '', textkörper);
 }
-exports.erzeugeAufgabenSammlung = erzeugeAufgabenSammlung;
 //# sourceMappingURL=aufgaben-sammlung.js.map

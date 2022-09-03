@@ -1,26 +1,20 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.gibAufgabenSammlung = exports.AufgabenSammlung = exports.ExamensAufgabe = exports.Aufgabe = exports.korrektheit = exports.bearbeitungsStand = void 0;
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
-const glob_1 = __importDefault(require("glob"));
-const helfer_1 = require("./helfer");
-const tex_1 = require("./tex");
-const examen_1 = require("./examen");
+import path from 'path';
+import fs from 'fs';
+import glob from 'glob';
+import { leseRepoDatei, repositoryPfad, generiereLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
+import { sammleStichwörter, gibInhaltEinesTexMakros } from './tex';
+import { Examen, gibExamenSammlung } from './examen';
 function umgebeMitKlammern(text) {
     return `{${text}}`;
 }
-exports.bearbeitungsStand = [
+export const bearbeitungsStand = [
     'unbekannt',
     'OCR',
     'TeX-Fehler',
     'nur Angabe',
     'mit Lösung'
 ];
-exports.korrektheit = [
+export const korrektheit = [
     'wahrscheinlich falsch',
     'unbekannt',
     'korrekt',
@@ -29,7 +23,7 @@ exports.korrektheit = [
 /**
  * Eine allgemeine Aufgabe, die keinem Examen zugeordnet werden kann.
  */
-class Aufgabe {
+export class Aufgabe {
     constructor(pfad) {
         this.stichwörter = [];
         /**
@@ -38,19 +32,19 @@ class Aufgabe {
          */
         this.istExamen = false;
         this.pfad = Aufgabe.normalisierePfad(pfad);
-        if (!fs_1.default.existsSync(this.pfad)) {
+        if (!fs.existsSync(this.pfad)) {
             this.inhalt = '';
         }
         else {
-            this.inhalt = (0, helfer_1.leseRepoDatei)(this.pfad);
+            this.inhalt = leseRepoDatei(this.pfad);
         }
-        this.stichwörter = (0, tex_1.sammleStichwörter)(this.inhalt);
+        this.stichwörter = sammleStichwörter(this.inhalt);
         const metaDaten = this.leseMetadatenVonTex();
         if (metaDaten != null) {
             this.metadaten_ = metaDaten;
         }
-        this.validiere(this.bearbeitungsStand, exports.bearbeitungsStand);
-        this.validiere(this.korrektheit, exports.korrektheit);
+        this.validiere(this.bearbeitungsStand, bearbeitungsStand);
+        this.validiere(this.korrektheit, korrektheit);
     }
     /**
      * Normalisiere den Dateipfad der Aufgabe. Er sollte immer als absoluter Pfad vorliegen.
@@ -59,13 +53,13 @@ class Aufgabe {
      * @returns Ein absoluter Pfad.
      */
     static normalisierePfad(pfad) {
-        if (pfad.charAt(0) === path_1.default.sep) {
+        if (pfad.charAt(0) === path.sep) {
             return pfad;
         }
-        if (pfad.includes(helfer_1.repositoryPfad)) {
+        if (pfad.includes(repositoryPfad)) {
             return pfad;
         }
-        return path_1.default.join(helfer_1.repositoryPfad, pfad);
+        return path.join(repositoryPfad, pfad);
     }
     static istAufgabe(pfad) {
         if (pfad.match(Aufgabe.pfadRegExp) != null) {
@@ -158,7 +152,7 @@ class Aufgabe {
         if (gegebenerWert != null && !gültigeWerte.includes(gegebenerWert)) {
             console.log('Der Wert ist nicht gültig: ' + gegebenerWert);
             console.log('Gültige Werte: ' + gültigeWerte.toString());
-            (0, helfer_1.öffneVSCode)(this.pfad);
+            öffneVSCode(this.pfad);
         }
     }
     /**
@@ -189,7 +183,7 @@ class Aufgabe {
         if (((_a = this.metadaten_) === null || _a === void 0 ? void 0 : _a.Thematik) != null) {
             return this.metadaten_.Thematik;
         }
-        const thematik = (0, tex_1.gibInhaltEinesTexMakros)('bAufgabenTitel', this.inhalt);
+        const thematik = gibInhaltEinesTexMakros('bAufgabenTitel', this.inhalt);
         if (thematik != null) {
             return thematik;
         }
@@ -223,7 +217,7 @@ class Aufgabe {
         return 'unbekannt';
     }
     get bearbeitungsStandGrad() {
-        return exports.bearbeitungsStand.indexOf(this.bearbeitungsStand);
+        return bearbeitungsStand.indexOf(this.bearbeitungsStand);
     }
     /**
      * Siehe Dokumentation des Typs
@@ -236,7 +230,7 @@ class Aufgabe {
         return 'unbekannt';
     }
     get korrektheitGrad() {
-        return exports.korrektheit.indexOf(this.korrektheit);
+        return korrektheit.indexOf(this.korrektheit);
     }
     /**
      * Zeigt an, ob die Aufgabe korrekt ist. Das ist der Fall wenn in den
@@ -307,33 +301,32 @@ class Aufgabe {
      * Formatierter Link zur Tex-Datei.
      */
     get linkTex() {
-        return (0, helfer_1.generiereLink)('.tex', this.pfad, { linkePdf: false });
+        return generiereLink('.tex', this.pfad, { linkePdf: false });
     }
     /**
      * Formatierter Link zur PDF-Datei auf Github mit den Stichwörtern.
      */
     get link() {
-        return ((0, helfer_1.generiereLink)(this.titelThematikFormatiert, this.pfad) +
+        return (generiereLink(this.titelThematikFormatiert, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +
             ') ');
     }
     get einbindenTexMakro() {
-        let relativerPfad = (0, helfer_1.macheRelativenPfad)(this.pfad);
+        let relativerPfad = macheRelativenPfad(this.pfad);
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\bAufgabe{${relativerPfad}}`;
     }
     get relativerPfad() {
-        return (0, helfer_1.macheRelativenPfad)(this.pfad);
+        return macheRelativenPfad(this.pfad);
     }
 }
-exports.Aufgabe = Aufgabe;
 Aufgabe.pfadRegExp = /.*Aufgabe_.*\.tex/;
 /**
  * Eine Examensaufgabe
  */
-class ExamensAufgabe extends Aufgabe {
+export class ExamensAufgabe extends Aufgabe {
     constructor(pfad, examen) {
         super(pfad);
         this.examen = examen;
@@ -341,7 +334,7 @@ class ExamensAufgabe extends Aufgabe {
         examen.aufgaben[pfad] = this;
         const treffer = pfad.match(ExamensAufgabe.pfadRegExp);
         if (treffer == null || treffer.groups == null) {
-            (0, helfer_1.zeigeFehler)(`Konnte den Pfad der Examensaufgabe nicht lesen: ${pfad}`);
+            zeigeFehler(`Konnte den Pfad der Examensaufgabe nicht lesen: ${pfad}`);
         }
         const gruppen = treffer.groups;
         this.aufgabe = parseInt(gruppen.aufgabe);
@@ -371,8 +364,8 @@ class ExamensAufgabe extends Aufgabe {
             arg1 = parseInt(arg1);
         }
         const pfad = ExamensAufgabe.erzeugePfad(arg1, gibNummer(arg2), gibNummer(arg3));
-        const examen = examen_1.Examen.erzeugeExamenVonReferenz(referenz);
-        return new ExamensAufgabe(path_1.default.join(examen.verzeichnis, pfad), examen);
+        const examen = Examen.erzeugeExamenVonReferenz(referenz);
+        return new ExamensAufgabe(path.join(examen.verzeichnis, pfad), examen);
     }
     static istExamensAufgabe(pfad) {
         if (pfad.match(ExamensAufgabe.pfadRegExp) != null) {
@@ -453,9 +446,9 @@ class ExamensAufgabe extends Aufgabe {
     gibTitelNurAufgabe(alsMarkdownLink = false) {
         const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`;
         if (alsMarkdownLink) {
-            return ((0, helfer_1.generiereLink)(ausgabe, this.pfad) +
+            return (generiereLink(ausgabe, this.pfad) +
                 ' (' +
-                (0, helfer_1.generiereLink)('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
+                generiereLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
                     linkePdf: false
                 }) +
                 ')');
@@ -467,7 +460,7 @@ class ExamensAufgabe extends Aufgabe {
         return `${this.examen.dateiName}_${aufgabenReferenz}`;
     }
     get link() {
-        return ((0, helfer_1.generiereLink)(this.titelKurz, this.pfad) +
+        return (generiereLink(this.titelKurz, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +
@@ -475,10 +468,10 @@ class ExamensAufgabe extends Aufgabe {
     }
     static erzeugePfad(arg1, arg2, arg3) {
         if (arg1 != null && arg2 != null && arg3 != null) {
-            return path_1.default.join(`Thema-${arg1}`, `Teilaufgabe-${arg2}`, `Aufgabe-${arg3}.tex`);
+            return path.join(`Thema-${arg1}`, `Teilaufgabe-${arg2}`, `Aufgabe-${arg3}.tex`);
         }
         else if (arg1 != null && arg2 != null && arg3 == null) {
-            return path_1.default.join(`Thema-${arg1}`, `Aufgabe-${arg2}.tex`);
+            return path.join(`Thema-${arg1}`, `Aufgabe-${arg2}.tex`);
         }
         else {
             return `Aufgabe-${arg1}.tex`;
@@ -493,7 +486,7 @@ class ExamensAufgabe extends Aufgabe {
      * `\bExamensAufgabe{66116/2017/03/Thema-1/Teilaufgabe-1/Aufgabe-2}`
      */
     get einbindenTexMakro() {
-        let relativerPfad = (0, helfer_1.macheRelativenPfad)(this.pfad);
+        let relativerPfad = macheRelativenPfad(this.pfad);
         relativerPfad = relativerPfad.replace('Staatsexamen/', '');
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\bExamensAufgabe{${relativerPfad}}`;
@@ -529,19 +522,18 @@ class ExamensAufgabe extends Aufgabe {
         return `\n\\ExamensAufgabe${suffix} ${examen} ${aufgabe}`;
     }
 }
-exports.ExamensAufgabe = ExamensAufgabe;
 ExamensAufgabe.pfadRegExp = /(?<nummer>\d{5})\/(?<jahr>\d{4})\/(?<monat>\d{2})\/(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/;
 ExamensAufgabe.schwacherPfadRegExp = /(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/;
-class AufgabenSammlung {
+export class AufgabenSammlung {
     constructor(examenSammlung) {
         this.examenSammlung = examenSammlung;
         this.aufgaben = {};
-        const dateien = glob_1.default.sync('**/*.tex', { cwd: helfer_1.repositoryPfad });
+        const dateien = glob.sync('**/*.tex', { cwd: repositoryPfad });
         this.aufgaben = {};
         for (const pfad of dateien) {
             const aufgabe = this.erzeugeAufgabe(pfad);
             if (aufgabe != null) {
-                this.aufgaben[(0, helfer_1.macheRelativenPfad)(pfad)] = aufgabe;
+                this.aufgaben[macheRelativenPfad(pfad)] = aufgabe;
             }
         }
     }
@@ -557,16 +549,14 @@ class AufgabenSammlung {
         }
     }
     gib(pfad) {
-        return this.aufgaben[(0, helfer_1.macheRelativenPfad)(pfad)];
+        return this.aufgaben[macheRelativenPfad(pfad)];
     }
 }
-exports.AufgabenSammlung = AufgabenSammlung;
 let aufgabenSammlung;
-function gibAufgabenSammlung() {
+export function gibAufgabenSammlung() {
     if (aufgabenSammlung == null) {
-        aufgabenSammlung = new AufgabenSammlung((0, examen_1.gibExamenSammlung)());
+        aufgabenSammlung = new AufgabenSammlung(gibExamenSammlung());
     }
     return aufgabenSammlung;
 }
-exports.gibAufgabenSammlung = gibAufgabenSammlung;
 //# sourceMappingURL=aufgabe.js.map

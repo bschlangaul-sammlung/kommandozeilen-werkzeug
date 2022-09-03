@@ -1,26 +1,20 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.gibStichwortVerzeichnis = exports.gibStichwortBaum = exports.StichwortVerzeichnis = exports.StichwortBaum = void 0;
-const js_yaml_1 = __importDefault(require("js-yaml"));
-const glob_1 = __importDefault(require("glob"));
-const helfer_1 = require("./helfer");
-const aufgabe_1 = require("./aufgabe");
-const string_similarity_1 = require("string-similarity");
-class StichwortBaum {
+import yaml from 'js-yaml';
+import glob from 'glob';
+import { leseRepoDatei, repositoryPfad, zeigeFehler, öffneVSCode } from './helfer';
+import { gibAufgabenSammlung } from './aufgabe';
+import { findBestMatch } from 'string-similarity';
+export class StichwortBaum {
     constructor() {
         this.flach = new Set();
-        const roherBaum = js_yaml_1.default.load((0, helfer_1.leseRepoDatei)('Stichwortverzeichnis.yml'));
+        const roherBaum = yaml.load(leseRepoDatei('Stichwortverzeichnis.yml'));
         if (roherBaum == null) {
-            (0, helfer_1.zeigeFehler)('Konnte die Konfigurationsdatei nicht lesen');
+            zeigeFehler('Konnte die Konfigurationsdatei nicht lesen');
         }
         this.baum = this.normalisiereBaum(roherBaum);
     }
     fügeStichwortSicherHinzu(stichwort) {
         if (this.flach.has(stichwort)) {
-            (0, helfer_1.zeigeFehler)(`Doppeltes Stichwort: ${stichwort}`);
+            zeigeFehler(`Doppeltes Stichwort: ${stichwort}`);
         }
         else {
             this.flach.add(stichwort);
@@ -57,7 +51,7 @@ class StichwortBaum {
             }
         }
         else {
-            (0, helfer_1.zeigeFehler)('Unbekannter Datentyp für den Stichwortbaum');
+            zeigeFehler('Unbekannter Datentyp für den Stichwortbaum');
         }
         return ausgang;
     }
@@ -112,26 +106,25 @@ class StichwortBaum {
         }
     }
     findeÄhnliches(suche) {
-        const ergebnis = (0, string_similarity_1.findBestMatch)(suche, Array.from(this.flach));
+        const ergebnis = findBestMatch(suche, Array.from(this.flach));
         return ergebnis.bestMatch.target;
     }
 }
-exports.StichwortBaum = StichwortBaum;
-class StichwortVerzeichnis {
+export class StichwortVerzeichnis {
     constructor(stichwortBaum, aufgabenSammlung) {
         this.stichwortBaum = stichwortBaum;
         this.aufgabenSammlung = aufgabenSammlung;
-        const dateien = glob_1.default.sync('**/*.tex', { cwd: helfer_1.repositoryPfad });
+        const dateien = glob.sync('**/*.tex', { cwd: repositoryPfad });
         this.verzeichnis = {};
         for (const pfad of dateien) {
             if (this.aufgabenSammlung.istAufgabenPfad(pfad)) {
                 const aufgabe = this.aufgabenSammlung.gib(pfad);
                 for (const stichwort of aufgabe.stichwörter) {
                     if (!stichwortBaum.existiertStichwort(stichwort)) {
-                        (0, helfer_1.öffneVSCode)(pfad);
+                        öffneVSCode(pfad);
                         console.log('Möglicherweise war dieses Stichwort gemeint: ' +
                             this.stichwortBaum.findeÄhnliches(stichwort));
-                        (0, helfer_1.zeigeFehler)(`Das Stichwort „${stichwort}“ in der Datei „${pfad}“ gibt es nicht.`);
+                        zeigeFehler(`Das Stichwort „${stichwort}“ in der Datei „${pfad}“ gibt es nicht.`);
                     }
                     if (this.verzeichnis[stichwort] != null) {
                         this.verzeichnis[stichwort].add(aufgabe);
@@ -161,21 +154,18 @@ class StichwortVerzeichnis {
         return aufgaben;
     }
 }
-exports.StichwortVerzeichnis = StichwortVerzeichnis;
 let stichwortBaum;
-function gibStichwortBaum() {
+export function gibStichwortBaum() {
     if (stichwortBaum == null) {
         stichwortBaum = new StichwortBaum();
     }
     return stichwortBaum;
 }
-exports.gibStichwortBaum = gibStichwortBaum;
 let stichwortVerzeichnis;
-function gibStichwortVerzeichnis() {
+export function gibStichwortVerzeichnis() {
     if (stichwortVerzeichnis == null) {
-        stichwortVerzeichnis = new StichwortVerzeichnis(gibStichwortBaum(), (0, aufgabe_1.gibAufgabenSammlung)());
+        stichwortVerzeichnis = new StichwortVerzeichnis(gibStichwortBaum(), gibAufgabenSammlung());
     }
     return stichwortVerzeichnis;
 }
-exports.gibStichwortVerzeichnis = gibStichwortVerzeichnis;
 //# sourceMappingURL=stichwort-verzeichnis.js.map

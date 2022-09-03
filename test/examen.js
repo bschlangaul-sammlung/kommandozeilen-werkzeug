@@ -1,8 +1,8 @@
 /* globals describe it */
 
-var assert = require('assert')
+import assert from 'assert'
 
-const { gibExamenSammlung } = require('../dist/examen.js')
+import { gibExamenSammlung } from '../dist/examen.js'
 
 const sammlung = gibExamenSammlung()
 

@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#! /usr/local/bin/node --experimental-specifier-resolution=node
 
 import programm from './kommando-zeile'
 

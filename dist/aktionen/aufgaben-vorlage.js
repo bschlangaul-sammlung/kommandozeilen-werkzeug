@@ -1,40 +1,33 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.erzeugeExamensAufgabeVorlage = exports.erzeugeAufgabenVorlage = void 0;
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
-const helfer_1 = require("../helfer");
-const aufgabe_1 = require("../aufgabe");
-const tex_1 = require("../tex");
-const aufgaben_metadaten_1 = require("./aufgaben-metadaten");
+import path from 'path';
+import fs from 'fs';
+import { öffneVSCode } from '../helfer';
+import { ExamensAufgabe } from '../aufgabe';
+import { schreibeTexDatei } from '../tex';
+import { macheAufgabenMetadatenPlist } from './aufgaben-metadaten';
 function schreibeVorlage(pfad, werte = {}) {
     const meta = {};
     meta.Titel = werte.titel != null ? werte.titel : '';
     meta.Thematik = werte.thematik != null ? werte.thematik : '';
     meta.ZitatSchluessel =
         werte.zitatSchlüssel != null ? werte.zitatSchlüssel : '';
-    const plist = (0, aufgaben_metadaten_1.macheAufgabenMetadatenPlist)(meta);
+    const plist = macheAufgabenMetadatenPlist(meta);
     const textkörper = plist + '\n' + '\\index{}\n' + '\\footcite{' + meta.ZitatSchluessel + '}\n';
-    (0, tex_1.schreibeTexDatei)(pfad, 'aufgabe', '', textkörper);
+    schreibeTexDatei(pfad, 'aufgabe', '', textkörper);
 }
-function erzeugeAufgabenVorlage(titel) {
+export function erzeugeAufgabenVorlage(titel) {
     let dateiName = 'Aufgabe_';
     if (titel != null) {
         const titelRein = titel.replace(/\s+/g, '-');
         dateiName = `${dateiName}${titelRein}`;
     }
-    const pfad = path_1.default.join(process.cwd(), `${dateiName}.tex`);
-    if (!fs_1.default.existsSync(pfad)) {
+    const pfad = path.join(process.cwd(), `${dateiName}.tex`);
+    if (!fs.existsSync(pfad)) {
         schreibeVorlage(pfad, {
             titel
         });
     }
-    (0, helfer_1.öffneVSCode)(pfad);
+    öffneVSCode(pfad);
 }
-exports.erzeugeAufgabenVorlage = erzeugeAufgabenVorlage;
 function schreibeExamensAufgabeVorlage(examensAufgabe) {
     schreibeVorlage(examensAufgabe.pfad, {
         titel: examensAufgabe.aufgabeFormatiert,
@@ -48,10 +41,9 @@ function schreibeExamensAufgabeVorlage(examensAufgabe) {
  * @param arg2 Teilaufgabe-Nummer oder Aufgabe-Nummer
  * @param arg3 Aufgabe-Nummer
  */
-function erzeugeExamensAufgabeVorlage(ref, arg1, arg2, arg3) {
-    const examensAufgabe = aufgabe_1.ExamensAufgabe.erzeugeExamensAufgabe(ref, arg1, arg2, arg3);
+export function erzeugeExamensAufgabeVorlage(ref, arg1, arg2, arg3) {
+    const examensAufgabe = ExamensAufgabe.erzeugeExamensAufgabe(ref, arg1, arg2, arg3);
     const pfad = schreibeExamensAufgabeVorlage(examensAufgabe);
-    (0, helfer_1.öffneVSCode)(pfad);
+    öffneVSCode(pfad);
 }
-exports.erzeugeExamensAufgabeVorlage = erzeugeExamensAufgabeVorlage;
 //# sourceMappingURL=aufgaben-vorlage.js.map

@@ -1,9 +1,4 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
+import path from 'path';
 function formatierteLänge(länge, spiegeln = false) {
     if (spiegeln) {
         länge = länge * -1;
@@ -171,13 +166,12 @@ function formatiereAutomat(def) {
     const bAntwort = tikzPicture + '\n' + formatiereFlaciLink(def);
     return formatiereTexEnv('bAntwort', bAntwort);
 }
-function default_1(jsonDateiPfad) {
+export default function (jsonDateiPfad) {
     if (jsonDateiPfad.match(/^\//) == null) {
-        jsonDateiPfad = path_1.default.join(process.cwd(), jsonDateiPfad);
+        jsonDateiPfad = path.join(process.cwd(), jsonDateiPfad);
     }
     // eslint-disable-next-line
     const definition = require(jsonDateiPfad);
     console.log(formatiereAutomat(definition));
 }
-exports.default = default_1;
 //# sourceMappingURL=flaci.js.map

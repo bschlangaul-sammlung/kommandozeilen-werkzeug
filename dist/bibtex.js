@@ -1,24 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.gibBibtexSammlung = exports.leseBibDatei = void 0;
-const glob_1 = __importDefault(require("glob"));
-const biblatex_csl_converter_1 = require("biblatex-csl-converter");
-const helfer_1 = require("./helfer");
-function leseBibDatei(dateiPfad) {
-    const parser = new biblatex_csl_converter_1.BibLatexParser((0, helfer_1.leseRepoDatei)(dateiPfad), {
+import glob from 'glob';
+import { BibLatexParser } from 'biblatex-csl-converter';
+import { leseRepoDatei, repositoryPfad } from './helfer';
+export function leseBibDatei(dateiPfad) {
+    const parser = new BibLatexParser(leseRepoDatei(dateiPfad), {
         processUnexpected: true,
         processUnknown: true
     });
     return parser.parse();
 }
-exports.leseBibDatei = leseBibDatei;
 class BibtexSammlung {
     constructor() {
         this.index = {};
-        const bibDateien = glob_1.default.sync('**/*.bib', { cwd: helfer_1.repositoryPfad });
+        const bibDateien = glob.sync('**/*.bib', { cwd: repositoryPfad });
         for (const bibDateiPfad of bibDateien) {
             this.leseBibTexJsonEin(leseBibDatei(bibDateiPfad));
         }
@@ -55,11 +48,10 @@ class BibtexSammlung {
     }
 }
 let bibtexSammlung;
-function gibBibtexSammlung() {
+export function gibBibtexSammlung() {
     if (bibtexSammlung == null) {
         bibtexSammlung = new BibtexSammlung();
     }
     return bibtexSammlung;
 }
-exports.gibBibtexSammlung = gibBibtexSammlung;
 //# sourceMappingURL=bibtex.js.map

@@ -1,17 +1,11 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.gibExamenSammlung = exports.examensTitel = exports.ExamenSammlung = exports.Examen = void 0;
-const path_1 = __importDefault(require("path"));
-const glob_1 = __importDefault(require("glob"));
-const helfer_1 = require("./helfer");
-const aufgabe_1 = require("./aufgabe");
+import path from 'path';
+import glob from 'glob';
+import { repositoryPfad, zeigeFehler, macheRelativenPfad, generiereLink, AusgabeSammler } from './helfer';
+import { ExamensAufgabe } from './aufgabe';
 /**
  * Die Klasse Examen repräsentiert eine Staatsexamensprüfung.
  */
-class Examen {
+export class Examen {
     /**
      * @param nummer Die Examens-Nummer, z. B. 65116
      * @param jahr Das Jahr in dem das Staatsexamen statt fand, z. b. 2021
@@ -42,7 +36,7 @@ class Examen {
      * z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09/Scan.pdf`
      */
     get pfad() {
-        return path_1.default.join(helfer_1.repositoryPfad, Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen), 'Scan.pdf');
+        return path.join(repositoryPfad, Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen), 'Scan.pdf');
     }
     /**
      * Der übergeordnete Ordner, in dem das Staatsexamen liegt.
@@ -50,7 +44,7 @@ class Examen {
      * @returns z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09`
      */
     get verzeichnis() {
-        return path_1.default.dirname(this.pfad);
+        return path.dirname(this.pfad);
     }
     /**
      * Der übergeordnete Ordner, in dem das Staatsexamen liegt, als relativen Pfad.
@@ -58,7 +52,7 @@ class Examen {
      * @returns z. B. `Staatsexamen/66116/2020/09`
      */
     get verzeichnisRelativ() {
-        return (0, helfer_1.macheRelativenPfad)(this.verzeichnis);
+        return macheRelativenPfad(this.verzeichnis);
     }
     /**
      * Generiere eine absoluten Dateipfad, der im Verzeichnis des Examens liegt.
@@ -66,13 +60,13 @@ class Examen {
      * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
      */
     machePfad(...pfadSegmente) {
-        return path_1.default.join(this.verzeichnis, ...pfadSegmente);
+        return path.join(this.verzeichnis, ...pfadSegmente);
     }
     /**
      * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
      */
     macheMarkdownLink(text, ...pfadSegmente) {
-        return (0, helfer_1.generiereLink)(text, this.machePfad(...pfadSegmente), {
+        return generiereLink(text, this.machePfad(...pfadSegmente), {
             linkePdf: false
         });
     }
@@ -89,7 +83,7 @@ class Examen {
         else if (this.monat === 9) {
             return 'Herbst';
         }
-        (0, helfer_1.zeigeFehler)('Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.');
+        zeigeFehler('Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.');
     }
     /**
      * In welcher Jahreszeit das Examen stattfindet. Der Monat `3` gibt
@@ -131,7 +125,7 @@ class Examen {
      * @returns z. B. `Datenbanksysteme / Softwaretechnologie (vertieft)`
      */
     get fach() {
-        return exports.examensTitel[this.nummer];
+        return examensTitel[this.nummer];
     }
     /**
      * @param nummer z. B. `66116`
@@ -142,7 +136,7 @@ class Examen {
         if (typeof nummer === 'string') {
             nummer = parseInt(nummer);
         }
-        return exports.examensTitel[nummer];
+        return examensTitel[nummer];
     }
     static erzeugeExamenDurchTextArgumente(nummer, jahr, monat) {
         return new Examen(parseInt(nummer), parseInt(jahr), parseInt(monat));
@@ -150,7 +144,7 @@ class Examen {
     static erzeugeExamenVonPfad(pfad) {
         const treffer = pfad.match(Examen.regExp);
         if (treffer == null || treffer.groups == null) {
-            (0, helfer_1.zeigeFehler)(`Konnten den Examenspfad nicht lesen: ${pfad}`);
+            zeigeFehler(`Konnten den Examenspfad nicht lesen: ${pfad}`);
         }
         const gruppen = treffer.groups;
         return Examen.erzeugeExamenDurchTextArgumente(gruppen.nummer, gruppen.jahr, gruppen.monat);
@@ -158,7 +152,7 @@ class Examen {
     static gibReferenzVonPfad(pfad) {
         const treffer = pfad.match(Examen.regExp);
         if (treffer == null || treffer.groups == null) {
-            (0, helfer_1.zeigeFehler)(`Konnten den Examenspfad nicht lesen: ${pfad}`);
+            zeigeFehler(`Konnten den Examenspfad nicht lesen: ${pfad}`);
         }
         const gruppen = treffer.groups;
         return `${gruppen.nummer}:${gruppen.jahr}:${gruppen.monat}`;
@@ -166,12 +160,12 @@ class Examen {
     static erzeugeExamenVonReferenz(referenz) {
         const ergebnis = referenz.split(':');
         if (ergebnis.length !== 3) {
-            (0, helfer_1.zeigeFehler)('Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09');
+            zeigeFehler('Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09');
         }
         return Examen.erzeugeExamenDurchTextArgumente(ergebnis[0], ergebnis[1], ergebnis[2]);
     }
     static erzeugePfad(nummer, jahr, monat) {
-        return path_1.default.join('Staatsexamen', `${nummer}`, `${jahr}`, `${monat}`);
+        return path.join('Staatsexamen', `${nummer}`, `${jahr}`, `${monat}`);
     }
     static teileReferenz(referenz) {
         const tmp = referenz.split(':');
@@ -191,7 +185,6 @@ class Examen {
         }
     }
 }
-exports.Examen = Examen;
 Examen.regExp = /^.*(?<nummer>\d{5})\/(?<jahr>\d{4})\/(?<monat>\d{2})\/.*$/;
 /**
  * Die Aufgaben eines Examens in einer rekursiven Baumdarstellung
@@ -238,17 +231,17 @@ class ExamenAufgabenBaum {
         function macheSegmenteLesbar(segment) {
             return segment.replace('-', ' ').replace('.tex', '');
         }
-        var collator = new Intl.Collator(undefined, {
+        const collator = new Intl.Collator(undefined, {
             numeric: true,
             sensitivity: 'base'
         });
         aufgabenPfade.sort(collator.compare);
         const baum = {};
         for (const pfad of aufgabenPfade) {
-            const aufgabenPfad = pfad.replace(this.examen.verzeichnisRelativ + path_1.default.sep, '');
+            const aufgabenPfad = pfad.replace(this.examen.verzeichnisRelativ + path.sep, '');
             if (aufgabenPfad.match(/(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/) != null) {
                 const aufgabe = aufgaben[pfad];
-                const segmente = aufgabenPfad.split(path_1.default.sep);
+                const segmente = aufgabenPfad.split(path.sep);
                 let unterBaum = baum;
                 for (const segment of segmente) {
                     const segmentLesbar = macheSegmenteLesbar(segment);
@@ -280,7 +273,7 @@ class ExamenAufgabenBaum {
         if (baum == null) {
             return;
         }
-        const ausgabe = new helfer_1.AusgabeSammler();
+        const ausgabe = new AusgabeSammler();
         function extrahiereNummer(titel) {
             const match = titel.match(/\d+/);
             if (match != null) {
@@ -314,10 +307,10 @@ class ExamenAufgabenBaum {
         };
         for (const thema in baum) {
             rufeBesucherFunktionAuf(thema, baum[thema]);
-            if (!(baum[thema] instanceof aufgabe_1.ExamensAufgabe)) {
+            if (!(baum[thema] instanceof ExamensAufgabe)) {
                 for (const teilaufgabe in baum[thema]) {
                     rufeBesucherFunktionAuf(teilaufgabe, baum[thema][teilaufgabe]);
-                    if (!(baum[thema][teilaufgabe] instanceof aufgabe_1.ExamensAufgabe)) {
+                    if (!(baum[thema][teilaufgabe] instanceof ExamensAufgabe)) {
                         for (const aufgabe in baum[thema][teilaufgabe]) {
                             rufeBesucherFunktionAuf(aufgabe, baum[thema][teilaufgabe][aufgabe]);
                         }
@@ -328,9 +321,9 @@ class ExamenAufgabenBaum {
         return ausgabe.gibText();
     }
 }
-class ExamenSammlung {
+export class ExamenSammlung {
     constructor() {
-        const dateien = glob_1.default.sync('**/Scan.pdf', { cwd: helfer_1.repositoryPfad });
+        const dateien = glob.sync('**/Scan.pdf', { cwd: repositoryPfad });
         this.speicher = {};
         for (const pfad of dateien) {
             const examen = Examen.erzeugeExamenVonPfad(pfad);
@@ -360,7 +353,6 @@ class ExamenSammlung {
         return this.examenBaum.baum;
     }
 }
-exports.ExamenSammlung = ExamenSammlung;
 /**
  * ```js
  * {
@@ -412,7 +404,7 @@ class ExamenBaum {
     besuche(besucher) {
         var _a;
         const examenBaum = examenSammlung.baum;
-        const ausgabe = new helfer_1.AusgabeSammler();
+        const ausgabe = new AusgabeSammler();
         for (const nummer in examenBaum) {
             if (besucher.betreteEinzelprüfungsNr != null) {
                 ausgabe.sammle(besucher.betreteEinzelprüfungsNr(parseInt(nummer)));
@@ -441,7 +433,7 @@ class ExamenBaum {
     }
 }
 // auch in .tex/pakete/basis.sty
-exports.examensTitel = {
+export const examensTitel = {
     46110: 'Grundlagen der Informatik (nicht vertieft)',
     46111: 'Programmentwicklung / Systemprogrammierung / Datenbanksysteme (nicht vertieft)',
     46112: 'Grundlagen der Informatik (nicht vertieft)',
@@ -462,11 +454,10 @@ exports.examensTitel = {
     66118: 'Fachdidaktik (Gymnasium)'
 };
 let examenSammlung;
-function gibExamenSammlung() {
+export function gibExamenSammlung() {
     if (examenSammlung == null) {
         examenSammlung = new ExamenSammlung();
     }
     return examenSammlung;
 }
-exports.gibExamenSammlung = gibExamenSammlung;
 //# sourceMappingURL=examen.js.map

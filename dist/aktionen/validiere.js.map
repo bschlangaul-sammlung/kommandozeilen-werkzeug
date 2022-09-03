@@ -1,1 +1,1 @@
-{"version":3,"file":"validiere.js","sourceRoot":"","sources":["../../src/aktionen/validiere.ts"],"names":[],"mappings":";;AAAA,wCAAgD;AAChD,oEAAkE;AAElE;IACE,IAAA,+CAAuB,GAAE,CAAA;IACzB,IAAA,6BAAmB,GAAE,CAAA;AACvB,CAAC;AAHD,4BAGC"}
+{"version":3,"file":"validiere.js","sourceRoot":"","sources":["../../src/aktionen/validiere.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,mBAAmB,EAAE,MAAM,YAAY,CAAA;AAChD,OAAO,EAAE,uBAAuB,EAAE,MAAM,0BAA0B,CAAA;AAElE,MAAM,CAAC,OAAO;IACZ,uBAAuB,EAAE,CAAA;IACzB,mBAAmB,EAAE,CAAA;AACvB,CAAC"}
