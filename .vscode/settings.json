@@ -8,5 +8,6 @@
     "**/*.out": true,
     "**/*.pdf": true,
     "**/*.synctex.gz": true
-  }
+  },
+  "mochaExplorer.nodeArgv": ["--experimental-specifier-resolution=node"]
 }

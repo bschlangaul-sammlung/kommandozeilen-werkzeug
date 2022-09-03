@@ -6,6 +6,7 @@
   "configurations": [
     {
       "type": "node",
+      "runtimeArgs": ["--experimental-specifier-resolution=node"],
       "request": "launch",
       "name": "readme",
       "program": "${workspaceFolder}/src/main.ts",

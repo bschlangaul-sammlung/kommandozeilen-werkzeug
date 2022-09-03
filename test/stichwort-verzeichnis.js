@@ -1,11 +1,11 @@
 /* globals describe it */
 
-var assert = require('assert')
+import assert from 'assert'
 
-const {
+import {
   gibStichwortBaum,
   gibStichwortVerzeichnis
-} = require('../dist/stichwort-verzeichnis.js')
+} from '../dist/stichwort-verzeichnis.js'
 
 const stichwortBaum = gibStichwortBaum()
 const stichwortVerzeichnis = gibStichwortVerzeichnis()

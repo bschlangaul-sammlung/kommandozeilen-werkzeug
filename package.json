@@ -34,6 +34,10 @@
     "build": "tsc",
     "install": "sudo rm -f /usr/local/bin/bschlangaul-werkzeug.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/bschlangaul-werkzeug.js;"
   },
+  "mocha": {
+    "node-option": ["experimental-specifier-resolution=node", "no-warnings"],
+    "spec": ["test/**/*.js"]
+  },
   "bin": {
     "bschlangaul-werkzeug.js": "./dist/main.js"
   },

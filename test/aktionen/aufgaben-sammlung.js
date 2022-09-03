@@ -1,11 +1,12 @@
 /* globals describe it */
 
-const assert = require('assert')
-const {
+import assert from 'assert'
+
+import {
   generiereExamensÜbersicht,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen
-} = require('../../dist/aktionen/aufgaben-sammlung.js')
+} from '../../dist/aktionen/aufgaben-sammlung.js'
 
 describe('aktionen/aufgaben-sammlung.ts', function () {
   it('Funktion generiereExamensÜbersicht()', function () {

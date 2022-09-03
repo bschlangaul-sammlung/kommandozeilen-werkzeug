@@ -1,17 +1,23 @@
 /* globals describe it */
 
-const assert = require('assert')
-const path = require('path')
-const {
+import assert from 'assert'
+import path from 'path'
+import { URL } from 'url'
+
+import {
   Aufgabe,
   gibAufgabenSammlung,
   ExamensAufgabe
-} = require('../dist/aufgabe.js')
+} from '../dist/aufgabe.js'
 
 const aufgabenSammlung = gibAufgabenSammlung()
 
 function gibTestPfad (dateiName) {
-  return path.resolve(__dirname, 'files', dateiName)
+  return path.resolve(
+    new URL('.', import.meta.url).pathname,
+    'files',
+    dateiName
+  )
 }
 
 describe('aufgabe.ts', function () {

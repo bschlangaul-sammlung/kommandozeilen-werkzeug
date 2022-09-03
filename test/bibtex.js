@@ -1,7 +1,7 @@
 /* globals describe it */
 
-const assert = require('assert')
-const { leseBibDatei, gibBibtexSammlung } = require('../dist/bibtex.js')
+import assert from 'assert'
+import { leseBibDatei, gibBibtexSammlung } from '../dist/bibtex.js'
 
 describe('bibtex.ts', function () {
   it('Funktion leseBibDatei()', function () {

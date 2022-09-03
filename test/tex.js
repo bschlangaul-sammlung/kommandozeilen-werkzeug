@@ -1,7 +1,8 @@
 /* globals describe it */
 
-const assert = require('assert')
-const { machePlist } = require('../dist/tex.js')
+import assert from 'assert'
+
+import { machePlist } from '../dist/tex.js'
 
 describe('tex.ts', function () {
   it('Funktion macheTexPlist()', function () {
