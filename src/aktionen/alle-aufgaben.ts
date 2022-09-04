@@ -45,7 +45,10 @@ function generiereAufgabenListe (
   const aufgaben = Array.from(aufgabenListe)
   aufgaben.sort(Aufgabe.vergleichePfade)
   for (const aufgabe of aufgaben) {
-    if (!verwendeteAufgaben.has(aufgabe.relativerPfad)) {
+    if (
+      !verwendeteAufgaben.has(aufgabe.relativerPfad) &&
+      aufgabe.bearbeitungsStand !== 'TeX-Fehler'
+    ) {
       zeilen.push(aufgabe.einbindenTexMakro)
       verwendeteAufgaben.add(aufgabe.relativerPfad)
     }
