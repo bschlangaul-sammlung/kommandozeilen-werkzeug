@@ -35,7 +35,7 @@
     "lint": "npm run lint:ts-standard && npm run lint:depcheck",
     "test": "npm run lint; npm run build; mocha 'test/**/*.js'",
     "build": "tsc",
-    "install": "sudo rm -f /usr/local/bin/bschlangaul-werkzeug.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/bschlangaul-werkzeug.js;"
+    "install": "npm run build && sudo rm -f /usr/local/bin/bschlangaul-werkzeug.js; sudo chmod a+x dist/main.js; sudo ln -s $(pwd)/dist/main.js /usr/local/bin/bschlangaul-werkzeug.js;"
   },
   "mocha": {
     "node-option": [

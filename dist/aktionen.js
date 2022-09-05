@@ -14,14 +14,16 @@ import { erzeugeAufgabenVorlage, erzeugeExamensAufgabeVorlage } from './aktionen
 import { erzeugeExamenScansSammlung, erzeugeExamensLösungen, erzeugeAufgabenSammlung } from './aktionen/aufgaben-sammlung';
 import { rotierePdf, erkenneTextInPdf, löscheGeradeSeitenInPdf, exportiereTxtAusPdf } from './aktionen/externe-befehle';
 import { erzeugeListenElemente } from './aktionen/tex-formatierung';
+import erzeugeAlleAufgaben from './aktionen/alle-aufgaben';
 export default {
     erkenneTextInPdf,
+    erzeugeAlleAufgaben,
     erzeugeAufgabenMetadaten,
+    erzeugeAufgabenSammlung,
     erzeugeAufgabenVorlage,
     erzeugeExamensAufgabeVorlage,
     erzeugeExamenScansSammlung,
     erzeugeExamensLösungen,
-    erzeugeAufgabenSammlung,
     erzeugeListenElemente,
     erzeugeReadme,
     erzeugeTexDokumentation,

@@ -200,8 +200,15 @@ sammlung
   .option('-z, --ziel <pfad>', '')
   .option('-e, --examen', 'Nur Examensaufgaben')
   .option('-m, --module', 'Nur Module')
-
   .action(aktionen.erzeugeAufgabenSammlung)
+
+sammlung
+  .command('aufgaben-ng')
+  .alias('as-ng')
+  .description(
+    'Erzeuge eine Sammlung an Aufgaben, d. h. ein Dokument in dem mehrere Aufgaben nach verschiedenen Kritieren eingebunden werden.'
+  )
+  .action(aktionen.erzeugeAlleAufgaben)
 
 sammlung
   .command('examen')

@@ -31,15 +31,17 @@ import {
   exportiereTxtAusPdf
 } from './aktionen/externe-befehle'
 import { erzeugeListenElemente } from './aktionen/tex-formatierung'
+import erzeugeAlleAufgaben from './aktionen/alle-aufgaben'
 
 export default {
   erkenneTextInPdf,
+  erzeugeAlleAufgaben,
   erzeugeAufgabenMetadaten,
+  erzeugeAufgabenSammlung,
   erzeugeAufgabenVorlage,
   erzeugeExamensAufgabeVorlage,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen,
-  erzeugeAufgabenSammlung,
   erzeugeListenElemente,
   erzeugeReadme,
   erzeugeTexDokumentation,
