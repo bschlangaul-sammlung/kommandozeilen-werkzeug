@@ -223,6 +223,6 @@ export function erzeugeAufgabenSammlung(opts) {
     if (opts.ziel != null) {
         ziel = opts.ziel;
     }
-    schreibeTexDatei(macheRepoPfad(ziel + '.tex'), 'haupt', '', textkörper);
+    schreibeTexDatei(macheRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper);
 }
 //# sourceMappingURL=aufgaben-sammlung.js.map
