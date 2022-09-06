@@ -101,7 +101,7 @@ export class Aufgabe {
             return text;
         }
         const ergebnis = {};
-        const match = this.inhalt.match(new RegExp(/\\bAufgabenMetadaten{(.*)\n}/, 's'));
+        const match = this.inhalt.match(/\\bAufgabenMetadaten{(.*)\n}/s);
         if (match != null) {
             const zeilen = match[1];
             for (const zeile of zeilen.split('\n')) {

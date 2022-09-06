@@ -155,7 +155,7 @@ programm
     .description('*.sty zu einem dtx zusammenfügen')
     .action(aktionen.erzeugeTexDokumentation);
 programm
-    .command('metadaten <texDatei>')
+    .command('metadaten <texDateiOderGlob>')
     .alias('m')
     .description('Erzeuge die Metadaten in einer TeX-Datei.')
     .action(aktionen.erzeugeAufgabenMetadaten);

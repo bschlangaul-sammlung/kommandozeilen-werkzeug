@@ -1,4 +1,7 @@
 import path from 'path'
+import fs from 'fs'
+
+import glob from 'glob'
 
 import { gibAufgabenSammlung } from '../aufgabe'
 import { schreibeDatei } from '../helfer'
@@ -15,7 +18,7 @@ export function schreibe (
 
   if (aufgabenInhalt.includes('\\bAufgabenMetadaten{')) {
     // /s s (dotall) modifier, +? one or more (non-greedy)
-    const regexp = new RegExp(/\\bAufgabenMetadaten\{.+?,?\n\}\n/, 's')
+    const regexp = /\\bAufgabenMetadaten\{.+?,?\n\}\n/s
     aufgabenTitelErsetzt = aufgabenInhalt.replace(regexp, titelTexMakro)
   } else {
     aufgabenTitelErsetzt = aufgabenInhalt.replace(
@@ -59,7 +62,7 @@ export function macheAufgabenMetadatenPlist (meta: {
  * }
  * ```
  */
-export default function (dateiPfad: string): void {
+function setzeMetadatenEineDatei (dateiPfad: string): void {
   dateiPfad = path.resolve(dateiPfad)
   const aufgabenSammlung = gibAufgabenSammlung()
   const aufgabe = aufgabenSammlung.gib(dateiPfad)
@@ -76,4 +79,16 @@ export default function (dateiPfad: string): void {
   }
 
   console.log(texPlist)
+}
+
+export default function (dateiPfadOderGlob: string): void {
+  if (fs.existsSync(dateiPfadOderGlob)) {
+    setzeMetadatenEineDatei(dateiPfadOderGlob)
+  } else {
+    const dateien = glob.sync(dateiPfadOderGlob)
+    for (const datei of dateien) {
+      console.log(datei)
+      setzeMetadatenEineDatei(datei)
+    }
+  }
 }
