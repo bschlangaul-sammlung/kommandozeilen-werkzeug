@@ -47,7 +47,7 @@ function generiereAufgabenListe (
   for (const aufgabe of aufgaben) {
     if (
       !verwendeteAufgaben.has(aufgabe.relativerPfad) &&
-      aufgabe.bearbeitungsStand !== 'TeX-Fehler'
+      aufgabe.bearbeitungsStandGrad > 3 // mit Lösung
     ) {
       zeilen.push(aufgabe.einbindenTexMakro)
       verwendeteAufgaben.add(aufgabe.relativerPfad)
