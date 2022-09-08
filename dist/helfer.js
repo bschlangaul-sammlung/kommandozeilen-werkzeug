@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
-const githubRawUrl = 'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main';
 export function leseDatei(pfad) {
     return fs.readFileSync(pfad, { encoding: 'utf-8' });
 }
@@ -29,6 +28,7 @@ function leseKonfigurationsDateiJson() {
 }
 export const konfiguration = leseKonfigurationsDateiJson();
 export const repositoryPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad;
+const githubRawUrl = konfiguration.github.rawUrl.replace('<name>', 'examens-aufgaben-tex');
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
  *

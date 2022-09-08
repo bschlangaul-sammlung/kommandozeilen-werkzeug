@@ -45,6 +45,11 @@ interface Repository {
 interface Konfiguration {
   repos: Record<string, Repository>
   einzelPruefungen: Record<string, string>
+
+  github: {
+    url: string
+    rawUrl: string
+  }
 }
 
 function leseKonfigurationsDateiJson (): Konfiguration {
@@ -55,8 +60,10 @@ export const konfiguration = leseKonfigurationsDateiJson()
 
 export const repositoryPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad
 
-const githubRawUrl =
-  'https://raw.githubusercontent.com/bschlangaul-sammlung/${name}/main'.replace('${name}', 'examens-aufgaben-tex')
+const githubRawUrl = konfiguration.github.rawUrl.replace(
+  '<name>',
+  'examens-aufgaben-tex'
+)
 
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
