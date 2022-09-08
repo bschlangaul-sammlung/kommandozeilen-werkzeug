@@ -12,7 +12,7 @@ import {
 
 import { log } from '../log'
 
-const übergeordneterPfad = path.join(repositoryPfad, '.tex')
+const übergeordneterPfad = path.join(repositoryPfad, '..', 'latex_vorlagen')
 const dtxPfad = path.join(übergeordneterPfad, 'dokumentation.dtx')
 
 /**
