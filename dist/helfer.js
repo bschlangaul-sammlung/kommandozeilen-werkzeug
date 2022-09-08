@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
-const konfigurationsDateiPfad = path.join(path.sep, 'etc', 'bschlangaul.config.tex');
 const githubRawUrl = 'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main';
 export function leseDatei(pfad) {
     return fs.readFileSync(pfad, { encoding: 'utf-8' });
@@ -25,15 +24,11 @@ export function zeigeFehler(meldung) {
     console.error(chalk.red(meldung));
     process.exit(1);
 }
-function leseKonfigurationsDatei(pfad) {
-    const inhalt = leseDatei(pfad);
-    const treffer = inhalt.match(/\\bPfadAufgaben\{(.*)\}/);
-    if (treffer == null) {
-        zeigeFehler(`Konfigurations-Datei nicht gefunden: ${pfad}`);
-    }
-    return treffer[1];
+function leseKonfigurationsDateiJson() {
+    return JSON.parse(leseDatei(path.join(path.sep, 'etc', 'bschlangaul.json')));
 }
-export const repositoryPfad = leseKonfigurationsDatei(konfigurationsDateiPfad);
+export const konfiguration = leseKonfigurationsDateiJson();
+export const repositoryPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad;
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
  *
@@ -47,8 +42,8 @@ export function macheRelativenPfad(pfad) {
 }
 /**
  * Lese eine Text-Datei. Die Pfad kann in Segmenten angegeben werden. Handelt es
- * sich um keinen absoluten Pfad, wird angenommen, das er relativ zum
- * Lehramt-Informatik-Repository liegt.
+ * sich um keinen absoluten Pfad, wird angenommen, dass er relativ zum
+ * Haupt-Repository liegt.
  *
  * @param args - Pfad-Segmente
  *
