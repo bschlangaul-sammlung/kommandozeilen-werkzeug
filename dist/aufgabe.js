@@ -81,7 +81,7 @@ export class Aufgabe {
      * \bAufgabenMetadaten{
      *   Titel = {Aufgabe 5},
      *   Thematik = {Regal mit DVDs, CDs und BDs},
-     *   RelativerPfad = Staatsexamen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
+     *   RelativerPfad = Examen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
      *   ZitatSchluessel = examen:66116:2014:09,
      *   EinzelpruefungsNr = 66116,
      *   Jahr = 2014,
@@ -490,7 +490,7 @@ export class ExamensAufgabe extends Aufgabe {
      */
     get einbindenTexMakro() {
         let relativerPfad = macheRelativenPfad(this.pfad);
-        relativerPfad = relativerPfad.replace('Staatsexamen/', '');
+        relativerPfad = relativerPfad.replace('Examen/', '');
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\bExamensAufgabe{${relativerPfad}}`;
     }

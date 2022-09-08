@@ -29,7 +29,7 @@ describe('aufgabe.ts', function () {
 
     describe('getter Methoden', function () {
       const aufgabe = aufgabenSammlung.gib(
-        'Staatsexamen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
       )
 
       it('getter Methode „titel“', function () {
@@ -46,7 +46,7 @@ describe('aufgabe.ts', function () {
 
       it('getter Methode „zitat“: 2 Elemente', function () {
         const a = aufgabenSammlung.gib(
-          'Staatsexamen/66116/2014/03/Thema-2/Teilaufgabe-2/Aufgabe-1.tex'
+          'Examen/66116/2014/03/Thema-2/Teilaufgabe-2/Aufgabe-1.tex'
         )
         assert.deepStrictEqual(a.zitat, [
           'examen:66116:2014:03',
@@ -82,7 +82,7 @@ describe('aufgabe.ts', function () {
   describe('Klasse ExamensAufgabe()', function () {
     it('Initialisierung', function () {
       const aufgabe = aufgabenSammlung.gib(
-        'Staatsexamen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
       )
       assert.strictEqual(aufgabe.istExamen, true)
       assert.strictEqual(aufgabe.referenz, '66116-2020-H.T1-TA1-A1')
@@ -122,14 +122,14 @@ describe('aufgabe.ts', function () {
 
     it('Methode „erzeugeMetadaten()“', function () {
       const aufgabe = aufgabenSammlung.gib(
-        'Staatsexamen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
       )
       const metadaten = aufgabe.erzeugeMetadaten()
       assert.strictEqual(metadaten.Titel, '{Aufgabe 1}')
       assert.strictEqual(metadaten.Thematik, '{Verifikation}')
       assert.strictEqual(
         metadaten.RelativerPfad,
-        'Staatsexamen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
       )
       assert.strictEqual(metadaten.ZitatSchluessel, 'examen:66116:2020:09')
       assert.strictEqual(metadaten.Stichwoerter, '{Verifikation, wp-Kalkül}')

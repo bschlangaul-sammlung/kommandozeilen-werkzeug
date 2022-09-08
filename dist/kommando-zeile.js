@@ -46,12 +46,12 @@ programm
     .action(aktionen.erzeugeAufgabenVorlage);
 programm
     .command('erzeuge-examens-aufgabe <referenz> <thema> [teilaufgabe] [aufgabe]')
-    .description('Erzeuge eine Examensaufgabe im Verzeichnis „Staatsexamen“.')
+    .description('Erzeuge eine Examensaufgabe im Verzeichnis „Examen“.')
     .alias('e')
     .action(aktionen.erzeugeExamensAufgabeVorlage);
 programm
     .command('oeffne <referenz...>')
-    .description('Öffne eine Staatsexamen oder andere Materialien durch die Referenz, z. B. 66116:2020:09.')
+    .description('Öffne eine Examen oder andere Materialien durch die Referenz, z. B. 66116:2020:09.')
     .alias('o')
     .action(aktionen.öffne);
 programm
@@ -70,7 +70,7 @@ programm
     .alias('k')
     .option('--oeffne-editor', 'Öffne eine fehlerhafte TeX-Datei im Editor „Visual Studio Code“')
     .option('-m, --module', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Module“')
-    .option('-e, --examen', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Staatsexamen“')
+    .option('-e, --examen', 'Kompiliere alle TeX-Dateien im Unterverzeichnis „Examen“')
     .option('-x, --ausschliessen <zeichenkette>', 'Dateien ausschließen, die die gegebene Zeichenkette enthalten.')
     .option('-b, --unter-verzeichnis <relativer-pfad>', 'Nur TeX-Dateien in dem angegeben Unterverzeichnis neu kompilieren.')
     .option('-d, --trockener-lauf', 'Nichts kompilieren, nur die Dateien auflisten, die kompiliert werden.')

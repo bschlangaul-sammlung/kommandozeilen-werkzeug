@@ -34,8 +34,8 @@ Commands:
   erzeuge-aufgabe|a [titel]                                             Erzeuge eine Aufgabe im aktuellen
                                                                         Arbeitsverzeichnis.
   erzeuge-examens-aufgabe|e <referenz> <thema> [teilaufgabe] [aufgabe]  Erzeuge eine Examensaufgabe im Verzeichnis
-                                                                        „Staatsexamen“.
-  oeffne|o <referenz...>                                                Öffne eine Staatsexamen oder andere
+                                                                        „Examen“.
+  oeffne|o <referenz...>                                                Öffne eine Examen oder andere
                                                                         Materialien durch die Referenz, z. B.
                                                                         66116:2020:09.
   oeffne-stichwort|s <stichwort>                                        Öffne Aufgaben anhand des Stichworts

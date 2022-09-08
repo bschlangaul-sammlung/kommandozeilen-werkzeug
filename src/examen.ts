@@ -17,7 +17,7 @@ export interface ExamenReferenz {
 }
 
 /**
- * Die Klasse Examen repräsentiert eine Staatsexamensprüfung.
+ * Die Klasse Examen repräsentiert eine Examensprüfung.
  */
 export class Examen {
   /**
@@ -41,7 +41,7 @@ export class Examen {
   /**
    * ```js
    * {
-   *    'Staatsexamen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-5.tex': aufgabe
+   *    'Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-5.tex': aufgabe
    * }
    * ```
    */
@@ -51,8 +51,8 @@ export class Examen {
 
   /**
    * @param nummer Die Examens-Nummer, z. B. 65116
-   * @param jahr Das Jahr in dem das Staatsexamen statt fand, z. b. 2021
-   * @param monat Das Monat, in dem das Staatsexamen statt fand. Mögliche Werte 3 für Frühjahr und 9 für Herbst.
+   * @param jahr Das Jahr in dem das Examen statt fand, z. b. 2021
+   * @param monat Das Monat, in dem das Examen statt fand. Mögliche Werte 3 für Frühjahr und 9 für Herbst.
    */
   constructor (nummer: number, jahr: number, monat: number) {
     this.nummer = nummer
@@ -70,7 +70,7 @@ export class Examen {
   /**
    * Der Pfad zum Scan
    *
-   * z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09/Scan.pdf`
+   * z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09/Scan.pdf`
    */
   get pfad (): string {
     return path.join(
@@ -81,18 +81,18 @@ export class Examen {
   }
 
   /**
-   * Der übergeordnete Ordner, in dem das Staatsexamen liegt.
+   * Der übergeordnete Ordner, in dem das Examen liegt.
    *
-   * @returns z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09`
+   * @returns z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09`
    */
   get verzeichnis (): string {
     return path.dirname(this.pfad)
   }
 
   /**
-   * Der übergeordnete Ordner, in dem das Staatsexamen liegt, als relativen Pfad.
+   * Der übergeordnete Ordner, in dem das Examen liegt, als relativen Pfad.
    *
-   * @returns z. B. `Staatsexamen/66116/2020/09`
+   * @returns z. B. `Examen/66116/2020/09`
    */
   get verzeichnisRelativ (): string {
     return macheRelativenPfad(this.verzeichnis)
@@ -129,7 +129,7 @@ export class Examen {
       return 'Herbst'
     }
     zeigeFehler(
-      'Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.'
+      'Die Monatsangabe in der Klasse Examen darf nur 3 oder 9 lauten.'
     )
   }
 
@@ -147,7 +147,7 @@ export class Examen {
    * @returns Ein lesbarer Dateiname, der das Examen identifiziert.
    */
   get dateiName (): string {
-    return `Staatsexamen-Informatik_${this.nummer}-${this.jahr}-${this.jahreszeit}`
+    return `Examen-Informatik_${this.nummer}-${this.jahr}-${this.jahreszeit}`
   }
 
   get jahrJahreszeit (): string {
@@ -228,7 +228,7 @@ export class Examen {
     const ergebnis = referenz.split(':')
     if (ergebnis.length !== 3) {
       zeigeFehler(
-        'Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09'
+        'Eine Examens-Referenz muss in diesem Format sein: 66116:2020:09'
       )
     }
     return Examen.erzeugeExamenDurchTextArgumente(
@@ -243,14 +243,14 @@ export class Examen {
     jahr: string | number,
     monat: string | number
   ): string {
-    return path.join('Staatsexamen', `${nummer}`, `${jahr}`, `${monat}`)
+    return path.join('Examen', `${nummer}`, `${jahr}`, `${monat}`)
   }
 
   static teileReferenz (referenz: string): ExamenReferenz {
     const tmp = referenz.split(':')
     if (tmp.length !== 3) {
       console.log(
-        'Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09'
+        'Eine Examens-Referenz muss in diesem Format sein: 66116:2020:09'
       )
       process.exit(1)
     }
@@ -499,7 +499,9 @@ export class ExamenSammlung {
   public examenBaum: ExamenBaum
 
   constructor () {
-    const dateien = glob.sync('**/Scan.pdf', { cwd: repositoryPfad })
+    const dateien = glob.sync('**/Scan.pdf', {
+      cwd: path.join(repositoryPfad, '.repos', 'examen-scans')
+    })
     this.speicher = {}
 
     for (const pfad of dateien) {

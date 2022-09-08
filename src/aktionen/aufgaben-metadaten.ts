@@ -51,7 +51,7 @@ export function macheAufgabenMetadatenPlist (meta: {
  * \bAufgabenMetadaten{
  *   Titel = Aufgabe 2,
  *   Thematik = Petri-Netz,
- *   RelativerPfad = Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,
+ *   RelativerPfad = Examen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex,
  *   ZitatSchluessel = sosy:pu:4,
  *   EinzelpruefungsNr = 46116,
  *   Jahr = 2016,

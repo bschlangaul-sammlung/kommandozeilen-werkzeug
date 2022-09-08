@@ -126,7 +126,7 @@ export function erzeugeExamenScansSammlung (): void {
         `\\bPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`
 
       schreibeTexDatei(
-        macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'),
+        macheRepoPfad('Examen', nummer.toString(), 'Examensammlung.tex'),
         'examen-scans',
         kopf,
         textKörper

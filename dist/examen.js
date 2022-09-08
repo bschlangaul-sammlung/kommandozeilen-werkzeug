@@ -3,19 +3,19 @@ import glob from 'glob';
 import { repositoryPfad, zeigeFehler, macheRelativenPfad, generiereLink, AusgabeSammler } from './helfer';
 import { ExamensAufgabe } from './aufgabe';
 /**
- * Die Klasse Examen repräsentiert eine Staatsexamensprüfung.
+ * Die Klasse Examen repräsentiert eine Examensprüfung.
  */
 export class Examen {
     /**
      * @param nummer Die Examens-Nummer, z. B. 65116
-     * @param jahr Das Jahr in dem das Staatsexamen statt fand, z. b. 2021
-     * @param monat Das Monat, in dem das Staatsexamen statt fand. Mögliche Werte 3 für Frühjahr und 9 für Herbst.
+     * @param jahr Das Jahr in dem das Examen statt fand, z. b. 2021
+     * @param monat Das Monat, in dem das Examen statt fand. Mögliche Werte 3 für Frühjahr und 9 für Herbst.
      */
     constructor(nummer, jahr, monat) {
         /**
          * ```js
          * {
-         *    'Staatsexamen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-5.tex': aufgabe
+         *    'Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-5.tex': aufgabe
          * }
          * ```
          */
@@ -33,23 +33,23 @@ export class Examen {
     /**
      * Der Pfad zum Scan
      *
-     * z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09/Scan.pdf`
+     * z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09/Scan.pdf`
      */
     get pfad() {
         return path.join(repositoryPfad, Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen), 'Scan.pdf');
     }
     /**
-     * Der übergeordnete Ordner, in dem das Staatsexamen liegt.
+     * Der übergeordnete Ordner, in dem das Examen liegt.
      *
-     * @returns z. B. `...github/hbschlang/lehramt-informatik/Staatsexamen/66116/2020/09`
+     * @returns z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09`
      */
     get verzeichnis() {
         return path.dirname(this.pfad);
     }
     /**
-     * Der übergeordnete Ordner, in dem das Staatsexamen liegt, als relativen Pfad.
+     * Der übergeordnete Ordner, in dem das Examen liegt, als relativen Pfad.
      *
-     * @returns z. B. `Staatsexamen/66116/2020/09`
+     * @returns z. B. `Examen/66116/2020/09`
      */
     get verzeichnisRelativ() {
         return macheRelativenPfad(this.verzeichnis);
@@ -83,7 +83,7 @@ export class Examen {
         else if (this.monat === 9) {
             return 'Herbst';
         }
-        zeigeFehler('Die Monatsangabe in der Klasse Staatsexamen darf nur 3 oder 9 lauten.');
+        zeigeFehler('Die Monatsangabe in der Klasse Examen darf nur 3 oder 9 lauten.');
     }
     /**
      * In welcher Jahreszeit das Examen stattfindet. Der Monat `3` gibt
@@ -98,7 +98,7 @@ export class Examen {
      * @returns Ein lesbarer Dateiname, der das Examen identifiziert.
      */
     get dateiName() {
-        return `Staatsexamen-Informatik_${this.nummer}-${this.jahr}-${this.jahreszeit}`;
+        return `Examen-Informatik_${this.nummer}-${this.jahr}-${this.jahreszeit}`;
     }
     get jahrJahreszeit() {
         return `${this.jahr} ${this.jahreszeit}`;
@@ -160,17 +160,17 @@ export class Examen {
     static erzeugeExamenVonReferenz(referenz) {
         const ergebnis = referenz.split(':');
         if (ergebnis.length !== 3) {
-            zeigeFehler('Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09');
+            zeigeFehler('Eine Examens-Referenz muss in diesem Format sein: 66116:2020:09');
         }
         return Examen.erzeugeExamenDurchTextArgumente(ergebnis[0], ergebnis[1], ergebnis[2]);
     }
     static erzeugePfad(nummer, jahr, monat) {
-        return path.join('Staatsexamen', `${nummer}`, `${jahr}`, `${monat}`);
+        return path.join('Examen', `${nummer}`, `${jahr}`, `${monat}`);
     }
     static teileReferenz(referenz) {
         const tmp = referenz.split(':');
         if (tmp.length !== 3) {
-            console.log('Eine Staatsexamens-Referenz muss in diesem Format sein: 66116:2020:09');
+            console.log('Eine Examens-Referenz muss in diesem Format sein: 66116:2020:09');
             process.exit(1);
         }
         return {
@@ -323,7 +323,9 @@ class ExamenAufgabenBaum {
 }
 export class ExamenSammlung {
     constructor() {
-        const dateien = glob.sync('**/Scan.pdf', { cwd: repositoryPfad });
+        const dateien = glob.sync('**/Scan.pdf', {
+            cwd: path.join(repositoryPfad, '.repos', 'examen-scans')
+        });
         this.speicher = {};
         for (const pfad of dateien) {
             const examen = Examen.erzeugeExamenVonPfad(pfad);

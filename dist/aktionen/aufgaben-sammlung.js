@@ -105,7 +105,7 @@ export function erzeugeExamenScansSammlung() {
             const textKörper = ausgabe.gibText();
             const kopf = `\\bPruefungsNummer{${nummer}}\n` +
                 `\\bPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`;
-            schreibeTexDatei(macheRepoPfad('Staatsexamen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
+            schreibeTexDatei(macheRepoPfad('Examen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
             return undefined;
         }
     });

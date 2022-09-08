@@ -67,14 +67,14 @@ programm
 
 programm
   .command('erzeuge-examens-aufgabe <referenz> <thema> [teilaufgabe] [aufgabe]')
-  .description('Erzeuge eine Examensaufgabe im Verzeichnis „Staatsexamen“.')
+  .description('Erzeuge eine Examensaufgabe im Verzeichnis „Examen“.')
   .alias('e')
   .action(aktionen.erzeugeExamensAufgabeVorlage)
 
 programm
   .command('oeffne <referenz...>')
   .description(
-    'Öffne eine Staatsexamen oder andere Materialien durch die Referenz, z. B. 66116:2020:09.'
+    'Öffne eine Examen oder andere Materialien durch die Referenz, z. B. 66116:2020:09.'
   )
   .alias('o')
   .action(aktionen.öffne)
@@ -105,7 +105,7 @@ programm
   )
   .option(
     '-e, --examen',
-    'Kompiliere alle TeX-Dateien im Unterverzeichnis „Staatsexamen“'
+    'Kompiliere alle TeX-Dateien im Unterverzeichnis „Examen“'
   )
   .option(
     '-x, --ausschliessen <zeichenkette>',

@@ -114,12 +114,12 @@ export interface AufgabenMetadaten {
   Ueberprueft?: string
 
   /**
-   * Der relative Datei-Pfad der Aufgabe, z. B. `Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex`
+   * Der relative Datei-Pfad der Aufgabe, z. B. `Examen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex`
    */
   RelativerPfad: string
 
   /**
-   * Relativer Pfad zu einer identischen Aufgabe z. B. `Staatsexamen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex`
+   * Relativer Pfad zu einer identischen Aufgabe z. B. `Examen/46116/2016/03/Thema-2/Teilaufgabe-1/Aufgabe-2.tex`
    */
   IdentischeAufgabe?: string
 
@@ -239,7 +239,7 @@ export class Aufgabe {
    * \bAufgabenMetadaten{
    *   Titel = {Aufgabe 5},
    *   Thematik = {Regal mit DVDs, CDs und BDs},
-   *   RelativerPfad = Staatsexamen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
+   *   RelativerPfad = Examen/66116/2014/09/Thema-2/Teilaufgabe-2/Aufgabe-5.tex,
    *   ZitatSchluessel = examen:66116:2014:09,
    *   EinzelpruefungsNr = 66116,
    *   Jahr = 2014,
@@ -723,7 +723,7 @@ export class ExamensAufgabe extends Aufgabe {
    */
   get einbindenTexMakro (): string {
     let relativerPfad = macheRelativenPfad(this.pfad)
-    relativerPfad = relativerPfad.replace('Staatsexamen/', '')
+    relativerPfad = relativerPfad.replace('Examen/', '')
     relativerPfad = relativerPfad.replace('.tex', '')
     return `\\bExamensAufgabe{${relativerPfad}}`
   }

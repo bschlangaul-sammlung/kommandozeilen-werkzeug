@@ -21,7 +21,7 @@ export default function (opts: Optionen): void {
   if (opts.unterVerzeichnis != null) {
     cwd = path.join(repositoryPfad, opts.unterVerzeichnis)
   } else if (opts.examen != null && opts.examen) {
-    cwd = path.join(repositoryPfad, 'Staatsexamen')
+    cwd = path.join(repositoryPfad, 'Examen')
   } else if (opts.module != null && opts.module) {
     cwd = path.join(repositoryPfad, 'Module')
   } else {

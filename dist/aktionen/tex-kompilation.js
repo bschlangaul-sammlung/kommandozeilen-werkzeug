@@ -10,7 +10,7 @@ export default function (opts) {
         cwd = path.join(repositoryPfad, opts.unterVerzeichnis);
     }
     else if (opts.examen != null && opts.examen) {
-        cwd = path.join(repositoryPfad, 'Staatsexamen');
+        cwd = path.join(repositoryPfad, 'Examen');
     }
     else if (opts.module != null && opts.module) {
         cwd = path.join(repositoryPfad, 'Module');

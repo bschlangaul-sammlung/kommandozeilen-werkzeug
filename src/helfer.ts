@@ -53,7 +53,7 @@ export const repositoryPfad = leseKonfigurationsDatei(konfigurationsDateiPfad)
  *
  * @param pfad Ein möglicherweise absoluter Pfad.
  *
- * @returns z. B. `Staatsexamen/66116.../`
+ * @returns z. B. `Examen/66116.../`
  */
 export function macheRelativenPfad (pfad: string): string {
   pfad = pfad.replace(repositoryPfad, '')

@@ -29,7 +29,7 @@ describe('examen.js', function () {
       const examen = sammlung.gibDurchReferenz('66116:2021:03')
       const aufgabe =
         examen.aufgaben[
-          'Staatsexamen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-3.tex'
+          'Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-3.tex'
         ]
       assert.strictEqual(aufgabe.aufgabe, 3)
     })
@@ -47,7 +47,7 @@ describe('examen.js', function () {
       const examen = sammlung.gibDurchReferenz('66116:2021:03')
       assert.strictEqual(
         examen.verzeichnisRelativ,
-        'Staatsexamen/66116/2021/03'
+        'Examen/66116/2021/03'
       )
     })
 
@@ -72,7 +72,7 @@ describe('examen.js', function () {
       const examen = sammlung.gibDurchReferenz('66116:2021:03')
       assert.strictEqual(
         examen.macheMarkdownLink('text', 'Thema-1', 'Aufgabe-2.tex'),
-        '[text](https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main/Staatsexamen/66116/2021/03/Thema-1/Aufgabe-2.tex)'
+        '[text](https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main/Examen/66116/2021/03/Thema-1/Aufgabe-2.tex)'
       )
     })
   })
