@@ -145,7 +145,7 @@ function erzeugeExamensLösung(examen) {
             return `\\bBindeAufgabeEin{${nummer}}`;
         }
     });
-    const kopf = machePlist('liMetaSetze', {
+    const kopf = machePlist('mMetaSetze', {
         EinzelpruefungsNr: examen.nummer,
         ExamenFach: examen.fach,
         Jahr: examen.jahr,

@@ -174,7 +174,7 @@ function erzeugeExamensLösung (examen: Examen): void {
     }
   })
 
-  const kopf = machePlist('liMetaSetze', {
+  const kopf = machePlist('mMetaSetze', {
     EinzelpruefungsNr: examen.nummer,
     ExamenFach: examen.fach,
     Jahr: examen.jahr,
