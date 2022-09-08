@@ -3,9 +3,6 @@ import childProcess from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-const githubRawUrl =
-  'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main'
-
 export function leseDatei (pfad: string): string {
   return fs.readFileSync(pfad, { encoding: 'utf-8' })
 }
@@ -32,6 +29,16 @@ export function zeigeFehler (meldung: string): never {
 }
 
 interface Repository {
+  /**
+   * z. B. Der Name des Repository
+   * `https://github.com/bschlangaul-sammlung/examens-aufgaben-tex` ist
+   * `examens-aufgaben-tex`
+   */
+  name: string
+
+  /**
+   * Absoluter Dateipfad zur lokalen Kopie des Repository.
+   */
   lokalerPfad: string
 }
 
@@ -47,6 +54,9 @@ function leseKonfigurationsDateiJson (): Konfiguration {
 export const konfiguration = leseKonfigurationsDateiJson()
 
 export const repositoryPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad
+
+const githubRawUrl =
+  'https://raw.githubusercontent.com/bschlangaul-sammlung/${name}/main'.replace('${name}', 'examens-aufgaben-tex')
 
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
