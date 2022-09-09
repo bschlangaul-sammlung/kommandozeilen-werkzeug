@@ -18,7 +18,7 @@ describe('aktionen/aufgaben-sammlung.ts', function () {
     )
     assert.ok(
       übersicht.includes(
-        'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben/main/Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-6.pdf'
+        'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-tex/main/Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-6.pdf'
       )
     )
   })

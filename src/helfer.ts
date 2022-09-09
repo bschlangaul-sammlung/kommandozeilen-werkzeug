@@ -43,12 +43,35 @@ interface Repository {
 }
 
 interface Konfiguration {
+  /**
+   * z. B. `examensAufgabenTex`
+   */
+  hauptRepo: string
+
   repos: Record<string, Repository>
+
   einzelPruefungen: Record<string, string>
 
   github: {
+    /**
+     * z. B. `https://github.com/bschlangaul-sammlung`
+     */
+    domain: string
+
+    /**
+     * z. B. `https://github.com/bschlangaul-sammlung/<name>`
+     */
     url: string
+
+    /**
+     * z. B. `https://raw.githubusercontent.com/bschlangaul-sammlung/<name>/main`
+     */
     rawUrl: string
+
+    /**
+     * z. B. `main`
+     */
+    main: string
   }
 }
 

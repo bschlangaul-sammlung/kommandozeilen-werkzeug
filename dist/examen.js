@@ -1,6 +1,6 @@
 import path from 'path';
 import glob from 'glob';
-import { repositoryPfad, zeigeFehler, macheRelativenPfad, generiereLink, AusgabeSammler } from './helfer';
+import { AusgabeSammler, generiereLink, konfiguration, macheRelativenPfad, repositoryPfad, zeigeFehler } from './helfer';
 import { ExamensAufgabe } from './aufgabe';
 /**
  * Die Klasse Examen repräsentiert eine Examensprüfung.
@@ -435,26 +435,7 @@ class ExamenBaum {
     }
 }
 // auch in .tex/pakete/basis.sty
-export const examensTitel = {
-    46110: 'Grundlagen der Informatik (nicht vertieft)',
-    46111: 'Programmentwicklung / Systemprogrammierung / Datenbanksysteme (nicht vertieft)',
-    46112: 'Grundlagen der Informatik (nicht vertieft)',
-    46113: 'Theoretische Informatik (nicht vertieft)',
-    46114: 'Algorithmen / Datenstrukturen / Programmiermethoden (nicht vertieft)',
-    46115: 'Theoretische Informatik / Algorithmen / Datenstrukturen (nicht vertieft)',
-    46116: 'Softwaretechnologie / Datenbanksysteme (nicht vertieft)',
-    46118: 'Fachdidaktik (Mittelschulen)',
-    46119: 'Fachdidaktik (Realschulen)',
-    46121: 'Fachdidaktik (berufliche Schulen)',
-    66110: 'Automatentheorie, Algorithmische Sprache (vertieft)',
-    66111: 'Betriebssysteme / Datenbanksysteme / Rechnerarchitektur (vertieft)',
-    66112: 'Automatentheorie / Komplexität / Algorithmen (vertieft)',
-    66113: 'Rechnerarchitektur / Datenbanken / Betriebssysteme (vertieft)',
-    66114: 'Datenbank- und Betriebssysteme (vertieft)',
-    66115: 'Theoretische Informatik / Algorithmen (vertieft)',
-    66116: 'Datenbanksysteme / Softwaretechnologie (vertieft)',
-    66118: 'Fachdidaktik (Gymnasium)'
-};
+export const examensTitel = konfiguration.einzelPruefungen;
 let examenSammlung;
 export function gibExamenSammlung() {
     if (examenSammlung == null) {
