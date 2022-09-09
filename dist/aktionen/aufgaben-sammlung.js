@@ -1,10 +1,11 @@
 /**
  * Aktionen, die über eine Sammlung an Aufgaben eine Ausgabe erzeugen.
  */
+import path from 'path';
 import { gibAufgabenSammlung } from '../aufgabe';
 import { log } from '../log';
 import { gibExamenSammlung, Examen } from '../examen';
-import { macheRepoPfad, löscheDatei, AusgabeSammler, macheRelativenPfad } from '../helfer';
+import { konfiguration, macheRepoPfad, löscheDatei, AusgabeSammler } from '../helfer';
 import { schreibeTexDatei, machePlist } from '../tex';
 /**
  * ```md
@@ -98,14 +99,15 @@ export function erzeugeExamenScansSammlung() {
         },
         betreteExamen(examen, monat, nummer) {
             ausgabe.sammle(`\n\\bTrennSeite{${examen.jahreszeit} ${examen.jahr}}`);
-            ausgabe.sammle(`\\bBindePdfEin{${macheRelativenPfad(examen.pfad)}}`);
+            const relativerPfad = path.join(examen.nummer.toString(), examen.jahr.toString(), examen.monatMitNullen, 'Scan.pdf');
+            ausgabe.sammle(`\\bBindePdfEin{${relativerPfad}}`);
             return undefined;
         },
         verlasseEinzelprüfungsNr(nummer) {
             const textKörper = ausgabe.gibText();
             const kopf = `\\bPruefungsNummer{${nummer}}\n` +
                 `\\bPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`;
-            schreibeTexDatei(macheRepoPfad('Examen', nummer.toString(), 'Examensammlung.tex'), 'examen-scans', kopf, textKörper);
+            schreibeTexDatei(path.join(konfiguration.repos.examenScans.lokalerPfad, nummer.toString(), 'Examenssammlung.tex'), 'examen-scans', kopf, textKörper);
             return undefined;
         }
     });
