@@ -11,6 +11,7 @@ export function erkenneTextInPdf (datei: string): void {
     [
       '--deskew',
       '--rotate-pages',
+      '--force-ocr',
       '-l',
       'deu+eng',
       '--sidecar',

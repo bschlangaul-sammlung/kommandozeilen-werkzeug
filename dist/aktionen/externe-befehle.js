@@ -7,6 +7,7 @@ export function erkenneTextInPdf(datei) {
     const process = childProcess.spawnSync('ocrmypdf', [
         '--deskew',
         '--rotate-pages',
+        '--force-ocr',
         '-l',
         'deu+eng',
         '--sidecar',
