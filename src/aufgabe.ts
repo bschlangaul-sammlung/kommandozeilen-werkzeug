@@ -5,7 +5,7 @@ import glob from 'glob'
 import {
   leseRepoDatei,
   repositoryPfad,
-  generiereLink,
+  generiereGithubRawLink,
   macheRelativenPfad,
   öffneVSCode,
   zeigeFehler
@@ -484,7 +484,7 @@ export class Aufgabe {
    * Formatierter Link zur Tex-Datei.
    */
   get linkTex (): string {
-    return generiereLink('.tex', this.pfad, { linkePdf: false })
+    return generiereGithubRawLink('.tex', this.pfad, { linkePdf: false })
   }
 
   /**
@@ -492,7 +492,7 @@ export class Aufgabe {
    */
   get link (): string {
     return (
-      generiereLink(this.titelThematikFormatiert, this.pfad) +
+      generiereGithubRawLink(this.titelThematikFormatiert, this.pfad) +
       this.stichwörterFormatiert +
       ' (' +
       this.linkTex +
@@ -673,9 +673,9 @@ export class ExamensAufgabe extends Aufgabe {
     const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`
     if (alsMarkdownLink) {
       return (
-        generiereLink(ausgabe, this.pfad) +
+        generiereGithubRawLink(ausgabe, this.pfad) +
         ' (' +
-        generiereLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
+        generiereGithubRawLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
           linkePdf: false
         }) +
         ')'
@@ -691,7 +691,7 @@ export class ExamensAufgabe extends Aufgabe {
 
   get link (): string {
     return (
-      generiereLink(this.titelKurz, this.pfad) +
+      generiereGithubRawLink(this.titelKurz, this.pfad) +
       this.stichwörterFormatiert +
       ' (' +
       this.linkTex +

@@ -5,7 +5,7 @@ import path from 'path';
 import { gibAufgabenSammlung } from '../aufgabe';
 import { log } from '../log';
 import { gibExamenSammlung, Examen } from '../examen';
-import { konfiguration, macheRepoPfad, löscheDatei, AusgabeSammler } from '../helfer';
+import { konfiguration, macheRepoPfad, löscheDatei, AusgabeSammler, generiereLink } from '../helfer';
 import { schreibeTexDatei, machePlist } from '../tex';
 /**
  * ```md
@@ -56,9 +56,6 @@ function erzeugeAufgabenBaumMarkdown(examen) {
         return '';
     return '\n' + ausgabe;
 }
-function erzeugeDateiLink(examen, dateiName) {
-    return examen.macheMarkdownLink(dateiName, dateiName);
-}
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
@@ -74,8 +71,8 @@ export function generiereExamensÜbersicht() {
             return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`;
         },
         betreteExamen(examen, monat, nummer) {
-            const scanLink = erzeugeDateiLink(examen, 'Scan.pdf');
-            const ocrLink = erzeugeDateiLink(examen, 'OCR.txt');
+            const scanLink = generiereLink('Scan.pdf', examen.scanUrl);
+            const ocrLink = generiereLink('OCR.txt', examen.scanUrl);
             return `- ${examen.jahrJahreszeit}: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`;
         }
     });

@@ -135,6 +135,10 @@ export interface LinkEinstellung {
   linkePdf?: boolean
 }
 
+export function generiereLink (text: string, url: string): string {
+  return `[${text}](${url})`
+}
+
 /**
  * Generiere einen Markdown- oder HTML-Link.
  *
@@ -144,7 +148,7 @@ export interface LinkEinstellung {
  * @returns Ein Link zu einer Datei auf Github, entweder im Markdown- oder im
  * HTML-Format.
  */
-export function generiereLink (
+export function generiereGithubRawLink (
   text: string,
   pfad: string,
   einstellung?: LinkEinstellung

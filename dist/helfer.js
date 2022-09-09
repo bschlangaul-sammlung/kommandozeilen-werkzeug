@@ -66,6 +66,9 @@ export function macheRepoPfad(...args) {
     }
     return path.join(repositoryPfad, ...args);
 }
+export function generiereLink(text, url) {
+    return `[${text}](${url})`;
+}
 /**
  * Generiere einen Markdown- oder HTML-Link.
  *
@@ -75,7 +78,7 @@ export function macheRepoPfad(...args) {
  * @returns Ein Link zu einer Datei auf Github, entweder im Markdown- oder im
  * HTML-Format.
  */
-export function generiereLink(text, pfad, einstellung) {
+export function generiereGithubRawLink(text, pfad, einstellung) {
     let linkePdf = true;
     if (typeof (einstellung === null || einstellung === void 0 ? void 0 : einstellung.linkePdf) === 'boolean') {
         linkePdf = einstellung.linkePdf;

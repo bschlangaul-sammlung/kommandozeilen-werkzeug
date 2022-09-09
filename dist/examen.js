@@ -1,6 +1,6 @@
 import path from 'path';
 import glob from 'glob';
-import { AusgabeSammler, generiereLink, konfiguration, macheRelativenPfad, repositoryPfad, zeigeFehler } from './helfer';
+import { AusgabeSammler, generiereGithubRawLink, konfiguration, macheRelativenPfad, repositoryPfad, zeigeFehler } from './helfer';
 import { ExamensAufgabe } from './aufgabe';
 /**
  * Die Klasse Examen repräsentiert eine Examensprüfung.
@@ -33,7 +33,7 @@ export class Examen {
     /**
      * Der Pfad zum Scan
      *
-     * z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09/Scan.pdf`
+     * z. B. `...github/hbschlang/Examen/66116/2020/09/Scan.pdf`
      */
     get pfad() {
         return path.join(repositoryPfad, Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen), 'Scan.pdf');
@@ -41,7 +41,7 @@ export class Examen {
     /**
      * Der übergeordnete Ordner, in dem das Examen liegt.
      *
-     * @returns z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09`
+     * @returns z. B. `...github/hbschlang/Examen/66116/2020/09`
      */
     get verzeichnis() {
         return path.dirname(this.pfad);
@@ -66,7 +66,7 @@ export class Examen {
      * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
      */
     macheMarkdownLink(text, ...pfadSegmente) {
-        return generiereLink(text, this.machePfad(...pfadSegmente), {
+        return generiereGithubRawLink(text, this.machePfad(...pfadSegmente), {
             linkePdf: false
         });
     }
@@ -126,6 +126,17 @@ export class Examen {
      */
     get fach() {
         return examensTitel[this.nummer];
+    }
+    macheExamenScansUrl(dateiName) {
+        return (konfiguration.github.rawUrl.replace('<name>', konfiguration.repos.examenScans.name) +
+            '/' +
+            path.join(this.nummer.toString(), this.jahr.toString(), this.monatMitNullen, dateiName));
+    }
+    get scanUrl() {
+        return this.macheExamenScansUrl('Scan.pdf');
+    }
+    get ocrUrl() {
+        return this.macheExamenScansUrl('OCR.pdf');
     }
     /**
      * @param nummer z. B. `66116`

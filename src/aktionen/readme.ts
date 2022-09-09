@@ -26,19 +26,10 @@ function ersetzeStichwörterInReadme (stichwort: string): string {
 
 export default function (): void {
   let inhalt = leseRepoDatei('README_template.md')
-  console.log(inhalt)
-
   inhalt = nunjucks.renderString(inhalt, {
-    gibAufgabenListe: ersetzeStichwörterInReadme
+    gibAufgabenListe: ersetzeStichwörterInReadme,
+    stichwortverzeichnis: leseRepoDatei('Stichwortverzeichnis.yml'),
+    staatsexamen: generiereExamensÜbersicht()
   })
-
-  console.log(inhalt)
-
-  const stichwörterInhalt = leseRepoDatei('Stichwortverzeichnis.yml')
-  inhalt = inhalt.replace('{{ stichwortverzeichnis }}', stichwörterInhalt)
-  console.log(inhalt)
-
-  inhalt = inhalt.replace('{{ staatsexamen }}', generiereExamensÜbersicht())
-  console.log(inhalt)
   fs.writeFileSync(path.join(repositoryPfad, 'README.md'), inhalt)
 }

@@ -10,7 +10,8 @@ import {
   konfiguration,
   macheRepoPfad,
   löscheDatei,
-  AusgabeSammler
+  AusgabeSammler,
+  generiereLink
 } from '../helfer'
 import { schreibeTexDatei, machePlist } from '../tex'
 
@@ -65,10 +66,6 @@ function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
   return '\n' + ausgabe
 }
 
-function erzeugeDateiLink (examen: Examen, dateiName: string): string {
-  return examen.macheMarkdownLink(dateiName, dateiName)
-}
-
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
@@ -86,8 +83,8 @@ export function generiereExamensÜbersicht (): string {
       return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`
     },
     betreteExamen (examen: Examen, monat: number, nummer: number): string {
-      const scanLink = erzeugeDateiLink(examen, 'Scan.pdf')
-      const ocrLink = erzeugeDateiLink(examen, 'OCR.txt')
+      const scanLink = generiereLink('Scan.pdf', examen.scanUrl)
+      const ocrLink = generiereLink('OCR.txt', examen.scanUrl)
       return `- ${
         examen.jahrJahreszeit
       }: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`

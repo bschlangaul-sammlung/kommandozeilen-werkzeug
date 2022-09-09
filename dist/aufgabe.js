@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
-import { leseRepoDatei, repositoryPfad, generiereLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
+import { leseRepoDatei, repositoryPfad, generiereGithubRawLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
 import { sammleStichwörter, gibInhaltEinesTexMakros } from './tex';
 import { Examen, gibExamenSammlung } from './examen';
 function umgebeMitKlammern(text) {
@@ -301,13 +301,13 @@ export class Aufgabe {
      * Formatierter Link zur Tex-Datei.
      */
     get linkTex() {
-        return generiereLink('.tex', this.pfad, { linkePdf: false });
+        return generiereGithubRawLink('.tex', this.pfad, { linkePdf: false });
     }
     /**
      * Formatierter Link zur PDF-Datei auf Github mit den Stichwörtern.
      */
     get link() {
-        return (generiereLink(this.titelThematikFormatiert, this.pfad) +
+        return (generiereGithubRawLink(this.titelThematikFormatiert, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +
@@ -449,9 +449,9 @@ export class ExamensAufgabe extends Aufgabe {
     gibTitelNurAufgabe(alsMarkdownLink = false) {
         const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`;
         if (alsMarkdownLink) {
-            return (generiereLink(ausgabe, this.pfad) +
+            return (generiereGithubRawLink(ausgabe, this.pfad) +
                 ' (' +
-                generiereLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
+                generiereGithubRawLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
                     linkePdf: false
                 }) +
                 ')');
@@ -463,7 +463,7 @@ export class ExamensAufgabe extends Aufgabe {
         return `${this.examen.dateiName}_${aufgabenReferenz}`;
     }
     get link() {
-        return (generiereLink(this.titelKurz, this.pfad) +
+        return (generiereGithubRawLink(this.titelKurz, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +

@@ -3,7 +3,7 @@ import glob from 'glob'
 
 import {
   AusgabeSammler,
-  generiereLink,
+  generiereGithubRawLink,
   konfiguration,
   macheRelativenPfad,
   repositoryPfad,
@@ -71,7 +71,7 @@ export class Examen {
   /**
    * Der Pfad zum Scan
    *
-   * z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09/Scan.pdf`
+   * z. B. `...github/hbschlang/Examen/66116/2020/09/Scan.pdf`
    */
   get pfad (): string {
     return path.join(
@@ -84,7 +84,7 @@ export class Examen {
   /**
    * Der übergeordnete Ordner, in dem das Examen liegt.
    *
-   * @returns z. B. `...github/hbschlang/lehramt-informatik/Examen/66116/2020/09`
+   * @returns z. B. `...github/hbschlang/Examen/66116/2020/09`
    */
   get verzeichnis (): string {
     return path.dirname(this.pfad)
@@ -112,7 +112,7 @@ export class Examen {
    * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
    */
   public macheMarkdownLink (text: string, ...pfadSegmente: string[]): string {
-    return generiereLink(text, this.machePfad(...pfadSegmente), {
+    return generiereGithubRawLink(text, this.machePfad(...pfadSegmente), {
       linkePdf: false
     })
   }
@@ -181,6 +181,30 @@ export class Examen {
    */
   get fach (): string {
     return examensTitel[this.nummer]
+  }
+
+  private macheExamenScansUrl (dateiName: string): string {
+    return (
+      konfiguration.github.rawUrl.replace(
+        '<name>',
+        konfiguration.repos.examenScans.name
+      ) +
+      '/' +
+      path.join(
+        this.nummer.toString(),
+        this.jahr.toString(),
+        this.monatMitNullen,
+        dateiName
+      )
+    )
+  }
+
+  get scanUrl (): string {
+    return this.macheExamenScansUrl('Scan.pdf')
+  }
+
+  get ocrUrl (): string {
+    return this.macheExamenScansUrl('OCR.pdf')
   }
 
   /**
