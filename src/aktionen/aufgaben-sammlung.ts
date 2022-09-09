@@ -10,8 +10,7 @@ import {
   konfiguration,
   macheRepoPfad,
   löscheDatei,
-  AusgabeSammler,
-  macheRelativenPfad
+  AusgabeSammler
 } from '../helfer'
 import { schreibeTexDatei, machePlist } from '../tex'
 

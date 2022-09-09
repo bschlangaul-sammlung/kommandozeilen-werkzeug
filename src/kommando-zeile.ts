@@ -100,20 +100,8 @@ programm
     'Öffne eine fehlerhafte TeX-Datei im Editor „Visual Studio Code“'
   )
   .option(
-    '-m, --module',
-    'Kompiliere alle TeX-Dateien im Unterverzeichnis „Module“'
-  )
-  .option(
-    '-e, --examen',
-    'Kompiliere alle TeX-Dateien im Unterverzeichnis „Examen“'
-  )
-  .option(
     '-x, --ausschliessen <zeichenkette>',
     'Dateien ausschließen, die die gegebene Zeichenkette enthalten.'
-  )
-  .option(
-    '-b, --unter-verzeichnis <relativer-pfad>',
-    'Nur TeX-Dateien in dem angegeben Unterverzeichnis neu kompilieren.'
   )
   .option(
     '-d, --trockener-lauf',

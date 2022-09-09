@@ -3,30 +3,19 @@ import glob from 'glob'
 import path from 'path'
 import chalk from 'chalk'
 
-import { repositoryPfad, öffneVSCode } from '../helfer'
+import { öffneVSCode } from '../helfer'
 
 const fehler: string[] = []
 
 interface Optionen {
   oeffneEditor?: boolean
-  unterVerzeichnis?: string
-  examen?: boolean
-  module?: boolean
   trockenerLauf?: boolean
   ausschliessen?: string
 }
 
 export default function (opts: Optionen): void {
-  let cwd: string
-  if (opts.unterVerzeichnis != null) {
-    cwd = path.join(repositoryPfad, opts.unterVerzeichnis)
-  } else if (opts.examen != null && opts.examen) {
-    cwd = path.join(repositoryPfad, 'Examen')
-  } else if (opts.module != null && opts.module) {
-    cwd = path.join(repositoryPfad, 'Module')
-  } else {
-    cwd = repositoryPfad
-  }
+  const cwd: string = process.cwd()
+
   console.log(`Kompiliere alle TeX-Dateien im Verzeichnis: ${cwd}`)
 
   const dateien = glob.sync('**/*.tex', { cwd })
