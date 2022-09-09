@@ -143,8 +143,10 @@ function erzeugeExamensLösung(examen) {
         betreteTeilaufgabe(nummer) {
             return `\n\\bSetzeTeilaufgabeNr{${nummer}}\n`;
         },
-        betreteAufgabe(aufgaben, nummer) {
-            return `\\bBindeAufgabeEin{${nummer}}`;
+        betreteAufgabe(aufgabe, nummer) {
+            if (aufgabe.bearbeitungsStandGrad > 3) {
+                return `\\bBindeAufgabeEin{${nummer}}`;
+            }
         }
     });
     const kopf = machePlist('bMetaSetze', {

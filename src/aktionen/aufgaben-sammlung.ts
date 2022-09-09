@@ -180,8 +180,10 @@ function erzeugeExamensLösung (examen: Examen): void {
     betreteTeilaufgabe (nummer: number): string {
       return `\n\\bSetzeTeilaufgabeNr{${nummer}}\n`
     },
-    betreteAufgabe (aufgaben: Aufgabe, nummer: number): string {
-      return `\\bBindeAufgabeEin{${nummer}}`
+    betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
+      if (aufgabe.bearbeitungsStandGrad > 3) {
+        return `\\bBindeAufgabeEin{${nummer}}`
+      }
     }
   })
 
