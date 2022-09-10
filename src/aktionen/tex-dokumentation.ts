@@ -2,7 +2,7 @@ import glob from 'glob'
 import path from 'path'
 
 import {
-  repositoryPfad,
+  hauptRepoPfad,
   leseDatei,
   schreibeDatei,
   führeAus,
@@ -12,7 +12,7 @@ import {
 
 import { log } from '../log'
 
-const übergeordneterPfad = path.join(repositoryPfad, '..', 'latex_vorlagen')
+const übergeordneterPfad = path.join(hauptRepoPfad, '..', 'latex_vorlagen')
 const dtxPfad = path.join(übergeordneterPfad, 'dokumentation.dtx')
 
 /**

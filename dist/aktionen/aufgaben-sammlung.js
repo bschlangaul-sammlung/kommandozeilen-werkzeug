@@ -59,7 +59,7 @@ function erzeugeAufgabenBaumMarkdown(examen) {
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
-export function generiereExamensÜbersicht() {
+export function generiereExamensÜbersicht(mitAufgaben = true) {
     const examenSammlung = gibExamenSammlung();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
@@ -73,7 +73,11 @@ export function generiereExamensÜbersicht() {
         betreteExamen(examen, monat, nummer) {
             const scanLink = generiereLink('Scan.pdf', examen.scanUrl);
             const ocrLink = generiereLink('OCR.txt', examen.scanUrl);
-            return `- ${examen.jahrJahreszeit}: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`;
+            let aufgaben = ' ';
+            if (mitAufgaben) {
+                aufgaben += erzeugeAufgabenBaumMarkdown(examen);
+            }
+            return `- ${examen.jahrJahreszeit}: ${scanLink} ${ocrLink}${aufgaben}`;
         }
     });
 }

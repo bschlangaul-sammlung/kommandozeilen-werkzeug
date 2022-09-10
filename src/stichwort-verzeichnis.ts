@@ -3,7 +3,7 @@ import glob from 'glob'
 
 import {
   leseRepoDatei,
-  repositoryPfad,
+  hauptRepoPfad,
   zeigeFehler,
   öffneVSCode
 } from './helfer'
@@ -135,7 +135,7 @@ export class StichwortVerzeichnis {
   ) {
     this.stichwortBaum = stichwortBaum
     this.aufgabenSammlung = aufgabenSammlung
-    const dateien = glob.sync('**/*.tex', { cwd: repositoryPfad })
+    const dateien = glob.sync('**/*.tex', { cwd: hauptRepoPfad })
     this.verzeichnis = {}
     for (const pfad of dateien) {
       if (this.aufgabenSammlung.istAufgabenPfad(pfad)) {

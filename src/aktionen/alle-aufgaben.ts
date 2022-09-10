@@ -5,7 +5,7 @@ import nunjucks from 'nunjucks'
 
 import { Aufgabe } from '../aufgabe'
 import { gibAufgaben } from '../stichwort-verzeichnis'
-import { repositoryPfad, leseRepoDatei } from '../helfer'
+import { hauptRepoPfad, leseRepoDatei } from '../helfer'
 
 const verwendeteAufgaben = new Set<string>()
 
@@ -70,5 +70,5 @@ export default function (): void {
   })
 
   console.log(inhalt)
-  fs.writeFileSync(path.join(repositoryPfad, 'Alle-Aufgaben.tex'), inhalt)
+  fs.writeFileSync(path.join(hauptRepoPfad, 'Alle-Aufgaben.tex'), inhalt)
 }

@@ -6,7 +6,7 @@ import {
   generiereGithubRawLink,
   konfiguration,
   macheRelativenPfad,
-  repositoryPfad,
+  hauptRepoPfad,
   zeigeFehler
 } from './helfer'
 import { Aufgabe, ExamensAufgabe } from './aufgabe'
@@ -75,7 +75,7 @@ export class Examen {
    */
   get pfad (): string {
     return path.join(
-      repositoryPfad,
+      hauptRepoPfad,
       Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen),
       'Scan.pdf'
     )
@@ -525,7 +525,7 @@ export class ExamenSammlung {
 
   constructor () {
     const dateien = glob.sync('**/Scan.pdf', {
-      cwd: path.join(repositoryPfad, '.repos', 'examen-scans')
+      cwd: path.join(hauptRepoPfad, '.repos', 'examen-scans')
     })
     this.speicher = {}
 

@@ -1,6 +1,6 @@
 import yaml from 'js-yaml';
 import glob from 'glob';
-import { leseRepoDatei, repositoryPfad, zeigeFehler, öffneVSCode } from './helfer';
+import { leseRepoDatei, hauptRepoPfad, zeigeFehler, öffneVSCode } from './helfer';
 import { gibAufgabenSammlung } from './aufgabe';
 import { findBestMatch } from 'string-similarity';
 export class StichwortBaum {
@@ -114,7 +114,7 @@ export class StichwortVerzeichnis {
     constructor(stichwortBaum, aufgabenSammlung) {
         this.stichwortBaum = stichwortBaum;
         this.aufgabenSammlung = aufgabenSammlung;
-        const dateien = glob.sync('**/*.tex', { cwd: repositoryPfad });
+        const dateien = glob.sync('**/*.tex', { cwd: hauptRepoPfad });
         this.verzeichnis = {};
         for (const pfad of dateien) {
             if (this.aufgabenSammlung.istAufgabenPfad(pfad)) {

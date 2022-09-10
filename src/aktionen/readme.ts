@@ -5,7 +5,7 @@ import nunjucks from 'nunjucks'
 
 import { Aufgabe } from '../aufgabe'
 import { gibStichwortVerzeichnis } from '../stichwort-verzeichnis'
-import { repositoryPfad, leseRepoDatei } from '../helfer'
+import { hauptRepoPfad, leseRepoDatei } from '../helfer'
 import { generiereExamensÜbersicht } from './aufgaben-sammlung'
 
 function generiereMarkdownAufgabenListe (aufgabenListe: Set<Aufgabe>): string {
@@ -31,5 +31,5 @@ export default function (): void {
     stichwortverzeichnis: leseRepoDatei('Stichwortverzeichnis.yml'),
     staatsexamen: generiereExamensÜbersicht()
   })
-  fs.writeFileSync(path.join(repositoryPfad, 'README.md'), inhalt)
+  fs.writeFileSync(path.join(hauptRepoPfad, 'README.md'), inhalt)
 }

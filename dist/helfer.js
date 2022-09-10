@@ -27,7 +27,7 @@ function leseKonfigurationsDateiJson() {
     return JSON.parse(leseDatei(path.join(path.sep, 'etc', 'bschlangaul.json')));
 }
 export const konfiguration = leseKonfigurationsDateiJson();
-export const repositoryPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad;
+export const hauptRepoPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad;
 const githubRawUrl = konfiguration.github.rawUrl.replace('<name>', 'examens-aufgaben-tex');
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
@@ -37,34 +37,42 @@ const githubRawUrl = konfiguration.github.rawUrl.replace('<name>', 'examens-aufg
  * @returns z. B. `Examen/66116.../`
  */
 export function macheRelativenPfad(pfad) {
-    pfad = pfad.replace(repositoryPfad, '');
+    pfad = pfad.replace(hauptRepoPfad, '');
     return pfad.replace(/^\//, '');
+}
+export function macheRepoPfad(pfadSegmente, repoId) {
+    if (typeof pfadSegmente === 'string') {
+        pfadSegmente = [pfadSegmente];
+    }
+    let repoPfad;
+    if (repoId != null) {
+        repoPfad = konfiguration.repos[repoId].lokalerPfad;
+    }
+    else {
+        repoPfad = hauptRepoPfad;
+    }
+    let elternPfad = repoPfad;
+    // Überprüfe, ob es sich bereits um einen absoluten Pfad handelt
+    if (pfadSegmente[0].charAt(0) === path.sep) {
+        elternPfad = '';
+    }
+    if (pfadSegmente[0].includes(repoPfad)) {
+        return path.join(...pfadSegmente);
+    }
+    return path.join(elternPfad, ...pfadSegmente);
 }
 /**
  * Lese eine Text-Datei. Die Pfad kann in Segmenten angegeben werden. Handelt es
  * sich um keinen absoluten Pfad, wird angenommen, dass er relativ zum
- * Haupt-Repository liegt.
+ * Haupt-Repository oder zum einem mit der repoId angegeben Repository liegt.
  *
- * @param args - Pfad-Segmente
+ * @param pfadSegmente - Ein Pfad oder Pfad-Segmente.
+ * @param repoId - z. B. or `examensAufgabenTex` oder `examenScans`.
  *
  * @returns Der Inhalt der Text-Datei als String.
  */
-export function leseRepoDatei(...args) {
-    let elternPfad = repositoryPfad;
-    // Überprüfe, ob es sich bereits um einen absoluten Pfad handelt
-    if (args[0].charAt(0) === path.sep) {
-        elternPfad = '';
-    }
-    if (args[0].includes(repositoryPfad)) {
-        return leseDatei(path.join(...args));
-    }
-    return leseDatei(path.join(elternPfad, ...args));
-}
-export function macheRepoPfad(...args) {
-    if (args[0].includes(repositoryPfad)) {
-        return path.join(...args);
-    }
-    return path.join(repositoryPfad, ...args);
+export function leseRepoDatei(pfadSegmente, repoId) {
+    return leseDatei(macheRepoPfad(pfadSegmente, repoId));
 }
 export function generiereLink(text, url) {
     return `[${text}](${url})`;
@@ -83,7 +91,7 @@ export function generiereGithubRawLink(text, pfad, einstellung) {
     if (typeof (einstellung === null || einstellung === void 0 ? void 0 : einstellung.linkePdf) === 'boolean') {
         linkePdf = einstellung.linkePdf;
     }
-    pfad = pfad.replace(repositoryPfad, '');
+    pfad = pfad.replace(hauptRepoPfad, '');
     pfad = pfad.replace(/^\//, '');
     if (linkePdf) {
         pfad = pfad.replace(/\.[\w]+$/, '.pdf');

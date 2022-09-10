@@ -1,8 +1,8 @@
 import glob from 'glob';
 import path from 'path';
-import { repositoryPfad, leseDatei, schreibeDatei, führeAus, öffneProgramm, AusgabeSammler } from '../helfer';
+import { hauptRepoPfad, leseDatei, schreibeDatei, führeAus, öffneProgramm, AusgabeSammler } from '../helfer';
 import { log } from '../log';
-const übergeordneterPfad = path.join(repositoryPfad, '..', 'latex_vorlagen');
+const übergeordneterPfad = path.join(hauptRepoPfad, '..', 'latex_vorlagen');
 const dtxPfad = path.join(übergeordneterPfad, 'dokumentation.dtx');
 /**
  * @param segmente Relativ zum übergeordneten .tex-Verzeichnis

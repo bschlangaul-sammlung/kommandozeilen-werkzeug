@@ -1,6 +1,6 @@
 import glob from 'glob';
 import { BibLatexParser } from 'biblatex-csl-converter';
-import { leseRepoDatei, repositoryPfad } from './helfer';
+import { leseRepoDatei, hauptRepoPfad } from './helfer';
 export function leseBibDatei(dateiPfad) {
     const parser = new BibLatexParser(leseRepoDatei(dateiPfad), {
         processUnexpected: true,
@@ -11,7 +11,7 @@ export function leseBibDatei(dateiPfad) {
 class BibtexSammlung {
     constructor() {
         this.index = {};
-        const bibDateien = glob.sync('**/*.bib', { cwd: repositoryPfad });
+        const bibDateien = glob.sync('**/*.bib', { cwd: hauptRepoPfad });
         for (const bibDateiPfad of bibDateien) {
             this.leseBibTexJsonEin(leseBibDatei(bibDateiPfad));
         }

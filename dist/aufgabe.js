@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
-import { leseRepoDatei, repositoryPfad, generiereGithubRawLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
+import { leseRepoDatei, hauptRepoPfad, generiereGithubRawLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
 import { sammleStichwörter, gibInhaltEinesTexMakros } from './tex';
 import { Examen, gibExamenSammlung } from './examen';
 function umgebeMitKlammern(text) {
@@ -56,10 +56,10 @@ export class Aufgabe {
         if (pfad.charAt(0) === path.sep) {
             return pfad;
         }
-        if (pfad.includes(repositoryPfad)) {
+        if (pfad.includes(hauptRepoPfad)) {
             return pfad;
         }
-        return path.join(repositoryPfad, pfad);
+        return path.join(hauptRepoPfad, pfad);
     }
     static istAufgabe(pfad) {
         if (pfad.match(Aufgabe.pfadRegExp) != null) {
@@ -531,7 +531,7 @@ export class AufgabenSammlung {
     constructor(examenSammlung) {
         this.examenSammlung = examenSammlung;
         this.aufgaben = {};
-        const dateien = glob.sync('**/*.tex', { cwd: repositoryPfad });
+        const dateien = glob.sync('**/*.tex', { cwd: hauptRepoPfad });
         this.aufgaben = {};
         for (const pfad of dateien) {
             const aufgabe = this.erzeugeAufgabe(pfad);

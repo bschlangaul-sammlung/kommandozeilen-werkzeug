@@ -1,6 +1,6 @@
 import path from 'path';
 import glob from 'glob';
-import { AusgabeSammler, generiereGithubRawLink, konfiguration, macheRelativenPfad, repositoryPfad, zeigeFehler } from './helfer';
+import { AusgabeSammler, generiereGithubRawLink, konfiguration, macheRelativenPfad, hauptRepoPfad, zeigeFehler } from './helfer';
 import { ExamensAufgabe } from './aufgabe';
 /**
  * Die Klasse Examen repräsentiert eine Examensprüfung.
@@ -36,7 +36,7 @@ export class Examen {
      * z. B. `...github/hbschlang/Examen/66116/2020/09/Scan.pdf`
      */
     get pfad() {
-        return path.join(repositoryPfad, Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen), 'Scan.pdf');
+        return path.join(hauptRepoPfad, Examen.erzeugePfad(this.nummer, this.jahr, this.monatMitNullen), 'Scan.pdf');
     }
     /**
      * Der übergeordnete Ordner, in dem das Examen liegt.
@@ -335,7 +335,7 @@ class ExamenAufgabenBaum {
 export class ExamenSammlung {
     constructor() {
         const dateien = glob.sync('**/Scan.pdf', {
-            cwd: path.join(repositoryPfad, '.repos', 'examen-scans')
+            cwd: path.join(hauptRepoPfad, '.repos', 'examen-scans')
         });
         this.speicher = {};
         for (const pfad of dateien) {

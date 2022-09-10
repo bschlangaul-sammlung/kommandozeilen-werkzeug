@@ -69,7 +69,9 @@ function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
-export function generiereExamensÜbersicht (): string {
+export function generiereExamensÜbersicht (
+  mitAufgaben: boolean = true
+): string {
   const examenSammlung = gibExamenSammlung()
 
   const baum = examenSammlung.examenBaum
@@ -85,9 +87,11 @@ export function generiereExamensÜbersicht (): string {
     betreteExamen (examen: Examen, monat: number, nummer: number): string {
       const scanLink = generiereLink('Scan.pdf', examen.scanUrl)
       const ocrLink = generiereLink('OCR.txt', examen.scanUrl)
-      return `- ${
-        examen.jahrJahreszeit
-      }: ${scanLink} ${ocrLink} ${erzeugeAufgabenBaumMarkdown(examen)}`
+      let aufgaben: string = ' '
+      if (mitAufgaben) {
+        aufgaben += erzeugeAufgabenBaumMarkdown(examen)
+      }
+      return `- ${examen.jahrJahreszeit}: ${scanLink} ${ocrLink}${aufgaben}`
     }
   })
 }

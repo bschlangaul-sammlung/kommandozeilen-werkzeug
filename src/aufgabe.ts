@@ -4,7 +4,7 @@ import glob from 'glob'
 
 import {
   leseRepoDatei,
-  repositoryPfad,
+  hauptRepoPfad,
   generiereGithubRawLink,
   macheRelativenPfad,
   öffneVSCode,
@@ -211,10 +211,10 @@ export class Aufgabe {
     if (pfad.charAt(0) === path.sep) {
       return pfad
     }
-    if (pfad.includes(repositoryPfad)) {
+    if (pfad.includes(hauptRepoPfad)) {
       return pfad
     }
-    return path.join(repositoryPfad, pfad)
+    return path.join(hauptRepoPfad, pfad)
   }
 
   static istAufgabe (pfad: string): boolean {
@@ -770,7 +770,7 @@ export class AufgabenSammlung {
   constructor (examenSammlung: ExamenSammlung) {
     this.examenSammlung = examenSammlung
     this.aufgaben = {}
-    const dateien = glob.sync('**/*.tex', { cwd: repositoryPfad })
+    const dateien = glob.sync('**/*.tex', { cwd: hauptRepoPfad })
     this.aufgaben = {}
     for (const pfad of dateien) {
       const aufgabe = this.erzeugeAufgabe(pfad)
