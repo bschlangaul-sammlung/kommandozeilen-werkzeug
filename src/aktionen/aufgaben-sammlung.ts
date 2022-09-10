@@ -86,7 +86,7 @@ export function generiereExamensÜbersicht (
     },
     betreteExamen (examen: Examen, monat: number, nummer: number): string {
       const scanLink = generiereLink('Scan.pdf', examen.scanUrl)
-      const ocrLink = generiereLink('OCR.txt', examen.scanUrl)
+      const ocrLink = generiereLink('OCR.txt', examen.ocrUrl)
       let aufgaben: string = ' '
       if (mitAufgaben) {
         aufgaben += erzeugeAufgabenBaumMarkdown(examen)
