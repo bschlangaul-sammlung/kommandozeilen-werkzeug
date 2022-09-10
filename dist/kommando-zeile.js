@@ -63,7 +63,7 @@ programm
     .command('generiere-readme')
     .description('Erzeuge die README-Datei.')
     .alias('r')
-    .action(aktionen.erzeugeReadme);
+    .action(aktionen.erzeugeReadmeHaupt);
 programm
     .command('kompiliere-tex')
     .description('Kompiliere mehrere TeX-Dateien auf einmal.')

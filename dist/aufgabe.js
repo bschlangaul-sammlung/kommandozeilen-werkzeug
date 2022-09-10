@@ -494,36 +494,6 @@ export class ExamensAufgabe extends Aufgabe {
         relativerPfad = relativerPfad.replace('.tex', '');
         return `\\bExamensAufgabe{${relativerPfad}}`;
     }
-    /**
-     * Erzeugt ein TeX-Makro mit dem die Aufgabe in ein anderes Dokument
-     * eingebunden werden kann. Es handelt sich hierbei um die alte Version des
-     * Einbinden-Makros.
-     *
-     * @returns z. B. `\ExamensAufgabeTTA 66116 / 2021 / 03 : Thema 1 Teilaufgabe
-     * 1 Aufgabe 1`
-     */
-    get einbindenTexMakroAlt() {
-        let aufgabe = '';
-        let suffix = '';
-        const examen = `${this.examen.nummer} / ${this.examen.jahr} / ${this.examen.monat} :`;
-        if (this.thema != null &&
-            this.teilaufgabe != null &&
-            this.aufgabe != null) {
-            aufgabe = `Thema ${this.thema} Teilaufgabe ${this.teilaufgabe} Aufgabe ${this.aufgabe}`;
-            suffix = 'TTA';
-        }
-        else if (this.thema != null &&
-            this.aufgabe != null &&
-            this.teilaufgabe == null) {
-            aufgabe = `Thema ${this.thema} Aufgabe ${this.aufgabe}`;
-            suffix = 'TA';
-        }
-        else {
-            aufgabe = `Aufgabe ${this.aufgabe}`;
-            suffix = 'A';
-        }
-        return `\n\\ExamensAufgabe${suffix} ${examen} ${aufgabe}`;
-    }
 }
 ExamensAufgabe.pfadRegExp = /(?<nummer>\d{5})\/(?<jahr>\d{4})\/(?<monat>\d{2})\/(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/;
 ExamensAufgabe.schwacherPfadRegExp = /(Thema-(?<thema>\d)\/)?(Teilaufgabe-(?<teilaufgabe>\d)\/)?Aufgabe-(?<aufgabe>\d+)\.tex$/;
