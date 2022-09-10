@@ -8,7 +8,7 @@ import { log } from '../log'
 import { gibExamenSammlung, Examen } from '../examen'
 import {
   konfiguration,
-  macheRepoPfad,
+  gibRepoPfad,
   löscheDatei,
   AusgabeSammler,
   generiereLink
@@ -293,5 +293,5 @@ export function erzeugeAufgabenSammlung (
   if (opts.ziel != null) {
     ziel = opts.ziel
   }
-  schreibeTexDatei(macheRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper)
+  schreibeTexDatei(gibRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper)
 }

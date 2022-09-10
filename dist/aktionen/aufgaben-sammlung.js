@@ -5,7 +5,7 @@ import path from 'path';
 import { gibAufgabenSammlung } from '../aufgabe';
 import { log } from '../log';
 import { gibExamenSammlung, Examen } from '../examen';
-import { konfiguration, macheRepoPfad, löscheDatei, AusgabeSammler, generiereLink } from '../helfer';
+import { konfiguration, gibRepoPfad, löscheDatei, AusgabeSammler, generiereLink } from '../helfer';
 import { schreibeTexDatei, machePlist } from '../tex';
 /**
  * ```md
@@ -228,6 +228,6 @@ export function erzeugeAufgabenSammlung(opts) {
     if (opts.ziel != null) {
         ziel = opts.ziel;
     }
-    schreibeTexDatei(macheRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper);
+    schreibeTexDatei(gibRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper);
 }
 //# sourceMappingURL=aufgaben-sammlung.js.map

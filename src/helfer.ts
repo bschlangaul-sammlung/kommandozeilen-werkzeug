@@ -81,7 +81,8 @@ function leseKonfigurationsDateiJson (): Konfiguration {
 
 export const konfiguration = leseKonfigurationsDateiJson()
 
-export const hauptRepoPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad
+export const hauptRepoPfad =
+  konfiguration.repos[konfiguration.hauptRepo].lokalerPfad
 
 const githubRawUrl = konfiguration.github.rawUrl.replace(
   '<name>',
@@ -100,7 +101,7 @@ export function macheRelativenPfad (pfad: string): string {
   return pfad.replace(/^\//, '')
 }
 
-export function macheRepoPfad (
+export function gibRepoPfad (
   pfadSegmente: string | string[],
   repoId?: string
 ): string {
@@ -138,7 +139,7 @@ export function leseRepoDatei (
   pfadSegmente: string | string[],
   repoId?: string
 ): string {
-  return leseDatei(macheRepoPfad(pfadSegmente, repoId))
+  return leseDatei(gibRepoPfad(pfadSegmente, repoId))
 }
 
 export interface LinkEinstellung {
@@ -198,7 +199,7 @@ export function öffneProgramm (programm: string, pfad: string): void {
 }
 
 export function öffneVSCode (pfad: string): void {
-  öffneProgramm('/usr/bin/code', macheRepoPfad(pfad))
+  öffneProgramm('/usr/bin/code', gibRepoPfad(pfad))
 }
 
 /**

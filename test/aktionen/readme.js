@@ -1,7 +1,16 @@
-/* globals it */
+/* globals describe it */
 
-import erzeugeReadme from '../../dist/aktionen/readme.js'
+import {
+  erzeugeReadmeHaupt,
+  erzeugeReadmeExamenScans
+} from '../../dist/aktionen/readme.js'
 
-it('aktionen/readme.ts', function () {
-  erzeugeReadme()
+describe('aktionen/readme.ts', function () {
+  it('erzeugeReadmeHaupt', function () {
+    erzeugeReadmeHaupt()
+  })
+
+  it('erzeugeReadmeExamenScans', function () {
+    erzeugeReadmeExamenScans()
+  })
 })

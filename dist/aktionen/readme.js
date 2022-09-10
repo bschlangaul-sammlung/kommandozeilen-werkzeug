@@ -1,9 +1,8 @@
-import path from 'path';
 import fs from 'fs';
 import nunjucks from 'nunjucks';
 import { Aufgabe } from '../aufgabe';
 import { gibStichwortVerzeichnis } from '../stichwort-verzeichnis';
-import { hauptRepoPfad, leseRepoDatei } from '../helfer';
+import { leseRepoDatei, gibRepoPfad } from '../helfer';
 import { generiereExamensÜbersicht } from './aufgaben-sammlung';
 function generiereMarkdownAufgabenListe(aufgabenListe) {
     const aufgaben = Array.from(aufgabenListe);
@@ -17,13 +16,20 @@ function generiereMarkdownAufgabenListe(aufgabenListe) {
 function ersetzeStichwörterInReadme(stichwort) {
     return generiereMarkdownAufgabenListe(gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort));
 }
-export default function () {
+export function erzeugeReadmeExamenScans() {
+    let inhalt = leseRepoDatei('README_template.md', 'examenScans');
+    inhalt = nunjucks.renderString(inhalt, {
+        uebersicht: generiereExamensÜbersicht(false)
+    });
+    fs.writeFileSync(gibRepoPfad('README.md', 'examenScans'), inhalt);
+}
+export function erzeugeReadmeHaupt() {
     let inhalt = leseRepoDatei('README_template.md');
     inhalt = nunjucks.renderString(inhalt, {
         gibAufgabenListe: ersetzeStichwörterInReadme,
         stichwortverzeichnis: leseRepoDatei('Stichwortverzeichnis.yml'),
         staatsexamen: generiereExamensÜbersicht()
     });
-    fs.writeFileSync(path.join(hauptRepoPfad, 'README.md'), inhalt);
+    fs.writeFileSync(gibRepoPfad('README.md'), inhalt);
 }
 //# sourceMappingURL=readme.js.map

@@ -2,7 +2,7 @@
  * Sammle alle Aktionen im Unterverzeichnis ./aktionen in ein Objekt und
  * exportiere dieses.
  */
-import erzeugeReadme from './aktionen/readme';
+import { erzeugeReadmeExamenScans, erzeugeReadmeHaupt } from './aktionen/readme';
 import erzeugeTexDokumentation from './aktionen/tex-dokumentation';
 import kompiliereTex from './aktionen/tex-kompilation';
 import konvertiereFlaciZuTikz from './aktionen/flaci';
@@ -25,7 +25,8 @@ export default {
     erzeugeExamenScansSammlung,
     erzeugeExamensLösungen,
     erzeugeListenElemente,
-    erzeugeReadme,
+    erzeugeReadmeExamenScans,
+    erzeugeReadmeHaupt,
     erzeugeTexDokumentation,
     exportiereTxtAusPdf,
     führeSqlAus,

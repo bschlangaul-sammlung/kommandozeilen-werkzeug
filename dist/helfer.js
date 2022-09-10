@@ -27,7 +27,7 @@ function leseKonfigurationsDateiJson() {
     return JSON.parse(leseDatei(path.join(path.sep, 'etc', 'bschlangaul.json')));
 }
 export const konfiguration = leseKonfigurationsDateiJson();
-export const hauptRepoPfad = konfiguration.repos.examensAufgabenTex.lokalerPfad;
+export const hauptRepoPfad = konfiguration.repos[konfiguration.hauptRepo].lokalerPfad;
 const githubRawUrl = konfiguration.github.rawUrl.replace('<name>', 'examens-aufgaben-tex');
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
@@ -40,7 +40,7 @@ export function macheRelativenPfad(pfad) {
     pfad = pfad.replace(hauptRepoPfad, '');
     return pfad.replace(/^\//, '');
 }
-export function macheRepoPfad(pfadSegmente, repoId) {
+export function gibRepoPfad(pfadSegmente, repoId) {
     if (typeof pfadSegmente === 'string') {
         pfadSegmente = [pfadSegmente];
     }
@@ -72,7 +72,7 @@ export function macheRepoPfad(pfadSegmente, repoId) {
  * @returns Der Inhalt der Text-Datei als String.
  */
 export function leseRepoDatei(pfadSegmente, repoId) {
-    return leseDatei(macheRepoPfad(pfadSegmente, repoId));
+    return leseDatei(gibRepoPfad(pfadSegmente, repoId));
 }
 export function generiereLink(text, url) {
     return `[${text}](${url})`;
@@ -116,7 +116,7 @@ export function öffneProgramm(programm, pfad) {
     subprocess.unref();
 }
 export function öffneVSCode(pfad) {
-    öffneProgramm('/usr/bin/code', macheRepoPfad(pfad));
+    öffneProgramm('/usr/bin/code', gibRepoPfad(pfad));
 }
 /**
  * Kleine Helfer-Klasse um Strings zu sammeln in einem Array zu speichern
