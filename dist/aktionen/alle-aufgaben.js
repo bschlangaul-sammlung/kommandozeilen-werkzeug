@@ -44,11 +44,11 @@ function ersetzeStichwörterInReadme(stichwort, überschrift = 0) {
     return generiereAufgabenListe(gibAufgaben(stichwort), stichwort, überschrift);
 }
 export default function () {
-    let inhalt = leseRepoDatei('Alle-Aufgaben.tex_template');
+    let inhalt = leseRepoDatei('Bschlangaul-Sammlung.tex_template');
     inhalt = nunjucks.renderString(inhalt, {
         gibAufgabenListe: ersetzeStichwörterInReadme
     });
     console.log(inhalt);
-    fs.writeFileSync(path.join(hauptRepoPfad, 'Alle-Aufgaben.tex'), inhalt);
+    fs.writeFileSync(path.join(hauptRepoPfad, 'Bschlangaul-Sammlung.tex'), inhalt);
 }
 //# sourceMappingURL=alle-aufgaben.js.map

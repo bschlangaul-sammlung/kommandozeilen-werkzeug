@@ -29,28 +29,47 @@ function leseKonfigurationsDateiJson() {
 export const konfiguration = leseKonfigurationsDateiJson();
 export const hauptRepoPfad = konfiguration.repos[konfiguration.hauptRepo].lokalerPfad;
 const githubRawUrl = konfiguration.github.rawUrl.replace('<name>', 'examens-aufgaben-tex');
+function gibRepoBasisPfad(repoId) {
+    if (repoId != null) {
+        return konfiguration.repos[repoId].lokalerPfad;
+    }
+    else {
+        return hauptRepoPfad;
+    }
+}
 /**
  * Erzeuge einen zum Git-Repository relativen Pfad.
  *
- * @param pfad Ein möglicherweise absoluter Pfad.
+ * @param pfad - Ein möglicherweise absoluter Pfad.
+ * @param repoId - Die Repository-ID muss dem Schlüssel entsprechen unter dem
+ *   ein Repository (`repos[repoId]`) in der Konfigurationsdatei
+ *   `/etc/bschlangaul.json` angegeben ist, z. B. `examensAufgabenTex` oder
+ *   `examenScans`.
  *
  * @returns z. B. `Examen/66116.../`
  */
-export function macheRelativenPfad(pfad) {
-    pfad = pfad.replace(hauptRepoPfad, '');
-    return pfad.replace(/^\//, '');
+export function macheRelativenPfad(pfad, repoId) {
+    return pfad.replace(gibRepoBasisPfad(repoId), '').replace(/^\//, '');
 }
+/**
+ * Wandelt einen relativen Pfad in einen absoluten Pfad um, der in einem der
+ * Bschlangaul-Repositories liegt.
+ *
+ * Die Pfad kann in Segmenten angegeben werden. Handelt es sich um keinen
+ * absoluten Pfad, wird angenommen, dass er relativ zum Haupt-Repository oder
+ * zum einem mit der `repoId` angegeben Repository liegt.
+ *
+ * @param pfadSegmente - Ein Pfad oder Pfad-Segmente angegeben in einem Feld.
+ * @param repoId - Die Repository-ID muss dem Schlüssel entsprechen unter dem
+ *   ein Repository (`repos[repoId]`) in der Konfigurationsdatei
+ *   `/etc/bschlangaul.json` angegeben ist, z. B. `examensAufgabenTex` oder
+ *   `examenScans`.
+ */
 export function gibRepoPfad(pfadSegmente, repoId) {
     if (typeof pfadSegmente === 'string') {
         pfadSegmente = [pfadSegmente];
     }
-    let repoPfad;
-    if (repoId != null) {
-        repoPfad = konfiguration.repos[repoId].lokalerPfad;
-    }
-    else {
-        repoPfad = hauptRepoPfad;
-    }
+    const repoPfad = gibRepoBasisPfad(repoId);
     let elternPfad = repoPfad;
     // Überprüfe, ob es sich bereits um einen absoluten Pfad handelt
     if (pfadSegmente[0].charAt(0) === path.sep) {
@@ -62,12 +81,15 @@ export function gibRepoPfad(pfadSegmente, repoId) {
     return path.join(elternPfad, ...pfadSegmente);
 }
 /**
- * Lese eine Text-Datei. Die Pfad kann in Segmenten angegeben werden. Handelt es
+ * Lese eine Text-Datei. Der Pfad kann in Segmenten angegeben werden. Handelt es
  * sich um keinen absoluten Pfad, wird angenommen, dass er relativ zum
- * Haupt-Repository oder zum einem mit der repoId angegeben Repository liegt.
+ * Haupt-Repository oder zum einem mit der `repoId` angegeben Repository liegt.
  *
- * @param pfadSegmente - Ein Pfad oder Pfad-Segmente.
- * @param repoId - z. B. or `examensAufgabenTex` oder `examenScans`.
+ * @param pfadSegmente - Ein Pfad oder Pfad-Segmente angegeben in einem Feld.
+ * @param repoId - Die Repository-ID muss dem Schlüssel entsprechen unter dem
+ *   ein Repository (`repos[repoId]`) in der Konfigurationsdatei
+ *   `/etc/bschlangaul.json` angegeben ist,  z. B. `examensAufgabenTex` oder
+ *   `examenScans`.
  *
  * @returns Der Inhalt der Text-Datei als String.
  */

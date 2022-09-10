@@ -3,14 +3,21 @@ import glob from 'glob';
 import path from 'path';
 import chalk from 'chalk';
 import { öffneVSCode } from '../helfer';
+import { gibAufgabenSammlung } from '../aufgabe';
 const fehler = [];
 export default function (opts) {
     const cwd = process.cwd();
     console.log(`Kompiliere alle TeX-Dateien im Verzeichnis: ${cwd}`);
+    const aufgabenSammlung = gibAufgabenSammlung();
     const dateien = glob.sync('**/*.tex', { cwd });
     for (let pfad of dateien) {
         pfad = path.join(cwd, pfad);
-        if (opts.ausschliessen != null && pfad.includes(opts.ausschliessen)) {
+        const aufgabe = aufgabenSammlung.erzeugeAufgabe(pfad);
+        if (aufgabe != null && aufgabe.bearbeitungsStandGrad < 3) {
+            console.log('Ausgeschlossen wegen Bearbeitungsstand');
+        }
+        else if (opts.ausschliessen != null &&
+            pfad.includes(opts.ausschliessen)) {
             console.log('ausgeschossen: ' + pfad);
         }
         else {
