@@ -204,7 +204,7 @@ export class Examen {
   }
 
   get ocrUrl (): string {
-    return this.macheExamenScansUrl('OCR.pdf')
+    return this.macheExamenScansUrl('OCR.txt')
   }
 
   /**

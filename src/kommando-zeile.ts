@@ -85,11 +85,23 @@ programm
   .alias('s')
   .action(aktionen.öffneDurchStichwort)
 
-programm
-  .command('generiere-readme')
-  .description('Erzeuge die README-Datei.')
-  .alias('r')
+const readme = new Command('readme').description(
+  'Erzeuge die README-Dateien für verschiedene Repositories'
+)
+
+readme
+  .command('haupt')
+  .description(
+    'Erzeuge die README-Datei für das Haupt-Repository „examens-aufgaben-tex“.'
+  )
   .action(aktionen.erzeugeReadmeHaupt)
+
+readme
+  .command('scans')
+  .description('Erzeuge die README-Datei für das Repository „examen-scans“.')
+  .action(aktionen.erzeugeReadmeExamenScans)
+
+programm.addCommand(readme)
 
 programm
   .command('kompiliere-tex')

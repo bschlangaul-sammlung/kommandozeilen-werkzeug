@@ -136,7 +136,7 @@ export class Examen {
         return this.macheExamenScansUrl('Scan.pdf');
     }
     get ocrUrl() {
-        return this.macheExamenScansUrl('OCR.pdf');
+        return this.macheExamenScansUrl('OCR.txt');
     }
     /**
      * @param nummer z. B. `66116`
