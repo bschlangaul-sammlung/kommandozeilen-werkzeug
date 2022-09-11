@@ -5,7 +5,7 @@ import glob from 'glob'
 import {
   leseRepoDatei,
   hauptRepoPfad,
-  generiereGithubRawLink,
+  erzeugeGithubRawLink,
   macheRelativenPfad,
   öffneVSCode,
   zeigeFehler
@@ -475,6 +475,9 @@ export class Aufgabe {
     return ausgabe
   }
 
+  /**
+   * @returns ` (Stichwort 1, Stichwort 2)`
+   */
   get stichwörterFormatiert (): string {
     if (this.stichwörter != null && this.stichwörter.length > 0) {
       return ` (${this.stichwörter.join(', ')})`
@@ -486,7 +489,7 @@ export class Aufgabe {
    * Formatierter Link zur Tex-Datei.
    */
   get linkTex (): string {
-    return generiereGithubRawLink('.tex', this.pfad, { linkePdf: false })
+    return erzeugeGithubRawLink('.tex', this.pfad, { linkePdf: false })
   }
 
   /**
@@ -494,7 +497,7 @@ export class Aufgabe {
    */
   get link (): string {
     return (
-      generiereGithubRawLink(this.titelThematikFormatiert, this.pfad) +
+      erzeugeGithubRawLink(this.titelThematikFormatiert, this.pfad) +
       this.stichwörterFormatiert +
       ' (' +
       this.linkTex +
@@ -522,8 +525,8 @@ export class Aufgabe {
     return this.pfad
   }
 
-  get texQuelltextUrl (): string | undefined {
-    return helfer.generiereGithubUrl(
+  get texQuelltextUrl (): string {
+    return helfer.erzeugeGithubUrl(
       'examensAufgabenTex',
       this.relativerPfad,
       false
@@ -533,15 +536,15 @@ export class Aufgabe {
   /**
    * Absoluter Pfad im lokalen Dateisystem.
    */
-  get pdfLokalerPfad (): string | undefined {
+  get pdfLokalerPfad (): string {
     return helfer.gibRepoPfad(
       this.relativerPfad.replace('.tex', '.pdf'),
       'examensAufgabenPdf'
     )
   }
 
-  get pdfUrl (): string | undefined {
-    return helfer.generiereGithubUrl(
+  get pdfUrl (): string {
+    return helfer.erzeugeGithubUrl(
       'examensAufgabenPdf',
       this.relativerPfad.replace('.tex', '.pdf'),
       true
@@ -704,19 +707,11 @@ export class ExamensAufgabe extends Aufgabe {
     return ausgabe
   }
 
-  gibTitelNurAufgabe (alsMarkdownLink: boolean = false): string {
-    const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`
-    if (alsMarkdownLink) {
-      return (
-        generiereGithubRawLink(ausgabe, this.pfad) +
-        ' (' +
-        generiereGithubRawLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
-          linkePdf: false
-        }) +
-        ')'
-      )
-    }
-    return ausgabe
+  /**
+   * @returns z. B. `Aufgabe 1 (Stichwort 1, Stichwort 2)`
+   */
+  get aufgabeNrStichwörterFormatiert (): string {
+    return `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`
   }
 
   get dateiName (): string {
@@ -726,7 +721,7 @@ export class ExamensAufgabe extends Aufgabe {
 
   get link (): string {
     return (
-      generiereGithubRawLink(this.titelKurz, this.pfad) +
+      erzeugeGithubRawLink(this.titelKurz, this.pfad) +
       this.stichwörterFormatiert +
       ' (' +
       this.linkTex +

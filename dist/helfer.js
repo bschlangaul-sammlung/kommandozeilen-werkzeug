@@ -96,7 +96,7 @@ export function gibRepoPfad(pfadSegmente, repoId) {
 export function leseRepoDatei(pfadSegmente, repoId) {
     return leseDatei(gibRepoPfad(pfadSegmente, repoId));
 }
-export function generiereLink(text, url) {
+export function erzeugeLink(text, url) {
     return `[${text}](${url})`;
 }
 /**
@@ -112,7 +112,7 @@ export function generiereLink(text, url) {
  * - raw = true:
  *   `https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-tex/main/README.md`
  */
-export function generiereGithubUrl(repoId, replativerPfad, raw = false) {
+export function erzeugeGithubUrl(repoId, replativerPfad, raw = false) {
     const baseUrl = raw ? konfiguration.github.rawUrl : konfiguration.github.url;
     return (baseUrl.replace('<name>', konfiguration.repos[repoId].name) +
         '/' +
@@ -127,7 +127,7 @@ export function generiereGithubUrl(repoId, replativerPfad, raw = false) {
  * @returns Ein Link zu einer Datei auf Github, entweder im Markdown- oder im
  * HTML-Format.
  */
-export function generiereGithubRawLink(text, pfad, einstellung) {
+export function erzeugeGithubRawLink(text, pfad, einstellung) {
     let linkePdf = true;
     if (typeof (einstellung === null || einstellung === void 0 ? void 0 : einstellung.linkePdf) === 'boolean') {
         linkePdf = einstellung.linkePdf;

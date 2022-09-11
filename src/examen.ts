@@ -3,7 +3,7 @@ import glob from 'glob'
 
 import {
   AusgabeSammler,
-  generiereGithubRawLink,
+  erzeugeGithubRawLink,
   konfiguration,
   macheRelativenPfad,
   hauptRepoPfad,
@@ -112,7 +112,7 @@ export class Examen {
    * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
    */
   public macheMarkdownLink (text: string, ...pfadSegmente: string[]): string {
-    return generiereGithubRawLink(text, this.machePfad(...pfadSegmente), {
+    return erzeugeGithubRawLink(text, this.machePfad(...pfadSegmente), {
       linkePdf: false
     })
   }

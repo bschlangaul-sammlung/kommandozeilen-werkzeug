@@ -9,7 +9,7 @@ import { hauptRepoPfad, leseRepoDatei } from '../helfer'
 
 const verwendeteAufgaben = new Set<string>()
 
-function generiereAufgabenListe (
+function erzeugeAufgabenListe (
   aufgabenListe: Set<Aufgabe>,
   stichwort: string,
   ueberschrift: number = 0
@@ -60,7 +60,7 @@ function ersetzeStichwörterInReadme (
   stichwort: string,
   überschrift: number = 0
 ): string {
-  return generiereAufgabenListe(gibAufgaben(stichwort), stichwort, überschrift)
+  return erzeugeAufgabenListe(gibAufgaben(stichwort), stichwort, überschrift)
 }
 
 export default function (): void {

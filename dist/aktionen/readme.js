@@ -3,8 +3,8 @@ import nunjucks from 'nunjucks';
 import { Aufgabe } from '../aufgabe';
 import { gibStichwortVerzeichnis } from '../stichwort-verzeichnis';
 import { leseRepoDatei, gibRepoPfad } from '../helfer';
-import { generiereExamensÜbersicht } from './aufgaben-sammlung';
-function generiereMarkdownAufgabenListe(aufgabenListe) {
+import { erzeugeExamensÜbersicht } from './aufgaben-sammlung';
+function erzeugeMarkdownAufgabenListe(aufgabenListe) {
     const aufgaben = Array.from(aufgabenListe);
     aufgaben.sort(Aufgabe.vergleichePfade);
     const teil = [];
@@ -14,12 +14,12 @@ function generiereMarkdownAufgabenListe(aufgabenListe) {
     return teil.join('\n');
 }
 function ersetzeStichwörterInReadme(stichwort) {
-    return generiereMarkdownAufgabenListe(gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort));
+    return erzeugeMarkdownAufgabenListe(gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort));
 }
 export function erzeugeReadmeExamenScans() {
     let inhalt = leseRepoDatei('README_template.md', 'examenScans');
     inhalt = nunjucks.renderString(inhalt, {
-        uebersicht: generiereExamensÜbersicht(false)
+        uebersicht: erzeugeExamensÜbersicht(false)
     });
     fs.writeFileSync(gibRepoPfad('README.md', 'examenScans'), inhalt);
 }
@@ -28,7 +28,7 @@ export function erzeugeReadmeHaupt() {
     inhalt = nunjucks.renderString(inhalt, {
         gibAufgabenListe: ersetzeStichwörterInReadme,
         stichwortverzeichnis: leseRepoDatei('Stichwortverzeichnis.yml'),
-        staatsexamen: generiereExamensÜbersicht()
+        staatsexamen: erzeugeExamensÜbersicht()
     });
     fs.writeFileSync(gibRepoPfad('README.md'), inhalt);
 }

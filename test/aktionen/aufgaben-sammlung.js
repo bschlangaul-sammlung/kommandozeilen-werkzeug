@@ -3,14 +3,14 @@
 import assert from 'assert'
 
 import {
-  generiereExamensÜbersicht,
+  erzeugeExamensÜbersicht,
   erzeugeExamenScansSammlung,
   erzeugeExamensLösungen
 } from '../../dist/aktionen/aufgaben-sammlung.js'
 
 describe('aktionen/aufgaben-sammlung.ts', function () {
-  it('Funktion generiereExamensÜbersicht()', function () {
-    const übersicht = generiereExamensÜbersicht()
+  it('Funktion erzeugeExamensÜbersicht()', function () {
+    const übersicht = erzeugeExamensÜbersicht()
     assert.ok(
       übersicht.includes(
         '### 66115: Theoretische Informatik / Algorithmen (vertieft)'
@@ -18,7 +18,7 @@ describe('aktionen/aufgaben-sammlung.ts', function () {
     )
     assert.ok(
       übersicht.includes(
-        'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-tex/main/Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-6.pdf'
+        'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-pdf/main/Examen/66116/2021/03/Thema-2/Teilaufgabe-2/Aufgabe-6.pdf'
       )
     )
   })

@@ -5,7 +5,8 @@ import path from 'path';
 import { gibAufgabenSammlung } from '../aufgabe';
 import { log } from '../log';
 import { gibExamenSammlung, Examen } from '../examen';
-import { konfiguration, gibRepoPfad, löscheDatei, AusgabeSammler, generiereLink } from '../helfer';
+import { konfiguration, gibRepoPfad, löscheDatei, AusgabeSammler, erzeugeLink } from '../helfer';
+import * as helfer from '../helfer';
 import { schreibeTexDatei, machePlist } from '../tex';
 /**
  * ```md
@@ -42,24 +43,29 @@ function erzeugeAufgabenBaumMarkdown(examen) {
             return ausgabe;
         },
         betreteAufgabe(aufgabe, nummer) {
-            let titel;
+            let ausgabe;
             if (aufgabe != null) {
-                titel = aufgabe.gibTitelNurAufgabe(true);
+                ausgabe =
+                    helfer.erzeugeLink(aufgabe.aufgabeNrStichwörterFormatiert, aufgabe.pdfUrl) +
+                        ' (' +
+                        helfer.erzeugeLink('.tex', aufgabe.texQuelltextUrl) +
+                        ')';
             }
             else {
-                titel = `Aufgabe ${nummer}`;
+                ausgabe = `Aufgabe ${nummer}`;
             }
-            return rückeEin() + titel;
+            return rückeEin() + ausgabe;
         }
     });
-    if (ausgabe == null)
+    if (ausgabe == null) {
         return '';
+    }
     return '\n' + ausgabe;
 }
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
-export function generiereExamensÜbersicht(mitAufgaben = true) {
+export function erzeugeExamensÜbersicht(mitAufgaben = true) {
     const examenSammlung = gibExamenSammlung();
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
@@ -71,8 +77,8 @@ export function generiereExamensÜbersicht(mitAufgaben = true) {
             return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`;
         },
         betreteExamen(examen, monat, nummer) {
-            const scanLink = generiereLink('Scan.pdf', examen.scanUrl);
-            const ocrLink = generiereLink('OCR.txt', examen.ocrUrl);
+            const scanLink = erzeugeLink('Scan.pdf', examen.scanUrl);
+            const ocrLink = erzeugeLink('OCR.txt', examen.ocrUrl);
             let aufgaben = ' ';
             if (mitAufgaben) {
                 aufgaben += erzeugeAufgabenBaumMarkdown(examen);

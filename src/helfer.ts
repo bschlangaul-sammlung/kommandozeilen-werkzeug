@@ -174,7 +174,7 @@ export interface LinkEinstellung {
   linkePdf?: boolean
 }
 
-export function generiereLink (text: string, url: string): string {
+export function erzeugeLink (text: string, url: string): string {
   return `[${text}](${url})`
 }
 
@@ -191,7 +191,7 @@ export function generiereLink (text: string, url: string): string {
  * - raw = true:
  *   `https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-tex/main/README.md`
  */
-export function generiereGithubUrl (
+export function erzeugeGithubUrl (
   repoId: string,
   replativerPfad: string,
   raw: boolean = false
@@ -213,7 +213,7 @@ export function generiereGithubUrl (
  * @returns Ein Link zu einer Datei auf Github, entweder im Markdown- oder im
  * HTML-Format.
  */
-export function generiereGithubRawLink (
+export function erzeugeGithubRawLink (
   text: string,
   pfad: string,
   einstellung?: LinkEinstellung

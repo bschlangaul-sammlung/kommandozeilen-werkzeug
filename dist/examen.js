@@ -1,6 +1,6 @@
 import path from 'path';
 import glob from 'glob';
-import { AusgabeSammler, generiereGithubRawLink, konfiguration, macheRelativenPfad, hauptRepoPfad, zeigeFehler } from './helfer';
+import { AusgabeSammler, erzeugeGithubRawLink, konfiguration, macheRelativenPfad, hauptRepoPfad, zeigeFehler } from './helfer';
 import { ExamensAufgabe } from './aufgabe';
 /**
  * Die Klasse Examen repräsentiert eine Examensprüfung.
@@ -66,7 +66,7 @@ export class Examen {
      * @param pfadSegmente - z. B. `'Thema-1', 'Teilaufgabe-1', 'Aufgabe-1.tex'`
      */
     macheMarkdownLink(text, ...pfadSegmente) {
-        return generiereGithubRawLink(text, this.machePfad(...pfadSegmente), {
+        return erzeugeGithubRawLink(text, this.machePfad(...pfadSegmente), {
             linkePdf: false
         });
     }

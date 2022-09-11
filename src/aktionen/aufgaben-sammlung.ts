@@ -11,8 +11,9 @@ import {
   gibRepoPfad,
   löscheDatei,
   AusgabeSammler,
-  generiereLink
+  erzeugeLink
 } from '../helfer'
+import * as helfer from '../helfer'
 import { schreibeTexDatei, machePlist } from '../tex'
 
 /**
@@ -45,33 +46,42 @@ function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
       ebene++
       return ausgabe
     },
+
     betreteTeilaufgabe (nummer: number): string {
       ebene = 2
       const ausgabe = rückeEin() + `Teilaufgabe ${nummer}`
       ebene++
       return ausgabe
     },
+
     betreteAufgabe (aufgabe: ExamensAufgabe, nummer: number): string {
-      let titel: string
+      let ausgabe: string
       if (aufgabe != null) {
-        titel = aufgabe.gibTitelNurAufgabe(true)
+        ausgabe =
+          helfer.erzeugeLink(
+            aufgabe.aufgabeNrStichwörterFormatiert,
+            aufgabe.pdfUrl
+          ) +
+          ' (' +
+          helfer.erzeugeLink('.tex', aufgabe.texQuelltextUrl) +
+          ')'
       } else {
-        titel = `Aufgabe ${nummer}`
+        ausgabe = `Aufgabe ${nummer}`
       }
-      return rückeEin() + titel
+      return rückeEin() + ausgabe
     }
   })
 
-  if (ausgabe == null) return ''
+  if (ausgabe == null) {
+    return ''
+  }
   return '\n' + ausgabe
 }
 
 /**
  * Erzeugen den Markdown-Code für die README-Datei.
  */
-export function generiereExamensÜbersicht (
-  mitAufgaben: boolean = true
-): string {
+export function erzeugeExamensÜbersicht (mitAufgaben: boolean = true): string {
   const examenSammlung = gibExamenSammlung()
 
   const baum = examenSammlung.examenBaum
@@ -85,8 +95,8 @@ export function generiereExamensÜbersicht (
       return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`
     },
     betreteExamen (examen: Examen, monat: number, nummer: number): string {
-      const scanLink = generiereLink('Scan.pdf', examen.scanUrl)
-      const ocrLink = generiereLink('OCR.txt', examen.ocrUrl)
+      const scanLink = erzeugeLink('Scan.pdf', examen.scanUrl)
+      const ocrLink = erzeugeLink('OCR.txt', examen.ocrUrl)
       let aufgaben: string = ' '
       if (mitAufgaben) {
         aufgaben += erzeugeAufgabenBaumMarkdown(examen)

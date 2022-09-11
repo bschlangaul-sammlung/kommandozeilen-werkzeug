@@ -39,7 +39,7 @@ Commands:
                                                                         Materialien durch die Referenz, z. B.
                                                                         66116:2020:09.
   oeffne-stichwort|s <stichwort>                                        Öffne Aufgaben anhand des Stichworts
-  generiere-readme|r                                                    Erzeuge die README-Datei.
+  readme|r                                                    Erzeuge die README-Datei.
   kompiliere-aufgaben|k                                                 Kompiliere alle TeX-Dateien der Aufgaben.
   sql|s [options] <tex-datei>                                           Führe SQL-Code in einer TeX-Datei aus. Der
                                                                         Code muss in

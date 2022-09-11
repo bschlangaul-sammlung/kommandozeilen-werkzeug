@@ -5,9 +5,9 @@ import nunjucks from 'nunjucks'
 import { Aufgabe } from '../aufgabe'
 import { gibStichwortVerzeichnis } from '../stichwort-verzeichnis'
 import { leseRepoDatei, gibRepoPfad } from '../helfer'
-import { generiereExamensÜbersicht } from './aufgaben-sammlung'
+import { erzeugeExamensÜbersicht } from './aufgaben-sammlung'
 
-function generiereMarkdownAufgabenListe (aufgabenListe: Set<Aufgabe>): string {
+function erzeugeMarkdownAufgabenListe (aufgabenListe: Set<Aufgabe>): string {
   const aufgaben = Array.from(aufgabenListe)
   aufgaben.sort(Aufgabe.vergleichePfade)
   const teil = []
@@ -18,7 +18,7 @@ function generiereMarkdownAufgabenListe (aufgabenListe: Set<Aufgabe>): string {
 }
 
 function ersetzeStichwörterInReadme (stichwort: string): string {
-  return generiereMarkdownAufgabenListe(
+  return erzeugeMarkdownAufgabenListe(
     gibStichwortVerzeichnis().gibAufgabenMitStichwortUnterBaum(stichwort)
   )
 }
@@ -26,7 +26,7 @@ function ersetzeStichwörterInReadme (stichwort: string): string {
 export function erzeugeReadmeExamenScans (): void {
   let inhalt = leseRepoDatei('README_template.md', 'examenScans')
   inhalt = nunjucks.renderString(inhalt, {
-    uebersicht: generiereExamensÜbersicht(false)
+    uebersicht: erzeugeExamensÜbersicht(false)
   })
   fs.writeFileSync(gibRepoPfad('README.md', 'examenScans'), inhalt)
 }
@@ -36,7 +36,7 @@ export function erzeugeReadmeHaupt (): void {
   inhalt = nunjucks.renderString(inhalt, {
     gibAufgabenListe: ersetzeStichwörterInReadme,
     stichwortverzeichnis: leseRepoDatei('Stichwortverzeichnis.yml'),
-    staatsexamen: generiereExamensÜbersicht()
+    staatsexamen: erzeugeExamensÜbersicht()
   })
   fs.writeFileSync(gibRepoPfad('README.md'), inhalt)
 }

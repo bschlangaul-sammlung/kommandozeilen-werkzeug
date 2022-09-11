@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
-import { leseRepoDatei, hauptRepoPfad, generiereGithubRawLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
+import { leseRepoDatei, hauptRepoPfad, erzeugeGithubRawLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
 import * as helfer from './helfer';
 import { sammleStichwörter, gibInhaltEinesTexMakros } from './tex';
 import { Examen, gibExamenSammlung } from './examen';
@@ -293,6 +293,9 @@ export class Aufgabe {
         }
         return ausgabe;
     }
+    /**
+     * @returns ` (Stichwort 1, Stichwort 2)`
+     */
     get stichwörterFormatiert() {
         if (this.stichwörter != null && this.stichwörter.length > 0) {
             return ` (${this.stichwörter.join(', ')})`;
@@ -303,13 +306,13 @@ export class Aufgabe {
      * Formatierter Link zur Tex-Datei.
      */
     get linkTex() {
-        return generiereGithubRawLink('.tex', this.pfad, { linkePdf: false });
+        return erzeugeGithubRawLink('.tex', this.pfad, { linkePdf: false });
     }
     /**
      * Formatierter Link zur PDF-Datei auf Github mit den Stichwörtern.
      */
     get link() {
-        return (generiereGithubRawLink(this.titelThematikFormatiert, this.pfad) +
+        return (erzeugeGithubRawLink(this.titelThematikFormatiert, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +
@@ -333,7 +336,7 @@ export class Aufgabe {
         return this.pfad;
     }
     get texQuelltextUrl() {
-        return helfer.generiereGithubUrl('examensAufgabenTex', this.relativerPfad, false);
+        return helfer.erzeugeGithubUrl('examensAufgabenTex', this.relativerPfad, false);
     }
     /**
      * Absoluter Pfad im lokalen Dateisystem.
@@ -342,7 +345,7 @@ export class Aufgabe {
         return helfer.gibRepoPfad(this.relativerPfad.replace('.tex', '.pdf'), 'examensAufgabenPdf');
     }
     get pdfUrl() {
-        return helfer.generiereGithubUrl('examensAufgabenPdf', this.relativerPfad.replace('.tex', '.pdf'), true);
+        return helfer.erzeugeGithubUrl('examensAufgabenPdf', this.relativerPfad.replace('.tex', '.pdf'), true);
     }
 }
 Aufgabe.pfadRegExp = /.*Aufgabe_.*\.tex/;
@@ -466,24 +469,18 @@ export class ExamensAufgabe extends Aufgabe {
         }
         return ausgabe;
     }
-    gibTitelNurAufgabe(alsMarkdownLink = false) {
-        const ausgabe = `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`;
-        if (alsMarkdownLink) {
-            return (generiereGithubRawLink(ausgabe, this.pfad) +
-                ' (' +
-                generiereGithubRawLink('.tex', this.pfad.replace(/\.pdf$/, '.tex'), {
-                    linkePdf: false
-                }) +
-                ')');
-        }
-        return ausgabe;
+    /**
+     * @returns z. B. `Aufgabe 1 (Stichwort 1, Stichwort 2)`
+     */
+    get aufgabeNrStichwörterFormatiert() {
+        return `Aufgabe ${this.aufgabe}${this.stichwörterFormatiert}`;
     }
     get dateiName() {
         const aufgabenReferenz = this.aufgabenReferenz.replace(/ /g, '-');
         return `${this.examen.dateiName}_${aufgabenReferenz}`;
     }
     get link() {
-        return (generiereGithubRawLink(this.titelKurz, this.pfad) +
+        return (erzeugeGithubRawLink(this.titelKurz, this.pfad) +
             this.stichwörterFormatiert +
             ' (' +
             this.linkTex +

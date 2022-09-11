@@ -5,7 +5,7 @@ import { Aufgabe } from '../aufgabe';
 import { gibAufgaben } from '../stichwort-verzeichnis';
 import { hauptRepoPfad, leseRepoDatei } from '../helfer';
 const verwendeteAufgaben = new Set();
-function generiereAufgabenListe(aufgabenListe, stichwort, ueberschrift = 0) {
+function erzeugeAufgabenListe(aufgabenListe, stichwort, ueberschrift = 0) {
     const zeilen = [];
     if (ueberschrift > 0) {
         let makro;
@@ -41,7 +41,7 @@ function generiereAufgabenListe(aufgabenListe, stichwort, ueberschrift = 0) {
     return zeilen.join('\n');
 }
 function ersetzeStichwörterInReadme(stichwort, überschrift = 0) {
-    return generiereAufgabenListe(gibAufgaben(stichwort), stichwort, überschrift);
+    return erzeugeAufgabenListe(gibAufgaben(stichwort), stichwort, überschrift);
 }
 export default function () {
     let inhalt = leseRepoDatei('Bschlangaul-Sammlung.tex_template');

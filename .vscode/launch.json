@@ -10,7 +10,7 @@
       "request": "launch",
       "name": "readme",
       "program": "${workspaceFolder}/src/main.ts",
-      "args": ["generiere-readme"],
+      "args": ["readme", "haupt"],
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
