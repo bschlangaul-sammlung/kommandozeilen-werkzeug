@@ -27,31 +27,41 @@ describe('aufgabe.ts', function () {
       assert.strictEqual(aufgabe.istExamen, false)
     })
 
-    describe('getter Methoden', function () {
+    describe('Getter-Methoden', function () {
       const aufgabe = aufgabenSammlung.gib(
         'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
       )
 
-      it('getter Methode „titel“', function () {
+      it('Getter-Methode „titel“', function () {
         assert.strictEqual(aufgabe.titel, 'Aufgabe 1')
       })
 
-      it('getter Methode „thematik“', function () {
+      it('Getter-Methode „thematik“', function () {
         assert.strictEqual(aufgabe.thematik, 'Verifikation')
       })
 
-      it('getter Methode „zitat“', function () {
-        assert.deepStrictEqual(aufgabe.zitat, ['examen:66116:2020:09'])
+      describe('Getter-Methode „zitat“', function () {
+        it('ein Element', function () {
+          assert.deepStrictEqual(aufgabe.zitat, ['examen:66116:2020:09'])
+        })
+
+        it('zwei Elemente', function () {
+          const a = aufgabenSammlung.gib(
+            'Examen/66116/2014/03/Thema-2/Teilaufgabe-2/Aufgabe-1.tex'
+          )
+          assert.deepStrictEqual(a.zitat, [
+            'examen:66116:2014:03',
+            'Thema 2 Teilaufgabe 2 Aufgabe 1 Seite 11'
+          ])
+        })
       })
 
-      it('getter Methode „zitat“: 2 Elemente', function () {
-        const a = aufgabenSammlung.gib(
-          'Examen/66116/2014/03/Thema-2/Teilaufgabe-2/Aufgabe-1.tex'
-        )
-        assert.deepStrictEqual(a.zitat, [
-          'examen:66116:2014:03',
-          'Thema 2 Teilaufgabe 2 Aufgabe 1 Seite 11'
-        ])
+      it('Getter-Methode „bearbeitungsStand“', function () {
+        assert.deepStrictEqual(aufgabe.bearbeitungsStand, 'mit Lösung')
+      })
+
+      it('Getter-Methode „bearbeitungsStandGrad“', function () {
+        assert.deepStrictEqual(aufgabe.bearbeitungsStandGrad, 4)
       })
     })
 

@@ -161,7 +161,7 @@ export interface AufgabenMetadaten {
  */
 export class Aufgabe {
   /**
-   * Der absolute Pfad zur Aufgabe
+   * Der absolute Pfad des TeX-Quelltexts der Aufgabe.
    */
   pfad: string
 
@@ -204,7 +204,8 @@ export class Aufgabe {
   /**
    * Normalisiere den Dateipfad der Aufgabe. Er sollte immer als absoluter Pfad vorliegen.
    *
-   * @param pfad - Ein möglicherweise relativer Dateipfad
+   * @param pfad - Ein möglicherweise relativer Dateipfad.
+   *
    * @returns Ein absoluter Pfad.
    */
   static normalisierePfad (pfad: string): string {
@@ -511,6 +512,22 @@ export class Aufgabe {
 
   get relativerPfad (): string {
     return macheRelativenPfad(this.pfad)
+  }
+
+  get texQuelltextLokalerPfad (): string {
+    return this.pfad
+  }
+
+  get texQuelltextUrl (): string | undefined {
+    return ''
+  }
+
+  get pdfLokalerPfad (): string | undefined {
+    return ''
+  }
+
+  get pdfUrl (): string | undefined {
+    return ''
   }
 }
 
