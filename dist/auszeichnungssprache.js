@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Einfaches Markup (= Auszeichnungssprache) sowohl als HTML als auch als
  * TeX erzeugen.
@@ -14,15 +13,43 @@ class Kompositum extends Komponente {
         this.komponenten.push(komponente);
     }
 }
-class Liste extends Kompositum {
-}
-class Überschrift {
+class Kontainer extends Kompositum {
     constructor(text) {
+        super();
+        this.text = text;
+    }
+    gibAuszeichnung() {
+        const ausgabe = [];
+        if (this.text != null) {
+            ausgabe.push(this.text);
+        }
+        for (const komponente of this.komponenten) {
+            ausgabe.push(komponente.gibAuszeichnung());
+        }
+        return ausgabe.join('\n');
+    }
+}
+class Liste extends Kompositum {
+    constructor() {
+        super(...arguments);
+        this.ebene = 1;
+    }
+    fügeHinzu(komponente) {
+        if (komponente instanceof Liste) {
+            komponente.ebene = this.ebene + 1;
+        }
+        this.komponenten.push(komponente);
+    }
+}
+class Überschrift extends Komponente {
+    constructor(text) {
+        super();
         this.text = text;
     }
 }
-class Link {
+class Link extends Komponente {
     constructor(text, url) {
+        super();
         this.text = text;
         this.url = url;
     }
@@ -31,14 +58,19 @@ class MarkdownListe extends Liste {
     gibAuszeichnung() {
         const ausgabe = [];
         for (const komponente of this.komponenten) {
-            ausgabe.push(komponente.gibAuszeichnung());
+            if (komponente instanceof MarkdownListe) {
+                ausgabe.push(komponente.gibAuszeichnung());
+            }
+            else {
+                ausgabe.push(' '.repeat(4 * (this.ebene - 1)) + '- ' + komponente.gibAuszeichnung());
+            }
         }
         return ausgabe.join('\n');
     }
 }
 class MarkdownÜberschrift extends Überschrift {
     gibAuszeichnung() {
-        return '\\section{' + this.text + '}';
+        return '# ' + this.text + '\n';
     }
 }
 class MarkdownLink extends Link {
@@ -50,22 +82,25 @@ class TexListe extends Liste {
     gibAuszeichnung() {
         const ausgabe = [];
         for (const komponente of this.komponenten) {
-            ausgabe.push(komponente.gibAuszeichnung());
+            ausgabe.push('\\item ' + komponente.gibAuszeichnung());
         }
-        return ausgabe.join('\n');
+        return '\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}';
     }
 }
 class TexÜberschrift extends Überschrift {
     gibAuszeichnung() {
-        return '\\section{' + this.text + '}';
+        return '\\section{' + this.text + '}\n';
     }
 }
 class TexLink extends Link {
     gibAuszeichnung() {
-        return '\\ref{' + this.text + '}{' + this.url + '}';
+        return '\\href{' + this.text + '}{' + this.url + '}';
     }
 }
 class Fabrik {
+    kontainer(text) {
+        return new Kontainer(text);
+    }
 }
 class TexFabrik extends Fabrik {
     liste() {
@@ -88,5 +123,11 @@ class MarkdownFabrik extends Fabrik {
     link(text, url) {
         return new MarkdownLink(text, url);
     }
+}
+export function gibAuszeichnung(auszeichnungssprache) {
+    if (auszeichnungssprache === 'tex') {
+        return new TexFabrik();
+    }
+    return new MarkdownFabrik();
 }
 //# sourceMappingURL=auszeichnungssprache.js.map

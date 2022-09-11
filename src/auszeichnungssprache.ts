@@ -17,25 +17,58 @@ abstract class Kompositum extends Komponente {
   abstract gibAuszeichnung (): string
 }
 
-abstract class Liste extends Kompositum {
-  abstract gibAuszeichnung (): string
+class Kontainer extends Kompositum {
+  private readonly text?: string
+
+  constructor (text?: string) {
+    super()
+    this.text = text
+  }
+
+  gibAuszeichnung (): string {
+    const ausgabe: string[] = []
+    if (this.text != null) {
+      ausgabe.push(this.text)
+    }
+    for (const komponente of this.komponenten) {
+      ausgabe.push(komponente.gibAuszeichnung())
+    }
+    return ausgabe.join('\n')
+  }
 }
 
-abstract class Überschrift implements Komponente {
-  text: string
+abstract class Liste extends Kompositum {
+  public ebene: number = 1
+
+  abstract gibAuszeichnung (): string
+
+  fügeHinzu (komponente: Komponente): void {
+    if (komponente instanceof Liste) {
+      komponente.ebene = this.ebene + 1
+    }
+
+    this.komponenten.push(komponente)
+  }
+}
+
+abstract class Überschrift extends Komponente {
+  protected text: string
 
   constructor (text: string) {
+    super()
     this.text = text
   }
 
   abstract gibAuszeichnung (): string
 }
 
-abstract class Link implements Komponente {
-  text: string
-  url: string
+abstract class Link extends Komponente {
+  protected readonly text: string
+
+  protected readonly url: string
 
   constructor (text: string, url: string) {
+    super()
     this.text = text
     this.url = url
   }
@@ -47,7 +80,13 @@ class MarkdownListe extends Liste {
   gibAuszeichnung (): string {
     const ausgabe: string[] = []
     for (const komponente of this.komponenten) {
-      ausgabe.push(komponente.gibAuszeichnung())
+      if (komponente instanceof MarkdownListe) {
+        ausgabe.push(komponente.gibAuszeichnung())
+      } else {
+        ausgabe.push(
+          ' '.repeat(4 * (this.ebene - 1)) + '- ' + komponente.gibAuszeichnung()
+        )
+      }
     }
     return ausgabe.join('\n')
   }
@@ -55,7 +94,7 @@ class MarkdownListe extends Liste {
 
 class MarkdownÜberschrift extends Überschrift {
   gibAuszeichnung (): string {
-    return '\\section{' + this.text + '}'
+    return '# ' + this.text + '\n'
   }
 }
 
@@ -69,27 +108,33 @@ class TexListe extends Liste {
   gibAuszeichnung (): string {
     const ausgabe: string[] = []
     for (const komponente of this.komponenten) {
-      ausgabe.push(komponente.gibAuszeichnung())
+      ausgabe.push('\\item ' + komponente.gibAuszeichnung())
     }
-    return ausgabe.join('\n')
+    return '\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}'
   }
 }
 
 class TexÜberschrift extends Überschrift {
   gibAuszeichnung (): string {
-    return '\\section{' + this.text + '}'
+    return '\\section{' + this.text + '}\n'
   }
 }
 
 class TexLink extends Link {
   gibAuszeichnung (): string {
-    return '\\ref{' + this.text + '}{' + this.url + '}'
+    return '\\href{' + this.text + '}{' + this.url + '}'
   }
 }
 
 abstract class Fabrik {
+  kontainer (text?: string): Kontainer {
+    return new Kontainer(text)
+  }
+
   abstract liste (): Liste
+
   abstract überschrift (text: string): Überschrift
+
   abstract link (text: string, url: string): Link
 }
 
@@ -119,4 +164,13 @@ class MarkdownFabrik extends Fabrik {
   link (text: string, url: string): Link {
     return new MarkdownLink(text, url)
   }
+}
+
+export function gibAuszeichnung (
+  auszeichnungssprache: 'markdown' | 'tex'
+): Fabrik {
+  if (auszeichnungssprache === 'tex') {
+    return new TexFabrik()
+  }
+  return new MarkdownFabrik()
 }
