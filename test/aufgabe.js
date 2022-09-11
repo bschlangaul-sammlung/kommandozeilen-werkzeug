@@ -78,10 +78,18 @@ describe('aufgabe.ts', function () {
         )
       })
 
+      it('Getter-Methode „pdfLokalerPfad“', function () {
+        assert.ok(
+          aufgabe.pdfLokalerPfad.includes(
+            'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.pdf'
+          )
+        )
+      })
+
       it('Getter-Methode „pdfUrl“', function () {
         assert.deepStrictEqual(
           aufgabe.pdfUrl,
-          'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+          'https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-pdf/main/Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.pdf'
         )
       })
     })

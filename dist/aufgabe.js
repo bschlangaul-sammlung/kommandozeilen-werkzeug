@@ -326,14 +326,20 @@ export class Aufgabe {
     get relativerPfad() {
         return macheRelativenPfad(this.pfad);
     }
+    /**
+     * Absoluter Pfad im lokalen Dateisystem. Alias für `this.pfad`.
+     */
     get texQuelltextLokalerPfad() {
         return this.pfad;
     }
     get texQuelltextUrl() {
         return helfer.generiereGithubUrl('examensAufgabenTex', this.relativerPfad, false);
     }
+    /**
+     * Absoluter Pfad im lokalen Dateisystem.
+     */
     get pdfLokalerPfad() {
-        return '';
+        return helfer.gibRepoPfad(this.relativerPfad.replace('.tex', '.pdf'), 'examensAufgabenPdf');
     }
     get pdfUrl() {
         return helfer.generiereGithubUrl('examensAufgabenPdf', this.relativerPfad.replace('.tex', '.pdf'), true);

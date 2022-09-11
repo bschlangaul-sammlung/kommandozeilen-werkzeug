@@ -515,6 +515,9 @@ export class Aufgabe {
     return macheRelativenPfad(this.pfad)
   }
 
+  /**
+   * Absoluter Pfad im lokalen Dateisystem. Alias für `this.pfad`.
+   */
   get texQuelltextLokalerPfad (): string {
     return this.pfad
   }
@@ -527,8 +530,14 @@ export class Aufgabe {
     )
   }
 
+  /**
+   * Absoluter Pfad im lokalen Dateisystem.
+   */
   get pdfLokalerPfad (): string | undefined {
-    return ''
+    return helfer.gibRepoPfad(
+      this.relativerPfad.replace('.tex', '.pdf'),
+      'examensAufgabenPdf'
+    )
   }
 
   get pdfUrl (): string | undefined {
