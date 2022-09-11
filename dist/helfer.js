@@ -100,6 +100,25 @@ export function generiereLink(text, url) {
     return `[${text}](${url})`;
 }
 /**
+ * @param repoId - z. B. `examensAufgabenTex`
+ * @param replativerPfad - z. B. `README.md`
+ * @param raw - Ob die URL zu einer `raw`en Version führen soll, d. h. nur der
+ *   Inhalt, ohne zusätzlich Github-HTML-Markup.
+ *
+ * @returns
+ *
+ * - raw = false:
+ *   `https://github.com/bschlangaul-sammlung/examens-aufgaben-tex/blob/main/README.md`
+ * - raw = true:
+ *   `https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-tex/main/README.md`
+ */
+export function generiereGithubUrl(repoId, replativerPfad, raw = false) {
+    const baseUrl = raw ? konfiguration.github.rawUrl : konfiguration.github.url;
+    return (baseUrl.replace('<name>', konfiguration.repos[repoId].name) +
+        '/' +
+        replativerPfad);
+}
+/**
  * Generiere einen Markdown- oder HTML-Link.
  *
  * @param text Der Text, der als Link gesetzt werden soll.

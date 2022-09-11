@@ -63,6 +63,27 @@ describe('aufgabe.ts', function () {
       it('Getter-Methode „bearbeitungsStandGrad“', function () {
         assert.deepStrictEqual(aufgabe.bearbeitungsStandGrad, 4)
       })
+
+      it('Getter-Methode „relativerPfad“', function () {
+        assert.deepStrictEqual(
+          aufgabe.relativerPfad,
+          'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        )
+      })
+
+      it('Getter-Methode „texQuelltextUrl“', function () {
+        assert.deepStrictEqual(
+          aufgabe.texQuelltextUrl,
+          'https://github.com/bschlangaul-sammlung/examens-aufgaben-tex/blob/main/Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        )
+      })
+
+      it('Getter-Methode „pdfUrl“', function () {
+        assert.deepStrictEqual(
+          aufgabe.pdfUrl,
+          'Examen/66116/2020/09/Thema-1/Teilaufgabe-1/Aufgabe-1.tex'
+        )
+      })
     })
 
     it('Methode leseMetadataVonTex()', function () {

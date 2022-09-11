@@ -10,6 +10,7 @@ import {
   öffneVSCode,
   zeigeFehler
 } from './helfer'
+import * as helfer from './helfer'
 import { sammleStichwörter, gibInhaltEinesTexMakros } from './tex'
 import { Examen, ExamenSammlung, gibExamenSammlung } from './examen'
 
@@ -519,7 +520,11 @@ export class Aufgabe {
   }
 
   get texQuelltextUrl (): string | undefined {
-    return ''
+    return helfer.generiereGithubUrl(
+      'examensAufgabenTex',
+      this.relativerPfad,
+      false
+    )
   }
 
   get pdfLokalerPfad (): string | undefined {
@@ -527,7 +532,11 @@ export class Aufgabe {
   }
 
   get pdfUrl (): string | undefined {
-    return ''
+    return helfer.generiereGithubUrl(
+      'examensAufgabenPdf',
+      this.relativerPfad.replace('.tex', '.pdf'),
+      true
+    )
   }
 }
 

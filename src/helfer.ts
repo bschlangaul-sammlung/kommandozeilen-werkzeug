@@ -191,7 +191,7 @@ export function generiereLink (text: string, url: string): string {
  * - raw = true:
  *   `https://raw.githubusercontent.com/bschlangaul-sammlung/examens-aufgaben-tex/main/README.md`
  */
-function generiereGithubUrl (
+export function generiereGithubUrl (
   repoId: string,
   replativerPfad: string,
   raw: boolean = false

@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
 import { leseRepoDatei, hauptRepoPfad, generiereGithubRawLink, macheRelativenPfad, öffneVSCode, zeigeFehler } from './helfer';
+import * as helfer from './helfer';
 import { sammleStichwörter, gibInhaltEinesTexMakros } from './tex';
 import { Examen, gibExamenSammlung } from './examen';
 function umgebeMitKlammern(text) {
@@ -49,7 +50,8 @@ export class Aufgabe {
     /**
      * Normalisiere den Dateipfad der Aufgabe. Er sollte immer als absoluter Pfad vorliegen.
      *
-     * @param pfad - Ein möglicherweise relativer Dateipfad
+     * @param pfad - Ein möglicherweise relativer Dateipfad.
+     *
      * @returns Ein absoluter Pfad.
      */
     static normalisierePfad(pfad) {
@@ -323,6 +325,18 @@ export class Aufgabe {
     }
     get relativerPfad() {
         return macheRelativenPfad(this.pfad);
+    }
+    get texQuelltextLokalerPfad() {
+        return this.pfad;
+    }
+    get texQuelltextUrl() {
+        return helfer.generiereGithubUrl('examensAufgabenTex', this.relativerPfad, false);
+    }
+    get pdfLokalerPfad() {
+        return '';
+    }
+    get pdfUrl() {
+        return helfer.generiereGithubUrl('examensAufgabenPdf', this.relativerPfad.replace('.tex', '.pdf'), true);
     }
 }
 Aufgabe.pfadRegExp = /.*Aufgabe_.*\.tex/;
