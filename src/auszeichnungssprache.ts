@@ -78,11 +78,14 @@ class Text extends Komponente {
 }
 
 abstract class Überschrift extends Komponente {
+  public ebene: number
+
   protected text: string
 
-  constructor (text: string) {
+  constructor (text: string, ebene: number = 1) {
     super()
     this.text = text
+    this.ebene = ebene
   }
 
   public abstract get auszeichnung (): string
@@ -118,7 +121,7 @@ class MarkdownListe extends Liste {
 
 class MarkdownÜberschrift extends Überschrift {
   public get auszeichnung (): string {
-    return '# ' + this.text + '\n'
+    return '#'.repeat(this.ebene) + ' ' + this.text + '\n'
   }
 }
 
@@ -138,9 +141,43 @@ class TexListe extends Liste {
   }
 }
 
+function erzeugeTexÜberschrift (text: string, ebene: number = 3): string {
+  let makro: string
+  switch (ebene) {
+    case 1:
+      makro = 'part'
+      break
+
+    case 2:
+      makro = 'chapter'
+      break
+
+    case 3:
+      makro = 'section'
+      break
+
+    case 4:
+      makro = 'subsection'
+      break
+
+    case 5:
+      makro = 'subsubsection'
+      break
+
+    case 6:
+      makro = 'subsubsubsection'
+      break
+
+    default:
+      makro = 'section'
+      break
+  }
+  return `\\${makro}{${text}}\n`
+}
+
 class TexÜberschrift extends Überschrift {
   public get auszeichnung (): string {
-    return '\\section{' + this.text + '}\n'
+    return erzeugeTexÜberschrift(this.text, this.ebene)
   }
 }
 

@@ -62,9 +62,10 @@ class Text extends Komponente {
     }
 }
 class Überschrift extends Komponente {
-    constructor(text) {
+    constructor(text, ebene = 1) {
         super();
         this.text = text;
+        this.ebene = ebene;
     }
 }
 class Link extends Komponente {
@@ -88,7 +89,7 @@ class MarkdownListe extends Liste {
 }
 class MarkdownÜberschrift extends Überschrift {
     get auszeichnung() {
-        return '# ' + this.text + '\n';
+        return '#'.repeat(this.ebene) + ' ' + this.text + '\n';
     }
 }
 class MarkdownLink extends Link {
@@ -105,9 +106,36 @@ class TexListe extends Liste {
         return '\n\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}';
     }
 }
+function erzeugeTexÜberschrift(text, ebene = 3) {
+    let makro;
+    switch (ebene) {
+        case 1:
+            makro = 'part';
+            break;
+        case 2:
+            makro = 'chapter';
+            break;
+        case 3:
+            makro = 'section';
+            break;
+        case 4:
+            makro = 'subsection';
+            break;
+        case 5:
+            makro = 'subsubsection';
+            break;
+        case 6:
+            makro = 'subsubsubsection';
+            break;
+        default:
+            makro = 'section';
+            break;
+    }
+    return `\\${makro}{${text}}\n`;
+}
 class TexÜberschrift extends Überschrift {
     get auszeichnung() {
-        return '\\section{' + this.text + '}\n';
+        return erzeugeTexÜberschrift(this.text, this.ebene);
     }
 }
 class TexLink extends Link {

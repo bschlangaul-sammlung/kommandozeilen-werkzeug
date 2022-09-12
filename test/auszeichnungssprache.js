@@ -30,7 +30,7 @@ describe('auszeichnungssprache.ts', function () {
   it('TeX', function () {
     assert.strictEqual(
       setze('tex'),
-      '\\section{Lorem}\n' +
+      '\\part{Lorem}\n' +
         '\n' +
         '\\begin{itemize}\n' +
         '\\item \\href{Link}{http://example.com}\n' +
