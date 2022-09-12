@@ -5,9 +5,9 @@ import path from 'path';
 import { gibAufgabenSammlung } from '../aufgabe';
 import { log } from '../log';
 import { gibExamenSammlung, Examen } from '../examen';
-import { konfiguration, löscheDatei, AusgabeSammler, erzeugeLink } from '../helfer';
 import * as helfer from '../helfer';
 import { schreibeTexDatei, machePlist } from '../tex';
+import gibAuszeichnung from '../auszeichnungssprache';
 /**
  * ```md
  * - 2015 Frühjahr: [Scan.pdf](...46116/2015/03/Scan.pdf) [OCR.txt](…46116/2015/03/OCR.txt)
@@ -67,6 +67,7 @@ function erzeugeAufgabenBaumMarkdown(examen) {
  */
 export function erzeugeExamensÜbersicht(mitAufgaben = true) {
     const examenSammlung = gibExamenSammlung();
+    const a = gibAuszeichnung('markdown');
     const baum = examenSammlung.examenBaum;
     if (baum == null) {
         log('info', 'Konnte keinen Examensbaum aufbauen');
@@ -74,11 +75,13 @@ export function erzeugeExamensÜbersicht(mitAufgaben = true) {
     }
     return baum.besuche({
         betreteEinzelprüfungsNr(nummer) {
-            return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`;
+            return ('\n' +
+                a.überschrift(`${nummer}: ${Examen.fachDurchNummer(nummer)}`, 3)
+                    .auszeichnung);
         },
         betreteExamen(examen, monat, nummer) {
-            const scanLink = erzeugeLink('Scan.pdf', examen.scanUrl);
-            const ocrLink = erzeugeLink('OCR.txt', examen.ocrUrl);
+            const scanLink = a.link('Scan.pdf', examen.scanUrl).auszeichnung;
+            const ocrLink = a.link('OCR.txt', examen.ocrUrl).auszeichnung;
             let aufgaben = ' ';
             if (mitAufgaben) {
                 aufgaben += erzeugeAufgabenBaumMarkdown(examen);
@@ -98,7 +101,7 @@ export function erzeugeExamenScansSammlung() {
         log('info', 'Konnte keinen Examensbaum aufbauen');
         return;
     }
-    const ausgabe = new AusgabeSammler();
+    const ausgabe = new helfer.AusgabeSammler();
     baum.besuche({
         betreteEinzelprüfungsNr(nummer) {
             ausgabe.leere();
@@ -114,7 +117,7 @@ export function erzeugeExamenScansSammlung() {
             const textKörper = ausgabe.gibText();
             const kopf = `\\bPruefungsNummer{${nummer}}\n` +
                 `\\bPruefungsTitel{${Examen.fachDurchNummer(nummer)}}\n`;
-            schreibeTexDatei(path.join(konfiguration.repos.examenScans.lokalerPfad, nummer.toString(), 'Examenssammlung.tex'), 'examen-scans', kopf, textKörper);
+            schreibeTexDatei(path.join(helfer.konfiguration.repos.examenScans.lokalerPfad, nummer.toString(), 'Examenssammlung.tex'), 'examen-scans', kopf, textKörper);
             return undefined;
         }
     });
@@ -170,7 +173,7 @@ function erzeugeExamensLösung(examen) {
     }
     else {
         log('verbose', 'Lösche %s', pfad);
-        löscheDatei(pfad);
+        helfer.löscheDatei(pfad);
     }
 }
 /**

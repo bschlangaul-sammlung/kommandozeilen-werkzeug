@@ -12,8 +12,8 @@ function setze (auszeichnungssprache) {
   liste1.komponenten = a.link('Link', 'http://example.com')
 
   const liste2 = a.liste()
-
   liste2.komponenten = a.kontainer('Text')
+
   liste1.komponenten = liste2
   kontainer.komponenten = liste1
   return kontainer.auszeichnung

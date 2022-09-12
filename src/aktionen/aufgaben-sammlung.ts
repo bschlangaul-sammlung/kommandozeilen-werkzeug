@@ -6,14 +6,9 @@ import path from 'path'
 import { Aufgabe, ExamensAufgabe, gibAufgabenSammlung } from '../aufgabe'
 import { log } from '../log'
 import { gibExamenSammlung, Examen } from '../examen'
-import {
-  konfiguration,
-  löscheDatei,
-  AusgabeSammler,
-  erzeugeLink
-} from '../helfer'
 import * as helfer from '../helfer'
 import { schreibeTexDatei, machePlist } from '../tex'
+import gibAuszeichnung from '../auszeichnungssprache'
 
 /**
  * ```md
@@ -83,6 +78,8 @@ function erzeugeAufgabenBaumMarkdown (examen: Examen): string {
 export function erzeugeExamensÜbersicht (mitAufgaben: boolean = true): string {
   const examenSammlung = gibExamenSammlung()
 
+  const a = gibAuszeichnung('markdown')
+
   const baum = examenSammlung.examenBaum
   if (baum == null) {
     log('info', 'Konnte keinen Examensbaum aufbauen')
@@ -91,11 +88,15 @@ export function erzeugeExamensÜbersicht (mitAufgaben: boolean = true): string {
 
   return baum.besuche({
     betreteEinzelprüfungsNr (nummer: number): string {
-      return `\n### ${nummer}: ${Examen.fachDurchNummer(nummer)}\n`
+      return (
+        '\n' +
+        a.überschrift(`${nummer}: ${Examen.fachDurchNummer(nummer)}`, 3)
+          .auszeichnung
+      )
     },
     betreteExamen (examen: Examen, monat: number, nummer: number): string {
-      const scanLink = erzeugeLink('Scan.pdf', examen.scanUrl)
-      const ocrLink = erzeugeLink('OCR.txt', examen.ocrUrl)
+      const scanLink = a.link('Scan.pdf', examen.scanUrl).auszeichnung
+      const ocrLink = a.link('OCR.txt', examen.ocrUrl).auszeichnung
       let aufgaben: string = ' '
       if (mitAufgaben) {
         aufgaben += erzeugeAufgabenBaumMarkdown(examen)
@@ -118,7 +119,7 @@ export function erzeugeExamenScansSammlung (): void {
     return
   }
 
-  const ausgabe = new AusgabeSammler()
+  const ausgabe = new helfer.AusgabeSammler()
 
   baum.besuche({
     betreteEinzelprüfungsNr (nummer: number): undefined {
@@ -144,7 +145,7 @@ export function erzeugeExamenScansSammlung (): void {
 
       schreibeTexDatei(
         path.join(
-          konfiguration.repos.examenScans.lokalerPfad,
+          helfer.konfiguration.repos.examenScans.lokalerPfad,
           nummer.toString(),
           'Examenssammlung.tex'
         ),
@@ -211,7 +212,7 @@ function erzeugeExamensLösung (examen: Examen): void {
     schreibeTexDatei(pfad, 'examen', kopf, textKörper)
   } else {
     log('verbose', 'Lösche %s', pfad)
-    löscheDatei(pfad)
+    helfer.löscheDatei(pfad)
   }
 }
 

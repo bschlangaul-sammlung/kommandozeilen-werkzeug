@@ -155,8 +155,8 @@ class TexFabrik extends Fabrik {
     liste() {
         return new TexListe();
     }
-    überschrift(text) {
-        return new TexÜberschrift(text);
+    überschrift(text, ebene = 1) {
+        return new TexÜberschrift(text, ebene);
     }
     link(text, url) {
         return new TexLink(text, url);
@@ -166,8 +166,8 @@ class MarkdownFabrik extends Fabrik {
     liste() {
         return new MarkdownListe();
     }
-    überschrift(text) {
-        return new MarkdownÜberschrift(text);
+    überschrift(text, ebene = 1) {
+        return new MarkdownÜberschrift(text, ebene);
     }
     link(text, url) {
         return new MarkdownLink(text, url);

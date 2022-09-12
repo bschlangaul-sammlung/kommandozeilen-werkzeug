@@ -198,7 +198,7 @@ abstract class Fabrik {
     return new Text(text)
   }
 
-  public abstract überschrift (text: string): Überschrift
+  public abstract überschrift (text: string, ebene?: number): Überschrift
 
   public abstract link (text: string, url: string): Link
 }
@@ -208,8 +208,8 @@ class TexFabrik extends Fabrik {
     return new TexListe()
   }
 
-  public überschrift (text: string): Überschrift {
-    return new TexÜberschrift(text)
+  public überschrift (text: string, ebene: number = 1): Überschrift {
+    return new TexÜberschrift(text, ebene)
   }
 
   public link (text: string, url: string): Link {
@@ -222,8 +222,8 @@ class MarkdownFabrik extends Fabrik {
     return new MarkdownListe()
   }
 
-  public überschrift (text: string): Überschrift {
-    return new MarkdownÜberschrift(text)
+  public überschrift (text: string, ebene: number = 1): Überschrift {
+    return new MarkdownÜberschrift(text, ebene)
   }
 
   public link (text: string, url: string): Link {
