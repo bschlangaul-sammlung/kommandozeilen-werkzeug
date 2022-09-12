@@ -8,7 +8,6 @@ import { log } from '../log'
 import { gibExamenSammlung, Examen } from '../examen'
 import {
   konfiguration,
-  gibRepoPfad,
   löscheDatei,
   AusgabeSammler,
   erzeugeLink
@@ -233,75 +232,4 @@ export function erzeugeExamensLösungen (): void {
       }
     }
   }
-}
-
-interface AufgabenSammlungenOptionen {
-  bearbeitungsStand?: string
-  korrektheit?: string
-  ziel?: string
-  examen?: boolean
-  module?: boolean
-}
-
-/**
- * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
- */
-export function erzeugeAufgabenSammlung (
-  opts: AufgabenSammlungenOptionen
-): void {
-  // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
-  gibAufgabenSammlung()
-  const examenSammlung = gibExamenSammlung()
-
-  const baum = examenSammlung.examenBaum
-  if (baum == null) {
-    log('info', 'Konnte keinen Examensbaum aufbauen')
-    return
-  }
-
-  let einzelprüfungsNr: number
-
-  const textkörper = baum.besuche({
-    betreteAufgabe (aufgabe: Aufgabe, nummer: number): string | undefined {
-      if (opts.examen != null && opts.examen && !aufgabe.istExamen) {
-        return
-      }
-
-      if (
-        opts.korrektheit != null &&
-        parseInt(opts.korrektheit) >= aufgabe.korrektheitGrad
-      ) {
-        return
-      }
-
-      if (
-        opts.bearbeitungsStand != null &&
-        parseInt(opts.bearbeitungsStand) >= aufgabe.bearbeitungsStandGrad
-      ) {
-        return
-      }
-
-      const examensAufgabe = aufgabe as ExamensAufgabe
-      const examen = examensAufgabe.examen
-      log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz)
-      let ausgabe: string = ''
-      if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
-        log(
-          'verbose',
-          'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.',
-          einzelprüfungsNr
-        )
-        einzelprüfungsNr = examen.nummer
-        const überschrift =
-          einzelprüfungsNr.toString() + ' (' + examen.fach + ')'
-        ausgabe += `\n\\section{${überschrift}}\n`
-      }
-      return ausgabe + aufgabe.einbindenTexMakro
-    }
-  })
-  let ziel = 'Bschlangaul-Sammlung'
-  if (opts.ziel != null) {
-    ziel = opts.ziel
-  }
-  schreibeTexDatei(gibRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper)
 }

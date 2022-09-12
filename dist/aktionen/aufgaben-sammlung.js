@@ -5,7 +5,7 @@ import path from 'path';
 import { gibAufgabenSammlung } from '../aufgabe';
 import { log } from '../log';
 import { gibExamenSammlung, Examen } from '../examen';
-import { konfiguration, gibRepoPfad, löscheDatei, AusgabeSammler, erzeugeLink } from '../helfer';
+import { konfiguration, löscheDatei, AusgabeSammler, erzeugeLink } from '../helfer';
 import * as helfer from '../helfer';
 import { schreibeTexDatei, machePlist } from '../tex';
 /**
@@ -190,50 +190,5 @@ export function erzeugeExamensLösungen() {
             }
         }
     }
-}
-/**
- * Erzeuge das Haupt-Dokument mit dem Dateinamen `Bschlangaul-Sammlung.tex`
- */
-export function erzeugeAufgabenSammlung(opts) {
-    // Damit die Aufgabensammlung in den Examensobjekten vorhanden ist.
-    gibAufgabenSammlung();
-    const examenSammlung = gibExamenSammlung();
-    const baum = examenSammlung.examenBaum;
-    if (baum == null) {
-        log('info', 'Konnte keinen Examensbaum aufbauen');
-        return;
-    }
-    let einzelprüfungsNr;
-    const textkörper = baum.besuche({
-        betreteAufgabe(aufgabe, nummer) {
-            if (opts.examen != null && opts.examen && !aufgabe.istExamen) {
-                return;
-            }
-            if (opts.korrektheit != null &&
-                parseInt(opts.korrektheit) >= aufgabe.korrektheitGrad) {
-                return;
-            }
-            if (opts.bearbeitungsStand != null &&
-                parseInt(opts.bearbeitungsStand) >= aufgabe.bearbeitungsStandGrad) {
-                return;
-            }
-            const examensAufgabe = aufgabe;
-            const examen = examensAufgabe.examen;
-            log('info', 'Die Aufgabe %s ist anscheinend korrekt.', aufgabe.referenz);
-            let ausgabe = '';
-            if (einzelprüfungsNr == null || examen.nummer !== einzelprüfungsNr) {
-                log('verbose', 'Beginne neue Überschrift für Einzelprüfungs-Nummer %s.', einzelprüfungsNr);
-                einzelprüfungsNr = examen.nummer;
-                const überschrift = einzelprüfungsNr.toString() + ' (' + examen.fach + ')';
-                ausgabe += `\n\\section{${überschrift}}\n`;
-            }
-            return ausgabe + aufgabe.einbindenTexMakro;
-        }
-    });
-    let ziel = 'Bschlangaul-Sammlung';
-    if (opts.ziel != null) {
-        ziel = opts.ziel;
-    }
-    schreibeTexDatei(gibRepoPfad(ziel + '.tex'), 'sammlung', '', textkörper);
 }
 //# sourceMappingURL=aufgaben-sammlung.js.map

@@ -182,33 +182,12 @@ const sammlung = new Command('sammlungen')
   .alias('sa')
 
 sammlung
-  .command('aufgaben')
-  .alias('as')
+  .command('haupt')
+  .alias('h')
   .description(
-    'Erzeuge eine Sammlung an Aufgaben, d. h. ein Dokument in dem mehrere Aufgaben nach verschiedenen Kritieren eingebunden werden.'
+    'Erzeuge die Haupt-PDF-Datei „Bschlangaul-Sammlung.tex“'
   )
-  .option(
-    '-b, --bearbeitungs-stand <grad>',
-    'Nur Aufgaben mit mindestens den Bearbeitungsstand. ' +
-      konvertierteGradFeldFürHilfe(aufgabe.bearbeitungsStand)
-  )
-  .option(
-    '-k, --korrektheit <grad>',
-    'Nur Aufgaben mit mindestens dem Grad an Korrektheit. ' +
-      konvertierteGradFeldFürHilfe(aufgabe.korrektheit)
-  )
-  .option('-z, --ziel <pfad>', '')
-  .option('-e, --examen', 'Nur Examensaufgaben')
-  .option('-m, --module', 'Nur Module')
-  .action(aktionen.erzeugeAufgabenSammlung)
-
-sammlung
-  .command('aufgaben-ng')
-  .alias('as-ng')
-  .description(
-    'Erzeuge eine Sammlung an Aufgaben, d. h. ein Dokument in dem mehrere Aufgaben nach verschiedenen Kritieren eingebunden werden.'
-  )
-  .action(aktionen.erzeugeAlleAufgaben)
+  .action(aktionen.erzeugeHauptBschlangaulSammlungTex)
 
 sammlung
   .command('examen')

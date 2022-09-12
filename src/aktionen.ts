@@ -21,8 +21,7 @@ import {
 } from './aktionen/aufgaben-vorlage'
 import {
   erzeugeExamenScansSammlung,
-  erzeugeExamensLösungen,
-  erzeugeAufgabenSammlung
+  erzeugeExamensLösungen
 } from './aktionen/aufgaben-sammlung'
 import {
   rotierePdf,
@@ -31,13 +30,12 @@ import {
   exportiereTxtAusPdf
 } from './aktionen/externe-befehle'
 import { erzeugeListenElemente } from './aktionen/tex-formatierung'
-import erzeugeAlleAufgaben from './aktionen/alle-aufgaben'
+import erzeugeHauptBschlangaulSammlungTex from './aktionen/haupt-bschlangaul-sammlung.tex'
 
 export default {
   erkenneTextInPdf,
-  erzeugeAlleAufgaben,
+  erzeugeHauptBschlangaulSammlungTex,
   erzeugeAufgabenMetadaten,
-  erzeugeAufgabenSammlung,
   erzeugeAufgabenVorlage,
   erzeugeExamensAufgabeVorlage,
   erzeugeExamenScansSammlung,

@@ -11,15 +11,14 @@ import führeSqlAus from './aktionen/sql';
 import erzeugeAufgabenMetadaten from './aktionen/aufgaben-metadaten';
 import { öffne, öffneDurchStichwort, öffneDurchGlobInVSCode } from './aktionen/oeffne';
 import { erzeugeAufgabenVorlage, erzeugeExamensAufgabeVorlage } from './aktionen/aufgaben-vorlage';
-import { erzeugeExamenScansSammlung, erzeugeExamensLösungen, erzeugeAufgabenSammlung } from './aktionen/aufgaben-sammlung';
+import { erzeugeExamenScansSammlung, erzeugeExamensLösungen } from './aktionen/aufgaben-sammlung';
 import { rotierePdf, erkenneTextInPdf, löscheGeradeSeitenInPdf, exportiereTxtAusPdf } from './aktionen/externe-befehle';
 import { erzeugeListenElemente } from './aktionen/tex-formatierung';
-import erzeugeAlleAufgaben from './aktionen/alle-aufgaben';
+import erzeugeHauptBschlangaulSammlungTex from './aktionen/haupt-bschlangaul-sammlung.tex';
 export default {
     erkenneTextInPdf,
-    erzeugeAlleAufgaben,
+    erzeugeHauptBschlangaulSammlungTex,
     erzeugeAufgabenMetadaten,
-    erzeugeAufgabenSammlung,
     erzeugeAufgabenVorlage,
     erzeugeExamensAufgabeVorlage,
     erzeugeExamenScansSammlung,
