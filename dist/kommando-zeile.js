@@ -18,14 +18,6 @@ function steigereRedseligkeit(dummyValue, verbosity) {
     }
     return verbosity;
 }
-function konvertierteGradFeldFürHilfe(grad) {
-    const ausgabe = [];
-    for (let index = 0; index < grad.length; index++) {
-        const value = grad[index];
-        ausgabe.push(`${index}: ${value}`);
-    }
-    return ausgabe.join(', ');
-}
 const programm = new Command()
     .description('Ein Kommandozeilen-Tool (Werkzeug), um verschiedene administrative Aufgaben, wie z. B. das Erzeugen von Aufgaben-Sammlungen, TeX-Vorlagen etc. zu erledigen.')
     .name('bschlangaul-werkzeug')
