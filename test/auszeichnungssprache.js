@@ -7,16 +7,16 @@ import { gibAuszeichnung } from '../dist/auszeichnungssprache.js'
 function setze (auszeichnungssprache) {
   const a = gibAuszeichnung(auszeichnungssprache)
   const kontainer = a.kontainer()
-  kontainer.fügeHinzu(a.überschrift('Lorem'))
+  kontainer.komponenten = a.überschrift('Lorem')
   const liste1 = a.liste()
-  liste1.fügeHinzu(a.link('Link', 'http://example.com'))
+  liste1.komponenten = a.link('Link', 'http://example.com')
 
   const liste2 = a.liste()
 
-  liste2.fügeHinzu(a.kontainer('Text'))
-  liste1.fügeHinzu(liste2)
-  kontainer.fügeHinzu(liste1)
-  return kontainer.gibAuszeichnung()
+  liste2.komponenten = a.kontainer('Text')
+  liste1.komponenten = liste2
+  kontainer.komponenten = liste1
+  return kontainer.auszeichnung
 }
 
 describe('auszeichnungssprache.ts', function () {
@@ -34,7 +34,8 @@ describe('auszeichnungssprache.ts', function () {
         '\n' +
         '\\begin{itemize}\n' +
         '\\item \\href{Link}{http://example.com}\n' +
-        '\\item \\begin{itemize}\n' +
+        '\\item \n' +
+        '\\begin{itemize}\n' +
         '\\item Text\n' +
         '\\end{itemize}\n' +
         '\\end{itemize}'

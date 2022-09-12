@@ -7,10 +7,21 @@ class Komponente {
 class Kompositum extends Komponente {
     constructor() {
         super(...arguments);
-        this.komponenten = [];
+        this.komponenten_ = [];
     }
     fügeHinzu(komponente) {
-        this.komponenten.push(komponente);
+        this.komponenten_.push(komponente);
+    }
+    get komponenten() {
+        return this.komponenten_;
+    }
+    set komponenten(komponenten) {
+        if (!Array.isArray(komponenten)) {
+            komponenten = [komponenten];
+        }
+        for (const komponente of komponenten) {
+            this.fügeHinzu(komponente);
+        }
     }
 }
 class Kontainer extends Kompositum {
@@ -18,15 +29,15 @@ class Kontainer extends Kompositum {
         super();
         this.text = text;
     }
-    gibAuszeichnung() {
+    get auszeichnung() {
         const ausgabe = [];
         if (this.text != null) {
             ausgabe.push(this.text);
         }
-        for (const komponente of this.komponenten) {
-            ausgabe.push(komponente.gibAuszeichnung());
+        for (const komponente of this.komponenten_) {
+            ausgabe.push(komponente.auszeichnung);
         }
-        return ausgabe.join('\n');
+        return ausgabe.join('');
     }
 }
 class Liste extends Kompositum {
@@ -38,7 +49,16 @@ class Liste extends Kompositum {
         if (komponente instanceof Liste) {
             komponente.ebene = this.ebene + 1;
         }
-        this.komponenten.push(komponente);
+        this.komponenten_.push(komponente);
+    }
+}
+class Text extends Komponente {
+    constructor(text) {
+        super();
+        this.text = text;
+    }
+    get auszeichnung() {
+        return this.text;
     }
 }
 class Überschrift extends Komponente {
@@ -55,51 +75,52 @@ class Link extends Komponente {
     }
 }
 class MarkdownListe extends Liste {
-    gibAuszeichnung() {
+    get auszeichnung() {
         const ausgabe = [];
-        for (const komponente of this.komponenten) {
-            if (komponente instanceof MarkdownListe) {
-                ausgabe.push(komponente.gibAuszeichnung());
-            }
-            else {
-                ausgabe.push(' '.repeat(4 * (this.ebene - 1)) + '- ' + komponente.gibAuszeichnung());
-            }
+        for (const komponente of this.komponenten_) {
+            const einrückung = komponente instanceof MarkdownListe
+                ? ''
+                : '\n' + ' '.repeat(4 * (this.ebene - 1)) + '- ';
+            ausgabe.push(einrückung + komponente.auszeichnung);
         }
-        return ausgabe.join('\n');
+        return ausgabe.join('');
     }
 }
 class MarkdownÜberschrift extends Überschrift {
-    gibAuszeichnung() {
+    get auszeichnung() {
         return '# ' + this.text + '\n';
     }
 }
 class MarkdownLink extends Link {
-    gibAuszeichnung() {
+    get auszeichnung() {
         return '[' + this.text + '](' + this.url + ')';
     }
 }
 class TexListe extends Liste {
-    gibAuszeichnung() {
+    get auszeichnung() {
         const ausgabe = [];
-        for (const komponente of this.komponenten) {
-            ausgabe.push('\\item ' + komponente.gibAuszeichnung());
+        for (const komponente of this.komponenten_) {
+            ausgabe.push('\\item ' + komponente.auszeichnung);
         }
-        return '\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}';
+        return '\n\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}';
     }
 }
 class TexÜberschrift extends Überschrift {
-    gibAuszeichnung() {
+    get auszeichnung() {
         return '\\section{' + this.text + '}\n';
     }
 }
 class TexLink extends Link {
-    gibAuszeichnung() {
+    get auszeichnung() {
         return '\\href{' + this.text + '}{' + this.url + '}';
     }
 }
 class Fabrik {
     kontainer(text) {
         return new Kontainer(text);
+    }
+    text(text) {
+        return new Text(text);
     }
 }
 class TexFabrik extends Fabrik {

@@ -4,17 +4,31 @@
  */
 
 abstract class Komponente {
-  abstract gibAuszeichnung (): string
+  public abstract get auszeichnung (): string
 }
 
 abstract class Kompositum extends Komponente {
-  komponenten: Komponente[] = []
+  protected komponenten_: Komponente[] = []
 
-  fügeHinzu (komponente: Komponente): void {
-    this.komponenten.push(komponente)
+  protected fügeHinzu (komponente: Komponente): void {
+    this.komponenten_.push(komponente)
   }
 
-  abstract gibAuszeichnung (): string
+  public get komponenten (): Komponente[] {
+    return this.komponenten_
+  }
+
+  public set komponenten (komponenten: Komponente | Komponente[]) {
+    if (!Array.isArray(komponenten)) {
+      komponenten = [komponenten]
+    }
+
+    for (const komponente of komponenten) {
+      this.fügeHinzu(komponente)
+    }
+  }
+
+  public abstract get auszeichnung (): string
 }
 
 class Kontainer extends Kompositum {
@@ -25,29 +39,41 @@ class Kontainer extends Kompositum {
     this.text = text
   }
 
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     const ausgabe: string[] = []
     if (this.text != null) {
       ausgabe.push(this.text)
     }
-    for (const komponente of this.komponenten) {
-      ausgabe.push(komponente.gibAuszeichnung())
+    for (const komponente of this.komponenten_) {
+      ausgabe.push(komponente.auszeichnung)
     }
-    return ausgabe.join('\n')
+    return ausgabe.join('')
   }
 }
 
 abstract class Liste extends Kompositum {
   public ebene: number = 1
 
-  abstract gibAuszeichnung (): string
+  public abstract get auszeichnung (): string
 
   fügeHinzu (komponente: Komponente): void {
     if (komponente instanceof Liste) {
       komponente.ebene = this.ebene + 1
     }
+    this.komponenten_.push(komponente)
+  }
+}
 
-    this.komponenten.push(komponente)
+class Text extends Komponente {
+  private readonly text: string
+
+  constructor (text: string) {
+    super()
+    this.text = text
+  }
+
+  public get auszeichnung (): string {
+    return this.text
   }
 }
 
@@ -59,7 +85,7 @@ abstract class Überschrift extends Komponente {
     this.text = text
   }
 
-  abstract gibAuszeichnung (): string
+  public abstract get auszeichnung (): string
 }
 
 abstract class Link extends Komponente {
@@ -73,95 +99,97 @@ abstract class Link extends Komponente {
     this.url = url
   }
 
-  abstract gibAuszeichnung (): string
+  public abstract get auszeichnung (): string
 }
 
 class MarkdownListe extends Liste {
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     const ausgabe: string[] = []
-    for (const komponente of this.komponenten) {
-      if (komponente instanceof MarkdownListe) {
-        ausgabe.push(komponente.gibAuszeichnung())
-      } else {
-        ausgabe.push(
-          ' '.repeat(4 * (this.ebene - 1)) + '- ' + komponente.gibAuszeichnung()
-        )
-      }
+    for (const komponente of this.komponenten_) {
+      const einrückung =
+        komponente instanceof MarkdownListe
+          ? ''
+          : '\n' + ' '.repeat(4 * (this.ebene - 1)) + '- '
+      ausgabe.push(einrückung + komponente.auszeichnung)
     }
-    return ausgabe.join('\n')
+    return ausgabe.join('')
   }
 }
 
 class MarkdownÜberschrift extends Überschrift {
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     return '# ' + this.text + '\n'
   }
 }
 
 class MarkdownLink extends Link {
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     return '[' + this.text + '](' + this.url + ')'
   }
 }
 
 class TexListe extends Liste {
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     const ausgabe: string[] = []
-    for (const komponente of this.komponenten) {
-      ausgabe.push('\\item ' + komponente.gibAuszeichnung())
+    for (const komponente of this.komponenten_) {
+      ausgabe.push('\\item ' + komponente.auszeichnung)
     }
-    return '\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}'
+    return '\n\\begin{itemize}\n' + ausgabe.join('\n') + '\n\\end{itemize}'
   }
 }
 
 class TexÜberschrift extends Überschrift {
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     return '\\section{' + this.text + '}\n'
   }
 }
 
 class TexLink extends Link {
-  gibAuszeichnung (): string {
+  public get auszeichnung (): string {
     return '\\href{' + this.text + '}{' + this.url + '}'
   }
 }
 
 abstract class Fabrik {
-  kontainer (text?: string): Kontainer {
+  public kontainer (text?: string): Kontainer {
     return new Kontainer(text)
   }
 
-  abstract liste (): Liste
+  public abstract liste (): Liste
 
-  abstract überschrift (text: string): Überschrift
+  public text (text: string): Text {
+    return new Text(text)
+  }
 
-  abstract link (text: string, url: string): Link
+  public abstract überschrift (text: string): Überschrift
+
+  public abstract link (text: string, url: string): Link
 }
 
 class TexFabrik extends Fabrik {
-  liste (): Liste {
+  public liste (): Liste {
     return new TexListe()
   }
 
-  überschrift (text: string): Überschrift {
+  public überschrift (text: string): Überschrift {
     return new TexÜberschrift(text)
   }
 
-  link (text: string, url: string): Link {
+  public link (text: string, url: string): Link {
     return new TexLink(text, url)
   }
 }
 
 class MarkdownFabrik extends Fabrik {
-  liste (): Liste {
+  public liste (): Liste {
     return new MarkdownListe()
   }
 
-  überschrift (text: string): Überschrift {
+  public überschrift (text: string): Überschrift {
     return new MarkdownÜberschrift(text)
   }
 
-  link (text: string, url: string): Link {
+  public link (text: string, url: string): Link {
     return new MarkdownLink(text, url)
   }
 }
