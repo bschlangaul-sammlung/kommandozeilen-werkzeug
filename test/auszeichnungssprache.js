@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 
-import { gibAuszeichnung } from '../dist/auszeichnungssprache.js'
+import gibAuszeichnung from '../dist/auszeichnungssprache.js'
 
 function setze (auszeichnungssprache) {
   const a = gibAuszeichnung(auszeichnungssprache)

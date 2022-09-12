@@ -145,8 +145,8 @@ class MarkdownFabrik extends Fabrik {
         return new MarkdownLink(text, url);
     }
 }
-export function gibAuszeichnung(auszeichnungssprache) {
-    if (auszeichnungssprache === 'tex') {
+export default function (auszeichnung) {
+    if (auszeichnung === 'tex') {
         return new TexFabrik();
     }
     return new MarkdownFabrik();

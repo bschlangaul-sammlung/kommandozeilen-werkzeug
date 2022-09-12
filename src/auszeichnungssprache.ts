@@ -194,10 +194,8 @@ class MarkdownFabrik extends Fabrik {
   }
 }
 
-export function gibAuszeichnung (
-  auszeichnungssprache: 'markdown' | 'tex'
-): Fabrik {
-  if (auszeichnungssprache === 'tex') {
+export default function (auszeichnung: 'markdown' | 'tex'): Fabrik {
+  if (auszeichnung === 'tex') {
     return new TexFabrik()
   }
   return new MarkdownFabrik()
